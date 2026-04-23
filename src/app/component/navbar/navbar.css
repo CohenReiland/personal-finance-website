@@ -21,18 +21,16 @@
 #home-img,
 #subscriptions-img,
 #transactions-img,
-#recurring-img,
-#idk-img,
+#budgets-img,
 #settings-img,
 #logout-img {
-	width: 30px;
-	height: 30px;
+	width: 25px;
+	height: 25px;
 }
 
 #home-img:hover,
 #subscriptions-img:hover,
 #transactions-img:hover,
-#recurring-img:hover,
 #idk-img:hover,
 #settings-img:hover,
 #logout-img:hover {
