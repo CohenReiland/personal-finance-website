@@ -1,1 +1,22 @@
-<p>transaction-list works!</p>
+<div class="top">
+  <h1>Transactions</h1>
+  <div class="search">
+    <input type="text" placeholder="Search.." />
+  </div>
+</div>
+
+<div class="container">
+  <div class="header-row">
+    <div>Name</div>
+    <div>Category</div>
+    <div>Amount</div>
+    <div>Date</div>
+  </div>
+  <div class="transaction-row">
+    @for (transaction of transactionService.transactions(); track $index) {
+      <app-transaction-item [transaction]="transaction"></app-transaction-item>
+    }
+  </div>
+</div>
+
+<div class="btn">Add expense</div>

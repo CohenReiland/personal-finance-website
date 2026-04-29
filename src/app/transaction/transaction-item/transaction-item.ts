@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
+import { TransactionService } from '../transaction-service';
+import { Transaction } from '../model/transaction';
 
 @Component({
   selector: 'app-transaction-item',
@@ -7,5 +9,6 @@ import { Component } from '@angular/core';
   styleUrl: './transaction-item.css',
 })
 export class TransactionItem {
-
+  transactionService = inject(TransactionService)
+  transaction = input.required<Transaction>();
 }

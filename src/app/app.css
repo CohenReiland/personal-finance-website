@@ -1,7 +1,17 @@
 :host {
-  display: block;
+  display: flex;
   min-height: 100vh;
   background: #000;
   color: #fff;
 }
+
+:host > app-navbar {
+  flex-shrink: 0;
+}
+
+:host > router-outlet {
+  flex: 1;
+  overflow-y: auto;
+}
+
 /* this is just to make the backround black to stop it from flashbang me */
