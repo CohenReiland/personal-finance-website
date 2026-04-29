@@ -10,6 +10,7 @@
     border-radius: 10px;
     width: 100%;
     box-sizing: border-box;
+    font-weight: 500;
 }
 
 :host:nth-child(even) .list {
@@ -18,4 +19,12 @@
 
 :host:nth-child(odd) .list {
     background-color: rgb(36, 36, 36);
+}
+
+.amount.income {
+    color: rgb(96, 215, 122);
+}
+
+.amount.expense {
+    color: rgb(240, 100, 100);
 }

@@ -1,6 +1,12 @@
 <div class="list">
   <div class="col name">{{ transaction().Name }}</div>
   <div class="col category">{{ transaction().Category }}</div>
-  <div class="col amount">{{ transaction().Amount }}</div>
+  <div
+    class="col amount"
+    [class.income]="transaction().Type === 'Income'"
+    [class.expense]="transaction().Type === 'Expense'"
+  >
+    {{ transaction().Amount }}
+  </div>
   <div class="col date">{{ transaction().Date }}</div>
 </div>

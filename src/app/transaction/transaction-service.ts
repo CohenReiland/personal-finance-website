@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { Transaction, TransactionCategory } from './model/transaction';
+import { ExpenseType, Transaction, TransactionCategory } from './model/transaction';
 import { floor } from 'firebase/firestore/pipelines';
 
 @Injectable({
@@ -19,13 +19,14 @@ export class TransactionService {
     return sum;
   })
 
-  addTransaction(name: string, category: TransactionCategory, Amount: number, Date: Date) {
+  addTransaction(name: string, category: TransactionCategory, Amount: number, Date: Date, type: ExpenseType) {
     const newTransaction: Transaction = {
       id: this.generateID(),
       Name: name,
       Category: category,
       Amount: Amount,
-      Date: Date
+      Date: Date,
+      Type: type
     }
     this.transactions.update(transactions => [... transactions, newTransaction]);
   }

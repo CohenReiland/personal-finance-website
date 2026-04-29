@@ -3,8 +3,10 @@ export interface Transaction {
     Name: String,
     Category: TransactionCategory,
     Amount: number,
-    Date: Date
-    // type: string need to add this to make the amout either add or subtract
+    Date: Date,
+    Type: ExpenseType
 }
 
 export type TransactionCategory = 'work' | 'personal' | 'Grocery' | 'Shopping' | 'Rent' | 'other';
+
+export type ExpenseType = 'Income' | 'Expense'
