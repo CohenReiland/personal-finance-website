@@ -63,6 +63,23 @@ export class AuthService {
     });
   }
 
+  //Gets a user by their ID (useful for viewing a specific user's details from other documents)
+  async getUserById(id: string): Promise<User | null> {
+    const userRef = doc(db, 'users', id);
+    const snapshot = await getDoc(userRef);
+
+    if (!snapshot.exists()) {
+      return null;
+    }
+
+    const userData = snapshot.data() as Omit<User, 'id'>;
+
+    return {
+      ...userData,
+      id: snapshot.id,
+    };
+  }
+
   // Searches database for user with matching authId and returns the user data
   private async getUserByAuthId(authId: string): Promise<User | null> {
     const userRef = doc(db, 'users', authId);
