@@ -88,6 +88,20 @@ export class AuthService {
     }
   }
 
+  // Logs in a user based on their email and password
+  async login(email: string, password: string): Promise<void> {
+    this.isLoading.set(true);
+
+    // Finds user with matching email and password and sets them as the current user
+    try {
+      const credentials = await signInWithEmailAndPassword(auth, email, password);
+      const userProfile = await this.getUserByAuthId(credentials.user.uid);
+      this.currentUser.set(userProfile);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
   // Load users from Firestore and updates the user's signal on changes
   loadUsers(): void {
     onSnapshot(this.userCollection, (snapshot) => {
