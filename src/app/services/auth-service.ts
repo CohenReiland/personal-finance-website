@@ -8,16 +8,13 @@ import {
   type User as FirebaseUser,
 } from 'firebase/auth';
 import {
-  addDoc,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
   serverTimestamp,
   setDoc,
   updateDoc,
-  writeBatch,
 } from 'firebase/firestore';
 import { auth, db } from '../firebase.config';
 import { User } from '../models/user';
@@ -109,18 +106,11 @@ export class AuthService {
     this.currentUser.set(null);
   }
 
-  // Load users from Firestore and updates the user's signal on changes
-  loadUsers(): void {
-    onSnapshot(this.userCollection, (snapshot) => {
-      const data = snapshot.docs.map((userDoc) => {
-        const userData = userDoc.data() as Omit<User, 'id'>;
-        return {
-          ...userData,
-          id: userDoc.id,
-        };
-      });
-      this.users.set(data);
-    });
+  // Updates a user's information in the database
+  async updateUser(id: string, user: Partial<User>): Promise<void> {
+    // finds the user document by ID and updates with new information
+    const userRef = doc(db, 'users', id);
+    await updateDoc(userRef, user);
   }
 
   //Gets a user by their ID (useful for viewing a specific user's details from other documents)
