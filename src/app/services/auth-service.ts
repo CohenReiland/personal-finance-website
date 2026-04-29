@@ -102,6 +102,13 @@ export class AuthService {
     }
   }
 
+  // Logs out the current user
+  async logout(): Promise<void> {
+    // Logs out the current user from Firebase and sets the current user to null
+    await signOut(auth);
+    this.currentUser.set(null);
+  }
+
   // Load users from Firestore and updates the user's signal on changes
   loadUsers(): void {
     onSnapshot(this.userCollection, (snapshot) => {
