@@ -31,6 +31,9 @@ export class AuthService {
   currentUser = signal<User | null>(null);
   firebaseUser = signal<FirebaseUser | null>(null);
 
+  // Signal to show loading state
+  isLoading = signal<boolean>(false);
+
   // Gets the collection of users from Firestore
   private userCollection = collection(db, 'users');
 
@@ -47,6 +50,42 @@ export class AuthService {
       const userProfile = await this.getUserByAuthId(firebaseUser.uid);
       this.currentUser.set(userProfile);
     });
+  }
+
+  // Creates a new user object and adds that object to firebase database
+  async signUp(user: Pick<User, 'fullName' | 'email' | 'password'>): Promise<void> {
+    this.isLoading.set(true);
+
+    try {
+      // creates the new user
+      const credentials = await createUserWithEmailAndPassword(
+        auth,
+        user.email,
+        user.password ?? '',
+      );
+
+      await updateProfile(credentials.user, { displayName: user.fullName });
+
+      // assigns the data to the new user
+      const newUser: User = {
+        id: credentials.user.uid,
+        authId: credentials.user.uid,
+        fullName: user.fullName,
+        email: user.email,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Add the new user to the Firestore database
+      await setDoc(doc(db, 'users', credentials.user.uid), {
+        ...newUser,
+        createdAt: serverTimestamp(),
+      });
+
+      // Sets the new user as the current user
+      this.currentUser.set(newUser);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   // Load users from Firestore and updates the user's signal on changes
