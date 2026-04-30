@@ -5,12 +5,11 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
-  updateCurrentUser,
   updatePassword,
   updateProfile,
   type User as FirebaseUser,
 } from 'firebase/auth';
-import { collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase.config';
 import { User } from '../models/user';
 
@@ -25,9 +24,7 @@ export class AuthService {
   // Signal to show loading state
   isLoading = signal<boolean>(false);
 
-  // Gets the collection of users from Firestore
-  private userCollection = collection(db, 'users');
-
+  // Constructor to initialize the service and listen to authentication state
   constructor() {
     this.listenToAuthState();
   }
@@ -123,7 +120,7 @@ export class AuthService {
   }
 
   // Updates a user's password (For settings page)
-  async updatePassword(newPassword: string): Promise<void> {
+  async changePassword(newPassword: string): Promise<void> {
     this.isLoading.set(true);
 
     try {
