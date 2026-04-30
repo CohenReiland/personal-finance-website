@@ -7,15 +7,7 @@ import {
   updateProfile,
   type User as FirebaseUser,
 } from 'firebase/auth';
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
-} from 'firebase/firestore';
+import { collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase.config';
 import { User } from '../models/user';
 
@@ -24,7 +16,6 @@ import { User } from '../models/user';
 })
 export class AuthService {
   // Signals to manage users and current user
-  users = signal<User[]>([]);
   currentUser = signal<User | null>(null);
   firebaseUser = signal<FirebaseUser | null>(null);
 
@@ -33,6 +24,10 @@ export class AuthService {
 
   // Gets the collection of users from Firestore
   private userCollection = collection(db, 'users');
+
+  constructor() {
+    this.listenToAuthState();
+  }
 
   // Listens to auth state if there is a change to auth then it sets current user to null
   private listenToAuthState() {
@@ -44,7 +39,7 @@ export class AuthService {
         return;
       }
 
-      const userProfile = await this.getUserByAuthId(firebaseUser.uid);
+      const userProfile = await this.getUserById(firebaseUser.uid);
       this.currentUser.set(userProfile);
     });
   }
@@ -92,7 +87,7 @@ export class AuthService {
     // Finds user with matching email and password and sets them as the current user
     try {
       const credentials = await signInWithEmailAndPassword(auth, email, password);
-      const userProfile = await this.getUserByAuthId(credentials.user.uid);
+      const userProfile = await this.getUserById(credentials.user.uid);
       this.currentUser.set(userProfile);
     } finally {
       this.isLoading.set(false);
@@ -116,23 +111,6 @@ export class AuthService {
   //Gets a user by their ID (useful for viewing a specific user's details from other documents)
   async getUserById(id: string): Promise<User | null> {
     const userRef = doc(db, 'users', id);
-    const snapshot = await getDoc(userRef);
-
-    if (!snapshot.exists()) {
-      return null;
-    }
-
-    const userData = snapshot.data() as Omit<User, 'id'>;
-
-    return {
-      ...userData,
-      id: snapshot.id,
-    };
-  }
-
-  // Searches database for user with matching authId and returns the user data
-  private async getUserByAuthId(authId: string): Promise<User | null> {
-    const userRef = doc(db, 'users', authId);
     const snapshot = await getDoc(userRef);
 
     if (!snapshot.exists()) {
