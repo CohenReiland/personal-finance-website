@@ -2,8 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
+  updateCurrentUser,
+  updatePassword,
   updateProfile,
   type User as FirebaseUser,
 } from 'firebase/auth';
@@ -106,6 +109,34 @@ export class AuthService {
     // finds the user document by ID and updates with new information
     const userRef = doc(db, 'users', id);
     await updateDoc(userRef, user);
+  }
+
+  // Resets a user's password by sending an email (For login page)
+  async resetPassword(email: string): Promise<void> {
+    this.isLoading.set(true);
+
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } finally {
+      this.isLoading.set(false);
+    }
+  }
+
+  // Updates a user's password (For settings page)
+  async updatePassword(newPassword: string): Promise<void> {
+    this.isLoading.set(true);
+
+    try {
+      const firebaseUser = this.firebaseUser();
+
+      if (!firebaseUser) {
+        throw new Error('User not found');
+      }
+
+      await updatePassword(firebaseUser, newPassword);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   //Gets a user by their ID (useful for viewing a specific user's details from other documents)
