@@ -7,11 +7,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
 
 @Component({
   selector: 'app-sign-up-component',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './sign-up-component.html',
   styleUrl: './sign-up-component.css',
 })
@@ -33,6 +34,7 @@ export class SignUpComponent {
     return password && confirm && password !== confirm ? { passwordMismatch: true } : null;
   };
 
+  // Form that holds all the sign up information and validates it
   protected readonly signupForm = this.formBuilder.nonNullable.group(
     {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -43,4 +45,23 @@ export class SignUpComponent {
     },
     { validators: [this.matchPassword] },
   );
+
+  protected async submit(): Promise<void> {
+    this.submitted = true;
+    this.signupError = '';
+
+    if (this.signupForm.invalid) {
+      this.signupForm.markAllAsTouched();
+      return;
+    }
+
+    const { firstName, lastName, email, password } = this.signupForm.getRawValue();
+
+    try {
+      await this.authService.signUp({ firstName, lastName, email, password });
+      await this.router.navigate(['/dashboard']);
+    } catch (error: unknown) {
+      this.signupError = 'Failed to create account. Please try again.';
+    }
+  }
 }
