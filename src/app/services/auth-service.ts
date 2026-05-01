@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   // Creates a new user object and adds that object to firebase database
-  async signUp(user: Pick<User, 'fullName' | 'email' | 'password'>): Promise<void> {
+  async signUp(user: Pick<User, 'firstName' | 'lastName' | 'email' | 'password'>): Promise<void> {
     this.isLoading.set(true);
 
     try {
@@ -56,13 +56,14 @@ export class AuthService {
         user.password ?? '',
       );
 
-      await updateProfile(credentials.user, { displayName: user.fullName });
+      await updateProfile(credentials.user, { displayName: `${user.firstName} ${user.lastName}` });
 
       // assigns the data to the new user
       const newUser: User = {
         id: credentials.user.uid,
         authId: credentials.user.uid,
-        fullName: user.fullName,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         createdAt: new Date().toISOString(),
       };
