@@ -1,2 +1,1012 @@
-/* You can add global styles to this file, and also import other style files */
-@import 'bootstrap/dist/css/bootstrap.min.css';
+/* =========================================================================
+   FRAMEWORK FOUR — FF/313 PERSONAL FINANCE
+   Global Design System — Electric Blue Variant
+   ---
+   Owner: Ethan Birnbaum
+   Project: frameworks-final-project
+   Course: Advanced Software / 313
+   ---
+   This file is the SINGLE SOURCE OF TRUTH for the application's visual
+   language. Drop this into src/styles.css and reference it from
+   angular.json (it should already be there by default).
+   ---
+   FOR YOUR TEAMMATES:
+     1. DO NOT hardcode colors, spacing, or font sizes anywhere.
+        Use CSS variables instead: var(--accent), var(--space-md), etc.
+     2. PREFER provided component classes (.btn, .card, .input, .tag, .tbl)
+        over writing your own. If you find yourself reinventing one of
+        these, ask Ethan first.
+     3. For component-scoped CSS, you CAN reference these variables —
+        Angular's emulated encapsulation does not block CSS custom
+        properties from cascading into components.
+     4. Layout primitives: .row, .stack, .grid-12, .container-app.
+        Compose these instead of writing flex/grid by hand.
+   ---
+   STRUCTURE:
+     1. Design tokens (CSS variables)
+     2. Reset & base elements
+     3. App shell (sidebar + main layout)
+     4. Status bar
+     5. Page header / section labels
+     6. Layout primitives
+     7. Components (cards, buttons, inputs, tables, tags, progress, stats)
+     8. Feed list (recent activity)
+     9. Form rows
+     10. Utilities
+   ========================================================================= */
+
+
+/* -------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   ------------------------------------------------------------------------- */
+
+/* Web fonts. Loaded once globally so every page gets them.
+   If your professor cares about offline, we'll self-host later. */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  /* ---- Surfaces (grayscale base) ---- */
+  --bg:        #0a0a0a;             /* page background */
+  --bg-2:      #111111;             /* slightly lifted — status bar, table headers */
+  --panel:     #161616;             /* card surface */
+  --panel-2:   #1c1c1c;             /* card hover, inset surface */
+  --line:      #2a2a2a;             /* subtle border, divider */
+  --line-hi:   #3d3d3d;             /* button border, stronger divider */
+
+  /* ---- Primary accent ---- */
+  /* The single brand color. Used for primary buttons, hover states,
+     section number prefixes, the brand pill, and the page-head underline.
+     Keep this consistent — if you find yourself wanting another accent
+     color, talk to the team. */
+  --accent:       #3d9eff;          /* electric blue */
+  --accent-dim:   #1d7ad6;
+  --accent-deep:  #0d4280;
+  --accent-soft:  rgba(61, 158, 255, 0.10);
+
+  /* ---- Semantic states ---- */
+  /* These are SEPARATE from the accent on purpose. Progress bars,
+     status tags, and delta indicators use these — never the accent —
+     so the meaning stays unambiguous regardless of theme color. */
+  --ok:        #2cd66e;             /* green — on track, success */
+  --warn:      #f5c518;             /* yellow — approaching limit */
+  --bad:       #ff4040;             /* red — over budget, error */
+
+  /* ---- Foreground / text ---- */
+  --fg:        #f0f0f0;             /* primary text */
+  --fg-2:      #b8b8b8;             /* secondary text, table cells */
+  --fg-3:      #6e6e6e;             /* tertiary text, labels, meta */
+
+  /* ---- Typography ---- */
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Type scale. Pick from this set; do not introduce intermediate sizes. */
+  --text-9:    9px;                 /* fine print — keys, footnotes */
+  --text-10:   10px;                /* meta, status bar */
+  --text-11:   11px;                /* form hints, table cells */
+  --text-12:   12px;                /* default body */
+  --text-13:   13px;                /* emphasized body */
+  --text-14:   14px;                /* small headings */
+  --text-22:   22px;                /* section heading */
+  --text-36:   36px;                /* stat value */
+  --text-64:   64px;                /* page heading */
+
+  --leading-tight:  1.15;
+  --leading-snug:   1.35;
+  --leading-normal: 1.5;
+
+  /* ---- Spacing (consistent rhythm; pick from this set) ---- */
+  --space-2xs: 4px;
+  --space-xs:  6px;
+  --space-sm:  8px;
+  --space-md:  12px;
+  --space-lg:  16px;
+  --space-xl:  20px;
+  --space-2xl: 24px;
+  --space-3xl: 32px;
+
+  /* ---- Layout dimensions ---- */
+  --sidebar-w:   220px;
+  --statusbar-h: 28px;
+  --container-max: 1480px;
+
+  /* ---- Motion ---- */
+  --t-fast:   80ms;
+  --t-normal: 150ms;
+  --t-slow:   250ms;
+  --ease:     cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+
+/* -------------------------------------------------------------------------
+   2. RESET & BASE ELEMENTS
+   ------------------------------------------------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: var(--text-13);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page heading element — uses display font, tight leading.
+   Page-level h1 is styled inside .page-head; bare h1 is fallback. */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: var(--leading-tight);
+  margin: 0;
+  text-transform: uppercase;
+}
+h1 { font-size: var(--text-64); letter-spacing: -0.04em; line-height: 0.85; }
+h2 { font-size: var(--text-22); }
+h3 { font-size: var(--text-14); }
+
+p { margin: 0; }
+
+/* Links — by default, accent-colored, no underline.
+   For text inside paragraphs, use class="link" if you want underline-on-hover. */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--t-fast) var(--ease);
+}
+a:hover { color: var(--fg); }
+a.link { border-bottom: 1px solid transparent; }
+a.link:hover { border-bottom-color: currentColor; }
+
+/* Numeric content — tabular figures so dollar columns align on the decimal.
+   Apply to ANY element holding a number: <span class="num">$1,247.83</span> */
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Focus state for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Reduced-motion preference — kill all animations */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* -------------------------------------------------------------------------
+   3. APP SHELL
+   ---
+   The application is structured as:
+   ┌────────────────────────────────────────────┐
+   │ .statusbar (fixed top, thin)               │
+   ├────────────┬───────────────────────────────┤
+   │            │                               │
+   │ .sidebar   │ <main class="main">           │
+   │            │   page content                │
+   │            │ </main>                       │
+   │            │                               │
+   └────────────┴───────────────────────────────┘
+   Use this in app.component.html to wrap everything.
+   ------------------------------------------------------------------------- */
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: calc(100vh - var(--statusbar-h));
+}
+
+.main {
+  padding: var(--space-2xl);
+  min-width: 0;     /* prevents grid blowout on long content */
+}
+
+
+/* -------------------------------------------------------------------------
+   4. STATUS BAR
+   ---
+   The thin top bar. Holds brand pill, live indicator, and meta items.
+   Markup: <div class="statusbar">...</div> at the top of <body>.
+   ------------------------------------------------------------------------- */
+.statusbar {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  gap: var(--space-2xl);
+  align-items: center;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-xs) var(--space-lg);
+  font-size: var(--text-10);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  height: var(--statusbar-h);
+}
+
+.statusbar .pill {
+  background: var(--accent);
+  color: var(--bg);
+  padding: 2px var(--space-sm);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.statusbar .item { color: var(--fg-3); }
+.statusbar .item .v { color: var(--fg); }
+
+.statusbar .live {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--ok);
+}
+.statusbar .live::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--ok);
+  border-radius: 50%;
+  animation: pulse 1.4s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+
+/* -------------------------------------------------------------------------
+   5. SIDEBAR NAV
+   ---
+   Markup pattern (Angular):
+     <aside class="sidebar">
+       <div class="sidebar-brand">FF<span class="punct">/</span>313</div>
+       <div class="nav-section">// MAIN</div>
+       <a class="nav-link" routerLink="/dashboard" routerLinkActive="active">
+         ▸ DASHBOARD <span class="key">D</span>
+       </a>
+       ...
+       <div class="sidebar-footer">
+         <div class="user">▸ {{ userEmail }}</div>
+         <div>BUILD v0.4.2-α</div>
+       </div>
+     </aside>
+   ---
+   The .active class is added automatically by Angular's routerLinkActive.
+   ------------------------------------------------------------------------- */
+.sidebar {
+  background: var(--bg-2);
+  border-right: 1px solid var(--line);
+  padding: var(--space-2xl) 0;
+  position: sticky;
+  top: var(--statusbar-h);
+  align-self: start;
+  height: calc(100vh - var(--statusbar-h));
+  overflow-y: auto;
+}
+
+.sidebar-brand {
+  font-family: var(--font-display);
+  font-size: var(--text-22);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  padding: 0 var(--space-xl) var(--space-2xl);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: var(--space-lg);
+}
+.sidebar-brand .punct { color: var(--accent); }
+
+.nav-section {
+  font-family: var(--font-mono);
+  font-size: var(--text-9);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  padding: var(--space-lg) var(--space-xl) var(--space-sm);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-xl);
+  font-family: var(--font-mono);
+  font-size: var(--text-12);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-2);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  transition: background var(--t-fast) var(--ease),
+              color var(--t-fast) var(--ease),
+              border-color var(--t-fast) var(--ease);
+}
+.nav-link:hover {
+  background: var(--panel);
+  color: var(--fg);
+}
+.nav-link.active {
+  background: var(--panel);
+  color: var(--accent);
+  border-left-color: var(--accent);
+}
+
+/* Keyboard hint pill at the right of nav links */
+.nav-link .key {
+  font-size: var(--text-10);
+  color: var(--fg-3);
+  margin-left: auto;
+  border: 1px solid var(--line-hi);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+.nav-link.active .key {
+  color: var(--accent);
+  border-color: var(--accent-deep);
+}
+
+.sidebar-footer {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding: var(--space-lg) var(--space-xl);
+  border-top: 1px solid var(--line);
+  background: var(--bg-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  color: var(--fg-3);
+  letter-spacing: 0.1em;
+}
+.sidebar-footer .user {
+  color: var(--fg);
+  margin-bottom: var(--space-2xs);
+}
+
+
+/* -------------------------------------------------------------------------
+   6. PAGE HEADER & SECTION LABELS
+   ---
+   Use .page-head once at the top of each page.
+   Use .section-label above each major content block.
+   ------------------------------------------------------------------------- */
+.page-head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: var(--space-2xl);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+.page-head h1 .punct { color: var(--accent); }
+.page-head .meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg-3);
+  text-align: right;
+}
+.page-head .meta strong {
+  color: var(--fg);
+  display: block;
+  font-size: var(--text-12);
+  margin-bottom: var(--space-2xs);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-xs) var(--space-md);
+  margin-bottom: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--fg-3);
+  background: var(--bg-2);
+}
+.section-label .num {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.section { margin-bottom: var(--space-3xl); }
+
+
+/* -------------------------------------------------------------------------
+   7. LAYOUT PRIMITIVES
+   ---
+   Compose these instead of writing custom flex/grid in each component.
+   ------------------------------------------------------------------------- */
+.row {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.row-between { justify-content: space-between; }
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.stack-sm { gap: var(--space-sm); }
+.stack-lg { gap: var(--space-lg); }
+
+/* The 2-column dashboard split. Wider column first (1.4fr) for the
+   primary content (e.g., budget table); narrower (1fr) for the sidebar
+   widget (e.g., recent activity feed). */
+.grid-dash {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+}
+@media (max-width: 1100px) {
+  .grid-dash { grid-template-columns: 1fr; }
+}
+
+/* 12-column grid escape hatch — for pages that need custom layout.
+   Use .col-3 / .col-4 / .col-6 etc. on children. */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-md);
+}
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+@media (max-width: 1100px) {
+  .col-3, .col-4, .col-5, .col-7, .col-8 { grid-column: span 6; }
+}
+@media (max-width: 720px) {
+  .col-3, .col-4, .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+}
+
+
+/* -------------------------------------------------------------------------
+   8. CARDS
+   ---
+   Standard panel container. Use anywhere you want to group content.
+   Markup:
+     <div class="card">
+       <div class="card-head">
+         <span class="id">▸ MY.WIDGET</span>
+         <span class="meta">UPDATED 2H AGO</span>
+       </div>
+       <div class="card-body">...</div>
+     </div>
+   .card-body is optional — for tabular content, omit it and put the table
+   directly inside .card so the rows go edge-to-edge.
+   ------------------------------------------------------------------------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+.card-head .id {
+  color: var(--accent);
+  font-weight: 700;
+}
+.card-head .meta { color: var(--fg-3); }
+
+.card-body { padding: var(--space-lg); }
+
+
+/* -------------------------------------------------------------------------
+   9. STAT / KPI BLOCKS
+   ---
+   Markup:
+     <div class="stat-grid">
+       <div class="stat">
+         <div class="stat-label"><span class="ticker">▸</span>REMAINING</div>
+         <div class="stat-value">$1,247<span class="cents">.83</span></div>
+         <div class="stat-delta up">+$120.00</div>
+       </div>
+     </div>
+   .stat-delta variants: .up (green), .down (red), .flat (gray)
+   ------------------------------------------------------------------------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+@media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .stat-grid { grid-template-columns: 1fr; } }
+
+.stat {
+  background: var(--panel);
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+  position: relative;
+}
+.stat::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 24px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--fg-3);
+  margin-bottom: var(--space-sm);
+}
+.stat-label .ticker {
+  color: var(--accent);
+  margin-right: var(--space-xs);
+}
+
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-36);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat-value .cents {
+  color: var(--fg-3);
+  font-size: 22px;
+}
+
+.stat-delta {
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  margin-top: var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+.stat-delta.up   { color: var(--ok); }
+.stat-delta.up::before   { content: "▲"; }
+.stat-delta.down { color: var(--bad); }
+.stat-delta.down::before { content: "▼"; }
+.stat-delta.flat { color: var(--fg-3); }
+.stat-delta.flat::before { content: "—"; }
+
+
+/* -------------------------------------------------------------------------
+   10. BUTTONS
+   ---
+   Markup:
+     <button class="btn btn-primary">▸ EXECUTE</button>
+     <button class="btn">CANCEL</button>
+     <button class="btn btn-danger">DELETE</button>
+   ------------------------------------------------------------------------- */
+.btn {
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  padding: var(--space-sm) var(--space-lg);
+  border: 1px solid var(--line-hi);
+  background: var(--panel);
+  color: var(--fg);
+  cursor: pointer;
+  transition: all var(--t-fast) var(--ease);
+  white-space: nowrap;
+}
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+.btn-primary:hover {
+  background: var(--ok);
+  border-color: var(--ok);
+  color: var(--bg);
+}
+
+.btn-danger {
+  color: var(--bad);
+  border-color: var(--bad);
+}
+.btn-danger:hover {
+  background: var(--bad);
+  color: var(--bg);
+}
+
+.btn-ghost {
+  border-color: transparent;
+  color: var(--fg-2);
+  background: transparent;
+}
+.btn-ghost:hover {
+  background: var(--panel-2);
+  color: var(--fg);
+  border-color: transparent;
+}
+
+
+/* -------------------------------------------------------------------------
+   11. FORM CONTROLS
+   ---
+   Two markup styles:
+   ---
+   STACKED (when you have plenty of vertical space):
+     <div class="form-field">
+       <label class="form-label">EMAIL *</label>
+       <input class="input" type="email" placeholder="you@example.com">
+       <div class="form-hint">We'll never share this.</div>
+     </div>
+   ---
+   ROW (compact, terminal-style — recommended for most forms):
+     <div class="form-row">
+       <div class="label">CATEGORY *</div>
+       <input class="input" placeholder="e.g. GROCERIES">
+     </div>
+   ------------------------------------------------------------------------- */
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--panel);
+  border: 1px solid var(--line-hi);
+  font-family: var(--font-mono);
+  font-size: var(--text-12);
+  color: var(--fg);
+  outline: none;
+  transition: border-color var(--t-fast) var(--ease),
+              background var(--t-fast) var(--ease);
+}
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--accent);
+  background: var(--panel-2);
+}
+.input::placeholder { color: var(--fg-3); }
+.input:read-only { color: var(--fg-2); cursor: default; }
+
+.input.error,
+.input.ng-invalid.ng-touched {
+  border-color: var(--bad);
+}
+
+/* Stacked form-field */
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+.form-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.form-label::before {
+  content: ">";
+  color: var(--accent);
+  margin-right: var(--space-xs);
+  font-weight: 700;
+}
+.form-hint {
+  font-size: var(--text-10);
+  color: var(--fg-3);
+  letter-spacing: 0.05em;
+}
+.form-error {
+  font-size: var(--text-10);
+  color: var(--bad);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Row-style form (use inside a .card for the terminal look) */
+.form-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  border-bottom: 1px solid var(--line);
+}
+.form-row:last-child { border-bottom: none; }
+.form-row .label {
+  background: var(--bg-2);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--text-10);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  border-right: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+}
+.form-row .label::before {
+  content: ">";
+  color: var(--accent);
+  margin-right: var(--space-xs);
+  font-weight: 700;
+}
+.form-row .input {
+  border: none;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--panel);
+}
+
+
+/* -------------------------------------------------------------------------
+   12. TABLES
+   ---
+   Markup:
+     <table class="tbl">
+       <thead>
+         <tr>
+           <th>CATEGORY</th>
+           <th class="num">SPENT</th>
+           <th>STATUS</th>
+         </tr>
+       </thead>
+       <tbody>
+         <tr>
+           <td><div class="cat">GROCERIES</div></td>
+           <td class="num">$182.40</td>
+           <td><span class="tag ok">OK</span></td>
+         </tr>
+       </tbody>
+     </table>
+   .num on a cell or header right-aligns and turns on tabular figures.
+   .cat styles a category name (uppercased, slightly emphasized).
+   ------------------------------------------------------------------------- */
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tbl th,
+.tbl td {
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-11);
+  border-bottom: 1px solid var(--line);
+}
+
+.tbl th {
+  font-size: var(--text-9);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  font-weight: 500;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line-hi);
+  position: sticky;
+  top: 0;
+}
+
+.tbl td.num,
+.tbl th.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tbl tr:hover td { background: var(--panel-2); }
+
+.tbl .cat {
+  color: var(--fg);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+/* -------------------------------------------------------------------------
+   13. PROGRESS BARS
+   ---
+   Inline progress bar — designed for use inside table cells or card rows.
+   Markup:
+     <div class="bar" style="--w: 60%"></div>            <!-- on track (green) -->
+     <div class="bar warn" style="--w: 83%"></div>       <!-- caution (yellow) -->
+     <div class="bar over"></div>                        <!-- breach (red, full) -->
+   ---
+   In Angular, bind --w with [style] (Smart Styling, Angular 21):
+     <div class="bar"
+          [style.--w.%]="percentage"
+          [class.warn]="percentage >= 80 && percentage < 100"
+          [class.over]="percentage >= 100">
+     </div>
+   ------------------------------------------------------------------------- */
+.bar {
+  display: block;
+  width: 100%;
+  height: 4px;
+  background: var(--line);
+  position: relative;
+  margin-top: var(--space-2xs);
+}
+.bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: var(--w, 0%);
+  background: var(--ok);
+  transition: width var(--t-slow) var(--ease);
+}
+.bar.warn::after { background: var(--warn); }
+.bar.over::after { background: var(--bad); width: 100%; }
+
+
+/* -------------------------------------------------------------------------
+   14. PERCENTAGE TEXT (paired with progress bars)
+   ---
+   <span class="pct">60.8%</span>             <!-- green -->
+   <span class="pct warn">83.0%</span>        <!-- yellow -->
+   <span class="pct over">118.0%</span>       <!-- red -->
+   ------------------------------------------------------------------------- */
+.pct       { color: var(--ok);   font-weight: 700; font-variant-numeric: tabular-nums; }
+.pct.warn  { color: var(--warn); }
+.pct.over  { color: var(--bad); }
+
+
+/* -------------------------------------------------------------------------
+   15. TAGS / STATUS PILLS
+   ---
+   <span class="tag ok">OK</span>
+   <span class="tag warn">CAUTION</span>
+   <span class="tag over">BREACH</span>
+   <span class="tag">DEFAULT</span>
+   ------------------------------------------------------------------------- */
+.tag {
+  font-family: var(--font-mono);
+  font-size: var(--text-9);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 2px var(--space-xs);
+  background: var(--line);
+  color: var(--fg-2);
+  display: inline-block;
+}
+.tag.ok    { background: var(--ok);   color: var(--bg); }
+.tag.warn  { background: var(--warn); color: var(--bg); }
+.tag.over  { background: var(--bad);  color: var(--bg); }
+
+
+/* -------------------------------------------------------------------------
+   16. ACTIVITY FEED
+   ---
+   Markup:
+     <div class="feed">
+       <div class="feed-row">
+         <span class="feed-time">14:22</span>
+         <span class="feed-desc">
+           Trader Joe's
+           <span class="feed-cat">GROCERIES</span>
+         </span>
+         <span class="feed-amt neg">−$42.18</span>
+       </div>
+     </div>
+   .feed-amt variants: .neg (red, expense), .pos (green, income)
+   ------------------------------------------------------------------------- */
+.feed-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-lg);
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+}
+.feed-row:last-child { border-bottom: none; }
+.feed-row:hover { background: var(--panel-2); }
+
+.feed-time {
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  color: var(--fg-3);
+  letter-spacing: 0.05em;
+}
+
+.feed-desc {
+  font-size: var(--text-12);
+  color: var(--fg);
+}
+.feed-desc .feed-cat {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-9);
+  color: var(--fg-3);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 2px;
+}
+
+.feed-amt {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-12);
+}
+.feed-amt.neg { color: var(--bad); }
+.feed-amt.pos { color: var(--ok); }
+
+
+/* -------------------------------------------------------------------------
+   17. UTILITIES
+   ------------------------------------------------------------------------- */
+.text-fg-2  { color: var(--fg-2); }
+.text-fg-3  { color: var(--fg-3); }
+.text-ok    { color: var(--ok); }
+.text-warn  { color: var(--warn); }
+.text-bad   { color: var(--bad); }
+.text-accent{ color: var(--accent); }
+
+.weight-700 { font-weight: 700; }
+.font-mono  { font-family: var(--font-mono); }
+.font-display { font-family: var(--font-display); }
+
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+
+/* Visually hide content, keep it accessible to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  white-space: nowrap; border: 0;
+}
+
+
+/* -------------------------------------------------------------------------
+   18. CUSTOM SCROLLBARS (WebKit)
+   ---
+   Subtle, on-brand. Optional — remove if you'd rather use OS defaults.
+   ------------------------------------------------------------------------- */
+::-webkit-scrollbar         { width: 8px; height: 8px; }
+::-webkit-scrollbar-track   { background: var(--bg-2); }
+::-webkit-scrollbar-thumb   { background: var(--line-hi); }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-3); }
