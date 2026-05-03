@@ -1,0 +1,113 @@
+/* login.component.css */
+
+.login-page {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl) var(--space-lg);
+  background: var(--bg);
+  gap: var(--space-2xl);
+}
+
+.login-header {
+  text-align: center;
+}
+
+.login-brand {
+  font-family: var(--font-display);
+  font-size: calc(var(--text-36) + 16px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.login-brand .punct {
+  color: var(--accent);
+}
+
+.login-brand-sub {
+  font-family: var(--font-mono);
+  font-size: calc(var(--text-14) + 4px);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin-top: var(--space-xs);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 700px;
+}
+
+.login-card .form-row {
+  grid-template-columns: 220px 1fr;
+}
+
+.login-card .form-row .field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.card-head {
+  font-size: var(--text-14);
+  font-weight: 700;
+}
+
+.meta {
+  color: var(--fg-2);
+}
+
+.label {
+  background: var(--panel);
+  font-size: calc(var(--text-14) + 1px);
+  font-weight: 600;
+  color: var(--fg-2);
+}
+
+.input {
+  background: var(--bg-2);
+  font-size: calc(var(--text-14) + 1px);
+  font-weight: 600;
+  color: var(--fg-3);
+}
+
+.form-error {
+  font-size: var(--text-12);
+  font-weight: 600;
+  padding-left: var(--space-sm);
+}
+
+.login-card .form-row:last-of-type {
+  border-bottom: none;
+}
+
+.btn.btn-primary {
+  font-size: calc(var(--text-14) + 2px);
+  font-weight: 900;
+}
+
+.login-footer {
+  font-family: var(--font-mono);
+  font-size: var(--text-13);
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  text-align: center;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--line);
+}
+
+.login-footer a {
+  color: var(--accent);
+  margin-left: var(--space-xs);
+}
+
+.login-footer a:hover {
+  color: var(--fg);
+}
