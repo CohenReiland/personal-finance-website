@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'bootstrap/dist/css/bootstrap.min.css';
+
 /* =========================================================================
    FRAMEWORK FOUR — FF/313 PERSONAL FINANCE
    Global Design System — Electric Blue Variant
@@ -37,7 +38,6 @@
      10. Utilities
    ========================================================================= */
 
-
 /* -------------------------------------------------------------------------
    1. DESIGN TOKENS
    ------------------------------------------------------------------------- */
@@ -48,86 +48,88 @@
 
 :root {
   /* ---- Surfaces (grayscale base) ---- */
-  --bg:        #0a0a0a;             /* page background */
-  --bg-2:      #111111;             /* slightly lifted — status bar, table headers */
-  --panel:     #161616;             /* card surface */
-  --panel-2:   #1c1c1c;             /* card hover, inset surface */
-  --line:      #2a2a2a;             /* subtle border, divider */
-  --line-hi:   #3d3d3d;             /* button border, stronger divider */
+  --bg: #0a0a0a; /* page background */
+  --bg-2: #111111; /* slightly lifted — status bar, table headers */
+  --panel: #161616; /* card surface */
+  --panel-2: #1c1c1c; /* card hover, inset surface */
+  --line: #2a2a2a; /* subtle border, divider */
+  --line-hi: #3d3d3d; /* button border, stronger divider */
 
   /* ---- Primary accent ---- */
   /* The single brand color. Used for primary buttons, hover states,
      section number prefixes, the brand pill, and the page-head underline.
      Keep this consistent — if you find yourself wanting another accent
      color, talk to the team. */
-  --accent:       #3d9eff;          /* electric blue */
-  --accent-dim:   #1d7ad6;
-  --accent-deep:  #0d4280;
-  --accent-soft:  rgba(61, 158, 255, 0.10);
+  --accent: #3d9eff; /* electric blue */
+  --accent-dim: #1d7ad6;
+  --accent-deep: #0d4280;
+  --accent-soft: rgba(61, 158, 255, 0.1);
 
   /* ---- Semantic states ---- */
   /* These are SEPARATE from the accent on purpose. Progress bars,
      status tags, and delta indicators use these — never the accent —
      so the meaning stays unambiguous regardless of theme color. */
-  --ok:        #2cd66e;             /* green — on track, success */
-  --warn:      #f5c518;             /* yellow — approaching limit */
-  --bad:       #ff4040;             /* red — over budget, error */
+  --ok: #2cd66e; /* green — on track, success */
+  --warn: #f5c518; /* yellow — approaching limit */
+  --bad: #ff4040; /* red — over budget, error */
 
   /* ---- Foreground / text ---- */
-  --fg:        #f0f0f0;             /* primary text */
-  --fg-2:      #b8b8b8;             /* secondary text, table cells */
-  --fg-3:      #6e6e6e;             /* tertiary text, labels, meta */
+  --fg: #f0f0f0; /* primary text */
+  --fg-2: #b8b8b8; /* secondary text, table cells */
+  --fg-3: #6e6e6e; /* tertiary text, labels, meta */
 
   /* ---- Typography ---- */
-  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Type scale. Pick from this set; do not introduce intermediate sizes. */
-  --text-9:    9px;                 /* fine print — keys, footnotes */
-  --text-10:   10px;                /* meta, status bar */
-  --text-11:   11px;                /* form hints, table cells */
-  --text-12:   12px;                /* default body */
-  --text-13:   13px;                /* emphasized body */
-  --text-14:   14px;                /* small headings */
-  --text-22:   22px;                /* section heading */
-  --text-36:   36px;                /* stat value */
-  --text-64:   64px;                /* page heading */
+  --text-9: 9px; /* fine print — keys, footnotes */
+  --text-10: 10px; /* meta, status bar */
+  --text-11: 11px; /* form hints, table cells */
+  --text-12: 12px; /* default body */
+  --text-13: 13px; /* emphasized body */
+  --text-14: 14px; /* small headings */
+  --text-22: 22px; /* section heading */
+  --text-36: 36px; /* stat value */
+  --text-64: 64px; /* page heading */
 
-  --leading-tight:  1.15;
-  --leading-snug:   1.35;
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
   --leading-normal: 1.5;
 
   /* ---- Spacing (consistent rhythm; pick from this set) ---- */
   --space-2xs: 4px;
-  --space-xs:  6px;
-  --space-sm:  8px;
-  --space-md:  12px;
-  --space-lg:  16px;
-  --space-xl:  20px;
+  --space-xs: 6px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 20px;
   --space-2xl: 24px;
   --space-3xl: 32px;
 
   /* ---- Layout dimensions ---- */
-  --sidebar-w:   220px;
+  --sidebar-w: 220px;
   --statusbar-h: 28px;
   --container-max: 1480px;
 
   /* ---- Motion ---- */
-  --t-fast:   80ms;
+  --t-fast: 80ms;
   --t-normal: 150ms;
-  --t-slow:   250ms;
-  --ease:     cubic-bezier(0.2, 0.6, 0.2, 1);
+  --t-slow: 250ms;
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
-
 
 /* -------------------------------------------------------------------------
    2. RESET & BASE ELEMENTS
    ------------------------------------------------------------------------- */
 *,
 *::before,
-*::after { box-sizing: border-box; }
+*::after {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background: var(--bg);
@@ -141,7 +143,12 @@ html, body {
 
 /* Page heading element — uses display font, tight leading.
    Page-level h1 is styled inside .page-head; bare h1 is fallback. */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -149,11 +156,21 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
   text-transform: uppercase;
 }
-h1 { font-size: var(--text-64); letter-spacing: -0.04em; line-height: 0.85; }
-h2 { font-size: var(--text-22); }
-h3 { font-size: var(--text-14); }
+h1 {
+  font-size: var(--text-64);
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+}
+h2 {
+  font-size: var(--text-22);
+}
+h3 {
+  font-size: var(--text-14);
+}
 
-p { margin: 0; }
+p {
+  margin: 0;
+}
 
 /* Links — by default, accent-colored, no underline.
    For text inside paragraphs, use class="link" if you want underline-on-hover. */
@@ -162,16 +179,22 @@ a {
   text-decoration: none;
   transition: color var(--t-fast) var(--ease);
 }
-a:hover { color: var(--fg); }
-a.link { border-bottom: 1px solid transparent; }
-a.link:hover { border-bottom-color: currentColor; }
+a:hover {
+  color: var(--fg);
+}
+a.link {
+  border-bottom: 1px solid transparent;
+}
+a.link:hover {
+  border-bottom-color: currentColor;
+}
 
 /* Numeric content — tabular figures so dollar columns align on the decimal.
    Apply to ANY element holding a number: <span class="num">$1,247.83</span> */
 .num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum" 1;
+  font-feature-settings: 'tnum' 1;
 }
 
 /* Focus state for keyboard navigation */
@@ -182,12 +205,13 @@ a.link:hover { border-bottom-color: currentColor; }
 
 /* Reduced-motion preference — kill all animations */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }
-
 
 /* -------------------------------------------------------------------------
    3. APP SHELL
@@ -212,9 +236,8 @@ a.link:hover { border-bottom-color: currentColor; }
 
 .main {
   padding: var(--space-2xl);
-  min-width: 0;     /* prevents grid blowout on long content */
+  min-width: 0; /* prevents grid blowout on long content */
 }
-
 
 /* -------------------------------------------------------------------------
    4. STATUS BAR
@@ -244,8 +267,12 @@ a.link:hover { border-bottom-color: currentColor; }
   letter-spacing: 0.1em;
 }
 
-.statusbar .item { color: var(--fg-3); }
-.statusbar .item .v { color: var(--fg); }
+.statusbar .item {
+  color: var(--fg-3);
+}
+.statusbar .item .v {
+  color: var(--fg);
+}
 
 .statusbar .live {
   display: inline-flex;
@@ -254,7 +281,7 @@ a.link:hover { border-bottom-color: currentColor; }
   color: var(--ok);
 }
 .statusbar .live::before {
-  content: "";
+  content: '';
   width: 6px;
   height: 6px;
   background: var(--ok);
@@ -262,10 +289,14 @@ a.link:hover { border-bottom-color: currentColor; }
   animation: pulse 1.4s infinite;
 }
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.3; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
-
 
 /* -------------------------------------------------------------------------
    5. SIDEBAR NAV
@@ -307,7 +338,9 @@ a.link:hover { border-bottom-color: currentColor; }
   border-bottom: 1px solid var(--line);
   margin-bottom: var(--space-lg);
 }
-.sidebar-brand .punct { color: var(--accent); }
+.sidebar-brand .punct {
+  color: var(--accent);
+}
 
 .nav-section {
   font-family: var(--font-mono);
@@ -330,9 +363,10 @@ a.link:hover { border-bottom-color: currentColor; }
   color: var(--fg-2);
   text-decoration: none;
   border-left: 2px solid transparent;
-  transition: background var(--t-fast) var(--ease),
-              color var(--t-fast) var(--ease),
-              border-color var(--t-fast) var(--ease);
+  transition:
+    background var(--t-fast) var(--ease),
+    color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease);
 }
 .nav-link:hover {
   background: var(--panel);
@@ -375,7 +409,6 @@ a.link:hover { border-bottom-color: currentColor; }
   margin-bottom: var(--space-2xs);
 }
 
-
 /* -------------------------------------------------------------------------
    6. PAGE HEADER & SECTION LABELS
    ---
@@ -391,7 +424,9 @@ a.link:hover { border-bottom-color: currentColor; }
   padding-bottom: var(--space-lg);
   margin-bottom: var(--space-xl);
 }
-.page-head h1 .punct { color: var(--accent); }
+.page-head h1 .punct {
+  color: var(--accent);
+}
 .page-head .meta {
   font-family: var(--font-mono);
   font-size: var(--text-10);
@@ -427,8 +462,9 @@ a.link:hover { border-bottom-color: currentColor; }
   font-weight: 700;
 }
 
-.section { margin-bottom: var(--space-3xl); }
-
+.section {
+  margin-bottom: var(--space-3xl);
+}
 
 /* -------------------------------------------------------------------------
    7. LAYOUT PRIMITIVES
@@ -441,15 +477,21 @@ a.link:hover { border-bottom-color: currentColor; }
   flex-wrap: wrap;
   align-items: center;
 }
-.row-between { justify-content: space-between; }
+.row-between {
+  justify-content: space-between;
+}
 
 .stack {
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
 }
-.stack-sm { gap: var(--space-sm); }
-.stack-lg { gap: var(--space-lg); }
+.stack-sm {
+  gap: var(--space-sm);
+}
+.stack-lg {
+  gap: var(--space-lg);
+}
 
 /* The 2-column dashboard split. Wider column first (1.4fr) for the
    primary content (e.g., budget table); narrower (1fr) for the sidebar
@@ -460,7 +502,9 @@ a.link:hover { border-bottom-color: currentColor; }
   gap: var(--space-lg);
 }
 @media (max-width: 1100px) {
-  .grid-dash { grid-template-columns: 1fr; }
+  .grid-dash {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* 12-column grid escape hatch — for pages that need custom layout.
@@ -470,20 +514,46 @@ a.link:hover { border-bottom-color: currentColor; }
   grid-template-columns: repeat(12, 1fr);
   gap: var(--space-md);
 }
-.col-3  { grid-column: span 3; }
-.col-4  { grid-column: span 4; }
-.col-5  { grid-column: span 5; }
-.col-6  { grid-column: span 6; }
-.col-7  { grid-column: span 7; }
-.col-8  { grid-column: span 8; }
-.col-12 { grid-column: span 12; }
+.col-3 {
+  grid-column: span 3;
+}
+.col-4 {
+  grid-column: span 4;
+}
+.col-5 {
+  grid-column: span 5;
+}
+.col-6 {
+  grid-column: span 6;
+}
+.col-7 {
+  grid-column: span 7;
+}
+.col-8 {
+  grid-column: span 8;
+}
+.col-12 {
+  grid-column: span 12;
+}
 @media (max-width: 1100px) {
-  .col-3, .col-4, .col-5, .col-7, .col-8 { grid-column: span 6; }
+  .col-3,
+  .col-4,
+  .col-5,
+  .col-7,
+  .col-8 {
+    grid-column: span 6;
+  }
 }
 @media (max-width: 720px) {
-  .col-3, .col-4, .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+  .col-3,
+  .col-4,
+  .col-5,
+  .col-6,
+  .col-7,
+  .col-8 {
+    grid-column: span 12;
+  }
 }
-
 
 /* -------------------------------------------------------------------------
    8. CARDS
@@ -521,10 +591,13 @@ a.link:hover { border-bottom-color: currentColor; }
   color: var(--accent);
   font-weight: 700;
 }
-.card-head .meta { color: var(--fg-3); }
+.card-head .meta {
+  color: var(--fg-3);
+}
 
-.card-body { padding: var(--space-lg); }
-
+.card-body {
+  padding: var(--space-lg);
+}
 
 /* -------------------------------------------------------------------------
    9. STAT / KPI BLOCKS
@@ -546,8 +619,16 @@ a.link:hover { border-bottom-color: currentColor; }
   background: var(--line);
   border: 1px solid var(--line);
 }
-@media (max-width: 900px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .stat-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
 .stat {
   background: var(--panel);
@@ -555,9 +636,10 @@ a.link:hover { border-bottom-color: currentColor; }
   position: relative;
 }
 .stat::before {
-  content: "";
+  content: '';
   position: absolute;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 24px;
   height: 2px;
   background: var(--accent);
@@ -599,13 +681,24 @@ a.link:hover { border-bottom-color: currentColor; }
   align-items: center;
   gap: var(--space-2xs);
 }
-.stat-delta.up   { color: var(--ok); }
-.stat-delta.up::before   { content: "▲"; }
-.stat-delta.down { color: var(--bad); }
-.stat-delta.down::before { content: "▼"; }
-.stat-delta.flat { color: var(--fg-3); }
-.stat-delta.flat::before { content: "—"; }
-
+.stat-delta.up {
+  color: var(--ok);
+}
+.stat-delta.up::before {
+  content: '▲';
+}
+.stat-delta.down {
+  color: var(--bad);
+}
+.stat-delta.down::before {
+  content: '▼';
+}
+.stat-delta.flat {
+  color: var(--fg-3);
+}
+.stat-delta.flat::before {
+  content: '—';
+}
 
 /* -------------------------------------------------------------------------
    10. BUTTONS
@@ -633,7 +726,9 @@ a.link:hover { border-bottom-color: currentColor; }
   border-color: var(--accent);
   color: var(--accent);
 }
-.btn:active { transform: translateY(1px); }
+.btn:active {
+  transform: translateY(1px);
+}
 .btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -671,7 +766,6 @@ a.link:hover { border-bottom-color: currentColor; }
   border-color: transparent;
 }
 
-
 /* -------------------------------------------------------------------------
    11. FORM CONTROLS
    ---
@@ -701,8 +795,9 @@ a.link:hover { border-bottom-color: currentColor; }
   font-size: var(--text-12);
   color: var(--fg);
   outline: none;
-  transition: border-color var(--t-fast) var(--ease),
-              background var(--t-fast) var(--ease);
+  transition:
+    border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
 }
 .input:focus,
 .select:focus,
@@ -710,8 +805,13 @@ a.link:hover { border-bottom-color: currentColor; }
   border-color: var(--accent);
   background: var(--panel-2);
 }
-.input::placeholder { color: var(--fg-3); }
-.input:read-only { color: var(--fg-2); cursor: default; }
+.input::placeholder {
+  color: var(--fg-3);
+}
+.input:read-only {
+  color: var(--fg-2);
+  cursor: default;
+}
 
 .input.error,
 .input.ng-invalid.ng-touched {
@@ -732,7 +832,7 @@ a.link:hover { border-bottom-color: currentColor; }
   color: var(--fg-3);
 }
 .form-label::before {
-  content: ">";
+  content: '>';
   color: var(--accent);
   margin-right: var(--space-xs);
   font-weight: 700;
@@ -755,7 +855,9 @@ a.link:hover { border-bottom-color: currentColor; }
   grid-template-columns: 160px 1fr;
   border-bottom: 1px solid var(--line);
 }
-.form-row:last-child { border-bottom: none; }
+.form-row:last-child {
+  border-bottom: none;
+}
 .form-row .label {
   background: var(--bg-2);
   padding: var(--space-md) var(--space-lg);
@@ -768,7 +870,7 @@ a.link:hover { border-bottom-color: currentColor; }
   align-items: center;
 }
 .form-row .label::before {
-  content: ">";
+  content: '>';
   color: var(--accent);
   margin-right: var(--space-xs);
   font-weight: 700;
@@ -778,7 +880,6 @@ a.link:hover { border-bottom-color: currentColor; }
   padding: var(--space-md) var(--space-lg);
   background: var(--panel);
 }
-
 
 /* -------------------------------------------------------------------------
    12. TABLES
@@ -835,7 +936,9 @@ a.link:hover { border-bottom-color: currentColor; }
   font-variant-numeric: tabular-nums;
 }
 
-.tbl tr:hover td { background: var(--panel-2); }
+.tbl tr:hover td {
+  background: var(--panel-2);
+}
 
 .tbl .cat {
   color: var(--fg);
@@ -843,7 +946,6 @@ a.link:hover { border-bottom-color: currentColor; }
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
-
 
 /* -------------------------------------------------------------------------
    13. PROGRESS BARS
@@ -870,16 +972,20 @@ a.link:hover { border-bottom-color: currentColor; }
   margin-top: var(--space-2xs);
 }
 .bar::after {
-  content: "";
+  content: '';
   display: block;
   height: 100%;
   width: var(--w, 0%);
   background: var(--ok);
   transition: width var(--t-slow) var(--ease);
 }
-.bar.warn::after { background: var(--warn); }
-.bar.over::after { background: var(--bad); width: 100%; }
-
+.bar.warn::after {
+  background: var(--warn);
+}
+.bar.over::after {
+  background: var(--bad);
+  width: 100%;
+}
 
 /* -------------------------------------------------------------------------
    14. PERCENTAGE TEXT (paired with progress bars)
@@ -888,10 +994,17 @@ a.link:hover { border-bottom-color: currentColor; }
    <span class="pct warn">83.0%</span>        <!-- yellow -->
    <span class="pct over">118.0%</span>       <!-- red -->
    ------------------------------------------------------------------------- */
-.pct       { color: var(--ok);   font-weight: 700; font-variant-numeric: tabular-nums; }
-.pct.warn  { color: var(--warn); }
-.pct.over  { color: var(--bad); }
-
+.pct {
+  color: var(--ok);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.pct.warn {
+  color: var(--warn);
+}
+.pct.over {
+  color: var(--bad);
+}
 
 /* -------------------------------------------------------------------------
    15. TAGS / STATUS PILLS
@@ -912,10 +1025,18 @@ a.link:hover { border-bottom-color: currentColor; }
   color: var(--fg-2);
   display: inline-block;
 }
-.tag.ok    { background: var(--ok);   color: var(--bg); }
-.tag.warn  { background: var(--warn); color: var(--bg); }
-.tag.over  { background: var(--bad);  color: var(--bg); }
-
+.tag.ok {
+  background: var(--ok);
+  color: var(--bg);
+}
+.tag.warn {
+  background: var(--warn);
+  color: var(--bg);
+}
+.tag.over {
+  background: var(--bad);
+  color: var(--bg);
+}
 
 /* -------------------------------------------------------------------------
    16. ACTIVITY FEED
@@ -941,8 +1062,12 @@ a.link:hover { border-bottom-color: currentColor; }
   border-bottom: 1px solid var(--line);
   align-items: center;
 }
-.feed-row:last-child { border-bottom: none; }
-.feed-row:hover { background: var(--panel-2); }
+.feed-row:last-child {
+  border-bottom: none;
+}
+.feed-row:hover {
+  background: var(--panel-2);
+}
 
 .feed-time {
   font-family: var(--font-mono);
@@ -971,44 +1096,83 @@ a.link:hover { border-bottom-color: currentColor; }
   font-variant-numeric: tabular-nums;
   font-size: var(--text-12);
 }
-.feed-amt.neg { color: var(--bad); }
-.feed-amt.pos { color: var(--ok); }
-
+.feed-amt.neg {
+  color: var(--bad);
+}
+.feed-amt.pos {
+  color: var(--ok);
+}
 
 /* -------------------------------------------------------------------------
    17. UTILITIES
    ------------------------------------------------------------------------- */
-.text-fg-2  { color: var(--fg-2); }
-.text-fg-3  { color: var(--fg-3); }
-.text-ok    { color: var(--ok); }
-.text-warn  { color: var(--warn); }
-.text-bad   { color: var(--bad); }
-.text-accent{ color: var(--accent); }
+.text-fg-2 {
+  color: var(--fg-2);
+}
+.text-fg-3 {
+  color: var(--fg-3);
+}
+.text-ok {
+  color: var(--ok);
+}
+.text-warn {
+  color: var(--warn);
+}
+.text-bad {
+  color: var(--bad);
+}
+.text-accent {
+  color: var(--accent);
+}
 
-.weight-700 { font-weight: 700; }
-.font-mono  { font-family: var(--font-mono); }
-.font-display { font-family: var(--font-display); }
+.weight-700 {
+  font-weight: 700;
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+.font-display {
+  font-family: var(--font-display);
+}
 
-.mt-sm { margin-top: var(--space-sm); }
-.mt-md { margin-top: var(--space-md); }
-.mt-lg { margin-top: var(--space-lg); }
+.mt-sm {
+  margin-top: var(--space-sm);
+}
+.mt-md {
+  margin-top: var(--space-md);
+}
+.mt-lg {
+  margin-top: var(--space-lg);
+}
 
 /* Visually hide content, keep it accessible to screen readers */
 .sr-only {
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0, 0, 0, 0);
-  white-space: nowrap; border: 0;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
-
 
 /* -------------------------------------------------------------------------
    18. CUSTOM SCROLLBARS (WebKit)
    ---
    Subtle, on-brand. Optional — remove if you'd rather use OS defaults.
    ------------------------------------------------------------------------- */
-::-webkit-scrollbar         { width: 8px; height: 8px; }
-::-webkit-scrollbar-track   { background: var(--bg-2); }
-::-webkit-scrollbar-thumb   { background: var(--line-hi); }
-::-webkit-scrollbar-thumb:hover { background: var(--fg-3); }
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-2);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-hi);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-3);
+}

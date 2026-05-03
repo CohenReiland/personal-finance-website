@@ -1,46 +1,94 @@
-<div class="container">
-  <h1>Student Finance Dashboard</h1>
-  <h2>Create Account</h2>
-  <form [formGroup]="signupForm" (ngSubmit)="submit()" novalidate>
-    <div class="form-group">
-      <label>First Name: <input type="text" formControlName="firstName" /></label>
-      @if (submitted && signupForm.controls.firstName.invalid) {
-        <div class="error">First name is required.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label>Last Name: <input type="text" formControlName="lastName" /> </label>
-      @if (submitted && signupForm.controls.lastName.invalid) {
-        <div class="error">Last name is required.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label>Email: <input type="email" formControlName="email" /></label>
-      @if (submitted && signupForm.controls.email.invalid) {
-        <div class="error">Email must be a valid email address.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label>Password: <input type="password" formControlName="password" /></label>
-      @if (submitted && signupForm.controls.password.invalid) {
-        <div class="error">Password must be at least 6 characters long.</div>
-      }
-    </div>
-    <div class="form-group">
-      <label>Confirm Password: <input type="password" formControlName="confirmPassword" /></label>
-      @if (submitted && signupForm.controls.confirmPassword.invalid) {
-        <div class="error">Passwords do not match.</div>
-      }
+<section class="signup-page">
+  <div class="signup-header">
+    <div class="signup-brand">FF<span class="punct">/</span>313</div>
+    <div class="signup-brand-sub">STUDENT FINANCE DASHBOARD</div>
+  </div>
+
+  <div class="card signup-card">
+    <div class="card-head">
+      <span class="id">▸ AUTH.CREATE_ACCOUNT</span>
+      <span class="meta">NEW USER REGISTRATION</span>
     </div>
 
-    @if (signupError) {
-      <p class="error">{{ signupError }}</p>
-    }
+    <div class="card-body stack-lg">
+      <form class="stack" [formGroup]="signupForm" (ngSubmit)="submit()" novalidate>
+        <div class="form-row">
+          <div class="label">FIRST NAME</div>
+          <input
+            class="input"
+            type="text"
+            formControlName="firstName"
+            placeholder="ENTER FIRST NAME"
+          />
+        </div>
+        @if (submitted && signupForm.controls.firstName.invalid) {
+          <div class="form-error">First name is required.</div>
+        }
 
-    <button class="btn-create" type="submit" [disabled]="isLoading()">
-      {{ isLoading() ? 'Creating Account...' : 'Create Account' }}
-    </button>
-  </form>
+        <div class="form-row">
+          <div class="label">LAST NAME</div>
+          <input
+            class="input"
+            type="text"
+            formControlName="lastName"
+            placeholder="ENTER LAST NAME"
+          />
+        </div>
+        @if (submitted && signupForm.controls.lastName.invalid) {
+          <div class="form-error">Last name is required.</div>
+        }
 
-  <h4>Already have an account? <a href="/login">Login</a></h4>
-</div>
+        <div class="form-row">
+          <div class="label">EMAIL</div>
+          <input
+            class="input"
+            type="email"
+            formControlName="email"
+            placeholder="NAME@EXAMPLE.COM"
+          />
+        </div>
+        @if (submitted && signupForm.controls.email.invalid) {
+          <div class="form-error">Email must be a valid email address.</div>
+        }
+
+        <div class="form-row">
+          <div class="label">PASSWORD</div>
+          <input
+            class="input"
+            type="password"
+            formControlName="password"
+            placeholder="MIN. 6 CHARACTERS"
+          />
+        </div>
+        @if (submitted && signupForm.controls.password.invalid) {
+          <div class="form-error">Password must be at least 6 characters long.</div>
+        }
+
+        <div class="form-row">
+          <div class="label">CONFIRM PW</div>
+          <input
+            class="input"
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="RE-ENTER PASSWORD"
+          />
+        </div>
+        @if (submitted && signupForm.controls.confirmPassword.invalid) {
+          <div class="form-error">Passwords do not match.</div>
+        }
+
+        @if (signupError) {
+          <div class="form-error">{{ signupError }}</div>
+        }
+
+        <div class="row" style="padding-top: var(--space-md)">
+          <button class="btn btn-primary" type="submit" [disabled]="isLoading()">
+            {{ isLoading() ? 'INITIALIZING...' : 'CREATE ACCOUNT' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="signup-footer">ALREADY REGISTERED? <a routerLink="/login">LOGIN</a></div>
+    </div>
+  </div>
+</section>
