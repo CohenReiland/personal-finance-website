@@ -14,7 +14,7 @@ export class LoginComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
-  // Variables to hold states 
+  // Variables to hold states
   protected showPassword = false;
   protected submitted = false;
   protected loginError = '';
@@ -26,4 +26,29 @@ export class LoginComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
+  // Function to toggle password visibility.
+  protected togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  // Grabs form values and checks for a user with those credentials
+  protected async submit(): Promise<void> {
+    this.submitted = true;
+    this.loginError = '';
+
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    const { email, password } = this.loginForm.getRawValue();
+
+    try {
+      await this.authService.login(email, password);
+      await this.router.navigate(['/dashboard']);
+    } catch (error: unknown) {
+      this.loginError =
+        error instanceof Error ? error.message : 'Unable to log in. Please try again.';
+    }
+  }
 }
