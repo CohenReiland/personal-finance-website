@@ -29,13 +29,21 @@
 
         <div class="form-row">
           <div class="label">PASSWORD</div>
-          <div class="field">
+          <div class="field field-with-toggle">
             <input
               class="input"
-              type="password"
+              [attr.type]="showPassword ? 'text' : 'password'"
               formControlName="password"
               placeholder="MIN. 6 CHARACTERS"
             />
+            <button
+              class="btn-ghost toggle-visibility"
+              type="button"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-pressed]="showPassword"
+            >
+              {{ showPassword ? 'HIDE' : 'SHOW' }}
+            </button>
             @if (submitted && loginForm.controls.password.invalid) {
               <div class="form-error">Password must be at least 6 characters long.</div>
             }

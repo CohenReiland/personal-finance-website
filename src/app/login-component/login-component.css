@@ -76,6 +76,23 @@
   color: var(--fg-3);
 }
 
+.field-with-toggle {
+  position: relative;
+}
+
+.field-with-toggle .input {
+  padding-right: 96px;
+}
+
+.toggle-visibility {
+  position: absolute;
+  right: var(--space-md);
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--text-10);
+  letter-spacing: 0.1em;
+}
+
 .form-error {
   font-size: var(--text-12);
   font-weight: 600;
