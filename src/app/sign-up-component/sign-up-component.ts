@@ -46,6 +46,7 @@ export class SignUpComponent {
     { validators: [this.matchPassword] },
   );
 
+  // Grabs the values from the form and creates a new user in the database
   protected async submit(): Promise<void> {
     this.submitted = true;
     this.signupError = '';
