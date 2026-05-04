@@ -49,4 +49,42 @@ export class SettingsComponent {
     },
     { validators: [this.matchPassword] },
   );
+
+  // Updates user profile information based on filled out form
+  protected async profileSubmit(): Promise<void> {
+    this.submitted = true;
+    this.profileError = '';
+
+    if (this.profileForm.invalid) {
+      this.profileForm.markAllAsTouched();
+      return;
+    }
+
+    const { firstName, lastName, email } = this.profileForm.getRawValue();
+
+    try {
+      await this.authService.updateUser(this.currentUser!.id, { firstName, lastName, email });
+    } catch (error: unknown) {
+      this.profileError = 'Failed to create account. Please try again.';
+    }
+  }
+
+  // Updates password based on form information
+  protected async submit(): Promise<void> {
+    this.submitted = true;
+    this.passwordError = '';
+
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+
+    const { password } = this.passwordForm.getRawValue();
+
+    try {
+      await this.authService.changePassword(password);
+    } catch (error: unknown) {
+      this.passwordError = 'Failed to update password. Please try again.';
+    }
+  }
 }
