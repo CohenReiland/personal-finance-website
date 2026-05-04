@@ -1,6 +1,7 @@
 export interface Transaction {
-    id: string,
-    Name: String,
+    id?: string,
+    transactionId?: string,
+    Name: string,
     Category: TransactionCategory,
     Amount: number,
     Date: Date,

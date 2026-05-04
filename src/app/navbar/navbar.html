@@ -1,5 +1,7 @@
 <div class="sidebar">
   <nav class="nav flex-column mb-auto">
+    <div class="sidebar-brand">FF<span class="punct">/</span>313</div>
+
     <a id="home" class="nav-link d-flex align-items-center" href="#" data-label="Home">
       <img id="home-img" src="/images/nav/home.svg" alt="Home" />
     </a>
@@ -14,7 +16,7 @@
     <a
       id="transactions"
       class="nav-link d-flex align-items-center"
-      href="#"
+      routerLink="/transactions"
       data-label="Transactions"
     >
       <img id="transactions-img" src="/images/nav/card.svg" alt="Transactions" />
@@ -25,9 +27,27 @@
     <a id="settings" class="nav-link d-flex align-items-center" href="#" data-label="Settings">
       <img id="settings-img" src="/images/nav/settings.svg" alt="Settings" />
     </a>
-    <div class="text-break"></div>
-    <a id="logout" class="nav-link d-flex align-items-center" href="#" data-label="Logout">
-      <img id="logout-img" src="/images/nav/logout.svg" alt="Logout" />
-    </a>
+    <div class="login-logout">
+      @if (authService.currentUser() != null) {
+        <button
+          id="logout"
+          class="nav-link d-flex align-items-center nav-action"
+          type="button"
+          data-label="Logout"
+          (click)="authService.logout()"
+        >
+          <img id="logout-img" src="/images/nav/logout.svg" alt="Logout" />
+        </button>
+      } @else {
+        <a
+          id="login"
+          class="nav-link d-flex align-items-center nav-action"
+          routerLink="/login"
+          data-label="Login"
+        >
+          <img id="login-img" src="/images/nav/login.svg" alt="Login" />
+        </a>
+      }
+    </div>
   </nav>
 </div>

@@ -1,0 +1,14 @@
+<tr>
+  <td>{{ transaction().Name }}</td>
+  <td>
+    <div class="cat">{{ transaction().Category }}</div>
+  </td>
+  <td
+    class="num feed-amt"
+    [class.neg]="transaction().Type === 'Expense'"
+    [class.pos]="transaction().Type === 'Income'"
+  >
+    {{ transaction().Type === 'Expense' ? '−' : '+' }}${{ transaction().Amount }}
+  </td>
+  <td>{{ transaction().Date }}</td>
+</tr>

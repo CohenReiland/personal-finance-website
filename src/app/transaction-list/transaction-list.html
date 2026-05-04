@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="search-section">
+    <input type="text" class="input" placeholder="Search transactions..." />
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="id">▸ TRANSACTIONS</span>
+      <span class="meta">{{ transactionService.transactions().length }} ITEMS</span>
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>CATEGORY</th>
+          <th class="num">AMOUNT</th>
+          <th>DATE</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (transaction of transactionService.transactions(); track $index) {
+          <app-transaction-item [transaction]="transaction"></app-transaction-item>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="add-btn">
+    <button class="btn btn-primary" type="button" (click)="openAdd()">▸ ADD EXPENSE</button>
+  </div>
+</div>
+
+@if (isAddOpen) {
+  <div class="modal-backdrop" (click)="closeAdd()">
+    <div class="modal-shell" (click)="$event.stopPropagation()">
+      <div class="card modal-card">
+        <div class="card-head">
+          <span class="id">▸ ADD.EXPENSE</span>
+          <button class="btn btn-ghost" type="button" (click)="closeAdd()">CLOSE</button>
+        </div>
+
+        <form class="modal-form">
+          <div class="form-row">
+            <div class="label">NAME *</div>
+            <input #nameInput class="input" type="text" placeholder="e.g. Trader Joe's" />
+          </div>
+
+          <div class="form-row">
+            <div class="label">CATEGORY *</div>
+            <input #categoryInput class="input" type="text" placeholder="e.g. Groceries" />
+          </div>
+
+          <div class="form-row">
+            <div class="label">AMOUNT *</div>
+            <input #amountInput class="input" type="number" placeholder="0.00" />
+          </div>
+
+          <div class="form-row">
+            <div class="label">DATE *</div>
+            <input #dateInput class="input" type="date" />
+          </div>
+
+          <div class="form-row">
+            <div class="label">TYPE</div>
+            <input #typeInput class="input" type="text" placeholder="Expense" />
+          </div>
+
+          <div class="row" style="padding: var(--space-md)">
+            <button
+              class="btn btn-primary"
+              type="button"
+              (click)="
+                saveAdd(
+                  nameInput.value,
+                  categoryInput.value,
+                  amountInput.value,
+                  dateInput.value,
+                  typeInput.value
+                )
+              "
+            >
+              ▸ SAVE
+            </button>
+            <button class="btn" type="button" (click)="closeAdd()">CANCEL</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}
