@@ -6,13 +6,13 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth-service';
 
 @Component({
   selector: 'app-sign-up-component',
-  imports: [ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './sign-up-component.html',
   styleUrl: './sign-up-component.css',
 })
