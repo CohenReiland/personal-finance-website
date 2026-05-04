@@ -1,9 +1,0 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--bg);
-  color: var(--fg);
-}
-
-/* this is just to make the background black to stop it from flashbang me */
