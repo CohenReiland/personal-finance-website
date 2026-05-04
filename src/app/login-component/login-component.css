@@ -84,6 +84,13 @@
   padding-right: 96px;
 }
 
+.icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+  color: currentColor;
+}
+
 .toggle-visibility {
   position: absolute;
   right: var(--space-md);
