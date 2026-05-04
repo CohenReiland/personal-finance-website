@@ -26,6 +26,7 @@ export class SettingsComponent {
   protected submitted = false;
   protected profileError = '';
   protected passwordError = '';
+  protected readonly isLoading = this.authService.isLoading;
 
   // Matches the password and the reentered password
   matchPassword: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {

@@ -10,11 +10,69 @@
   <div>
     <div class="section-label">
       <span><span class="num">01</span> &nbsp; Edit Profile</span>
+      <div class="card-body stack-lg">
+        <form class="stack" [formGroup]="profileForm" (ngSubmit)="profileSubmit()" novalidate>
+          <div class="form-row">
+            <div class="label">FIRST NAME</div>
+            <div class="field">
+              <input
+                class="input"
+                type="text"
+                formControlName="firstName"
+                placeholder="ENTER FIRST NAME"
+              />
+              @if (submitted && profileForm.controls.firstName.invalid) {
+                <div class="form-error">First name is required.</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="label">LAST NAME</div>
+            <div class="field">
+              <input
+                class="input"
+                type="text"
+                formControlName="lastName"
+                placeholder="ENTER LAST NAME"
+              />
+              @if (submitted && profileForm.controls.lastName.invalid) {
+                <div class="form-error">Last name is required.</div>
+              }
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="label">EMAIL</div>
+            <div class="field">
+              <input
+                class="input"
+                type="email"
+                formControlName="email"
+                placeholder="NAME@EXAMPLE.COM"
+              />
+              @if (submitted && profileForm.controls.email.invalid) {
+                <div class="form-error">Email must be a valid email address.</div>
+              }
+            </div>
+          </div>
+          @if (profileError) {
+            <div class="form-error">{{ profileError }}</div>
+          }
+
+          <div class="row" style="padding-top: var(--space-md)">
+            <button class="btn btn-primary" type="submit" [disabled]="isLoading()">
+              {{ isLoading() ? 'Updating...' : 'Update Profile' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-  <div>
-    <div class="section-label">
-      <span><span class="num">02</span> &nbsp; Reset Password</span>
+    
+    <div>
+      <div class="section-label">
+        <span><span class="num">02</span> &nbsp; Reset Password</span>
+      </div>
     </div>
   </div>
 </div>
