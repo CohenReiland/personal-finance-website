@@ -1,0 +1,32 @@
+/* settings.component.css */
+
+.section-label {
+  font-size: calc(var(--text-14) + 6px);
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.label {
+  background: var(--panel);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--fg-2);
+}
+
+.input {
+  background: var(--bg-2);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--fg-3);
+}
+
+.form-error {
+  font-size: var(--text-12);
+  font-weight: 600;
+  padding-left: var(--space-sm);
+}
+
+.btn.btn-primary {
+  font-size: var(--text-14);
+  font-weight: 900;
+}
