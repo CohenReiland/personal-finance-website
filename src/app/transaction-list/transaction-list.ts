@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { TransactionService } from '../services/transaction-service';
 import { TransactionItem } from '../transaction-item/transaction-item';
+import { ExpenseType, Transaction, TransactionCategory } from '../models/transaction';
 
 @Component({
   selector: 'app-transaction-list',
@@ -11,20 +12,35 @@ import { TransactionItem } from '../transaction-item/transaction-item';
 export class TransactionList {
   transactionService = inject(TransactionService);
   isAddOpen = false;
+  editingTransaction: Transaction | null = null;
 
   constructor() {
     this.transactionService.loadTransactions();
   }
 
   openAdd(): void {
+    this.editingTransaction = null;
     this.isAddOpen = true;
+  }
+
+  openEdit(transaction: Transaction): void {
+    this.editingTransaction = transaction;
+    this.isAddOpen = true;
+  }
+
+  formatDateInput(transaction: Transaction | null): string {
+    if (!transaction) {
+      return '';
+    }
+
+    return new Date(transaction.Date).toISOString().slice(0, 10);
   }
 
   closeAdd(): void {
     this.isAddOpen = false;
   }
 
-  async saveAdd(
+  async saveTransaction(
     name: string,
     category: string,
     amount: string,
@@ -36,19 +52,39 @@ export class TransactionList {
     const trimmedType = type.trim() || 'Expense';
     const parsedAmount = Number(amount);
     const parsedDate = date ? new Date(date) : new Date();
+    const parsedCategory = trimmedCategory as TransactionCategory;
+    const parsedType = trimmedType as ExpenseType;
 
     if (!trimmedName || !trimmedCategory || Number.isNaN(parsedAmount)) {
       return;
     }
 
-    await this.transactionService.addTransaction({
+    const transaction: Transaction = {
+      ...(this.editingTransaction ?? {}),
       Name: trimmedName,
-      Category: trimmedCategory as any,
+      Category: parsedCategory,
       Amount: parsedAmount,
       Date: parsedDate,
-      Type: trimmedType as any,
-    });
+      Type: parsedType,
+    };
 
+    if (this.editingTransaction) {
+      await this.transactionService.updateTransaction(transaction);
+    } else {
+      await this.transactionService.addTransaction(transaction);
+    }
+
+    this.editingTransaction = null;
     this.closeAdd();
+  }
+
+  async deleteTransaction(transaction: Transaction): Promise<void> {
+    const shouldDelete = window.confirm(`Delete ${transaction.Name}?`);
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    await this.transactionService.deleteTransaction(transaction);
   }
 }

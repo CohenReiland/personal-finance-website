@@ -44,6 +44,12 @@
   font-size: var(--text-13);
 }
 
+.card .tbl th:last-child,
+.card .tbl td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .add-btn {
   width: 100%;
   max-width: 1200px;

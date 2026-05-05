@@ -1,5 +1,6 @@
 <div class="container">
   <div class="search-section">
+    <p>total transactions test {{ transactionService.totalSpent() }}</p>
     <input type="text" class="input" placeholder="Search transactions..." />
   </div>
 
@@ -16,11 +17,16 @@
           <th>CATEGORY</th>
           <th class="num">AMOUNT</th>
           <th>DATE</th>
+          <th>ACTIONS</th>
         </tr>
       </thead>
       <tbody>
-        @for (transaction of transactionService.transactions(); track $index) {
-          <app-transaction-item [transaction]="transaction"></app-transaction-item>
+        @for (transaction of transactionService.transactions(); track transaction.id ?? $index) {
+          <app-transaction-item
+            [transaction]="transaction"
+            (editRequested)="openEdit($event)"
+            (deleteRequested)="deleteTransaction($event)"
+          ></app-transaction-item>
         }
       </tbody>
     </table>
@@ -36,34 +42,65 @@
     <div class="modal-shell" (click)="$event.stopPropagation()">
       <div class="card modal-card">
         <div class="card-head">
-          <span class="id">▸ ADD.EXPENSE</span>
+          <span class="id"
+            >▸ {{ editingTransaction ? 'EDIT.TRANSACTION' : 'ADD.TRANSACTION' }}</span
+          >
           <button class="btn btn-ghost" type="button" (click)="closeAdd()">CLOSE</button>
         </div>
 
         <form class="modal-form">
           <div class="form-row">
             <div class="label">NAME *</div>
-            <input #nameInput class="input" type="text" placeholder="e.g. Trader Joe's" />
+            <input
+              #nameInput
+              class="input"
+              type="text"
+              [value]="editingTransaction?.Name ?? ''"
+              placeholder="e.g. Trader Joe's"
+            />
           </div>
 
           <div class="form-row">
             <div class="label">CATEGORY *</div>
-            <input #categoryInput class="input" type="text" placeholder="e.g. Groceries" />
+            <input
+              #categoryInput
+              class="input"
+              type="text"
+              [value]="editingTransaction?.Category ?? ''"
+              placeholder="e.g. Groceries"
+            />
           </div>
 
           <div class="form-row">
             <div class="label">AMOUNT *</div>
-            <input #amountInput class="input" type="number" placeholder="0.00" />
+            <input
+              #amountInput
+              class="input"
+              type="number"
+              [value]="editingTransaction?.Amount ?? ''"
+              placeholder="0.00"
+            />
           </div>
 
           <div class="form-row">
             <div class="label">DATE *</div>
-            <input #dateInput class="input" type="date" />
+            <input
+              #dateInput
+              class="input"
+              type="date"
+              [value]="formatDateInput(editingTransaction)"
+            />
           </div>
 
           <div class="form-row">
             <div class="label">TYPE</div>
-            <select #type class="select" name="transaction-type" id="transaction-type">
+            <select
+              #type
+              class="select"
+              name="transaction-type"
+              id="transaction-type"
+              [value]="editingTransaction?.Type ?? 'Expense'"
+            >
               <option value="Expense">Expense</option>
               <option value="Income">Income</option>
             </select>
@@ -74,7 +111,7 @@
               class="btn btn-primary"
               type="button"
               (click)="
-                saveAdd(
+                saveTransaction(
                   nameInput.value,
                   categoryInput.value,
                   amountInput.value,
@@ -83,7 +120,7 @@
                 )
               "
             >
-              ▸ SAVE
+              ▸ {{ editingTransaction ? 'SAVE CHANGES' : 'SAVE' }}
             </button>
             <button class="btn" type="button" (click)="closeAdd()">CANCEL</button>
           </div>

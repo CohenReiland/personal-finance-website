@@ -21,7 +21,7 @@
     <a
       id="transactions"
       class="nav-link d-flex align-items-center"
-      [routerLink]="authService.currentUser() ? ['/transactions'] : ['/login']"
+      [routerLink]="authService.currentUser() ? ['/transactions'] : ['/transactions']"
       data-label="Transactions"
     >
       <img id="transactions-img" src="/images/nav/card.svg" alt="Transactions" />

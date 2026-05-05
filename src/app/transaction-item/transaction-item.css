@@ -7,6 +7,21 @@
   padding: var(--space-md) var(--space-lg);
 }
 
+:host .actions {
+  width: 1%;
+  white-space: nowrap;
+}
+
+:host .action-group {
+  display: inline-flex;
+  gap: var(--space-sm);
+}
+
+:host .action-btn {
+  padding: var(--space-2xs) var(--space-md);
+  min-height: 32px;
+}
+
 :host .feed-amt {
   font-size: var(--text-14);
 }

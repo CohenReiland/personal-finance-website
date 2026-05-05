@@ -11,4 +11,22 @@
     {{ transaction().Type === 'Expense' ? '−' : '+' }}${{ transaction().Amount }}
   </td>
   <td>{{ transaction().Date }}</td>
+  <td class="actions">
+    <div class="action-group">
+      <button
+        class="btn btn-ghost action-btn"
+        type="button"
+        (click)="editRequested.emit(transaction())"
+      >
+        Edit
+      </button>
+      <button
+        class="btn btn-danger action-btn"
+        type="button"
+        (click)="deleteRequested.emit(transaction())"
+      >
+        Delete
+      </button>
+    </div>
+  </td>
 </tr>

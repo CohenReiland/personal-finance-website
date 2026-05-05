@@ -1,5 +1,4 @@
-import { Component, inject, input } from '@angular/core';
-import { TransactionService } from '../services/transaction-service';
+import { Component, input, output } from '@angular/core';
 import { Transaction } from '../models/transaction';
 
 @Component({
@@ -9,6 +8,7 @@ import { Transaction } from '../models/transaction';
   styleUrl: './transaction-item.css',
 })
 export class TransactionItem {
-  transactionService = inject(TransactionService)
   transaction = input.required<Transaction>();
+  editRequested = output<Transaction>();
+  deleteRequested = output<Transaction>();
 }

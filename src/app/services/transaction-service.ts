@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import {
   addDoc,
   collection,
@@ -26,7 +26,11 @@ export class TransactionService {
     let sum = 0;
 
     for (const transaction of this.transactions()) {
-      sum += transaction.Amount;
+      if (transaction.Type === 'Expense' ) {
+        sum -= transaction.Amount
+      } else {
+        sum += transaction.Amount;
+      }
     }
     return sum;
   })
