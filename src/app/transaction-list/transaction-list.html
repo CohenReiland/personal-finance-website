@@ -63,7 +63,10 @@
 
           <div class="form-row">
             <div class="label">TYPE</div>
-            <input #typeInput class="input" type="text" placeholder="Expense" />
+            <select #type class="select" name="transaction-type" id="transaction-type">
+              <option value="Expense">Expense</option>
+              <option value="Income">Income</option>
+            </select>
           </div>
 
           <div class="row" style="padding: var(--space-md)">
@@ -76,7 +79,7 @@
                   categoryInput.value,
                   amountInput.value,
                   dateInput.value,
-                  typeInput.value
+                  type.value
                 )
               "
             >

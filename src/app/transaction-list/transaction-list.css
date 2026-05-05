@@ -6,9 +6,11 @@
 
 .container {
   width: 100%;
-  max-width: 100%;
-  padding: var(--space-3xl) var(--space-lg);
-  margin: 0;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3xl) var(--space-3xl);
+  /* margin: 0 auto; */
   box-sizing: border-box;
 }
 
@@ -68,4 +70,9 @@
 
 .modal-form .form-row .label {
   min-width: 140px;
+  font-size: 13px;
+}
+
+.modal-form .form-row .input{
+  font-size: 14px;
 }
