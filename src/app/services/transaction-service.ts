@@ -12,6 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase.config';
 import { ExpenseType, Transaction, TransactionCategory } from '../models/transaction';
+import { AuthService } from './auth-service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,7 @@ import { ExpenseType, Transaction, TransactionCategory } from '../models/transac
 export class TransactionService {
   transactions = signal<Transaction[]>([]);
   private transactionCollection = collection(db, 'transactions');
+  authService = inject(AuthService);
 
   transactionCount = computed(() => this.transactions().length);
 
@@ -41,6 +43,7 @@ export class TransactionService {
 
     const data = snapshot.docs.map((docSnap) => {
       const raw = docSnap.data() as {
+        userId?: string;
         Name: string;
         Category: TransactionCategory;
         Amount: number;
@@ -69,8 +72,15 @@ export class TransactionService {
 
   async addTransaction(transaction: Transaction) {
     const { transactionId, id, ...data } = transaction;
+    const userId = this.authService.currentUser()?.id;
+
+    if (!userId) {
+      throw new Error('No authenticated user found');
+    }
+
     await addDoc(this.transactionCollection, {
       ...data,
+      userId,
       Date: Timestamp.fromDate(transaction.Date),
     });
     this.loadTransactions();
@@ -82,9 +92,11 @@ export class TransactionService {
 
     const transactionRef = doc(db, 'transactions', targetId);
     const { transactionId, id, ...data } = transaction;
+    const userId = transaction.userId ?? this.authService.currentUser()?.id;
 
     await updateDoc(transactionRef, {
       ...data,
+      userId,
       Date: Timestamp.fromDate(transaction.Date),
     });
     this.loadTransactions();
