@@ -65,13 +65,20 @@
 
           <div class="form-row">
             <div class="label">CATEGORY *</div>
-            <input
+            <select
               #categoryInput
-              class="input"
-              type="text"
-              [value]="editingTransaction?.Category ?? ''"
-              placeholder="e.g. Groceries"
-            />
+              class="select"
+              name="transaction-category"
+              id="transaction-category"
+              [value]="editingTransaction?.Category ?? 'personal'"
+            >
+              <option value="work">work</option>
+              <option value="personal">personal</option>
+              <option value="Grocery">Grocery</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Rent">Rent</option>
+              <option value="other">other</option>
+            </select>
           </div>
 
           <div class="form-row">

@@ -84,6 +84,7 @@ export class TransactionService {
     const userId = this.authService.currentUser()?.id;
 
     if (!userId) {
+      console.log("no user id")
       throw new Error('No authenticated user found');
     }
 
