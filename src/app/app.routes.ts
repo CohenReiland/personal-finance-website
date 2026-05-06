@@ -31,20 +31,29 @@ const guestGuard: CanActivateFn = async () => {
   return isAuthenticated ? router.createUrlTree(['/dashboard']) : true;
 };
 
+// For each route add canActivate with either authGuard or guestGuard
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
   {
     path: 'signup',
     component: SignUpComponent,
     title: 'Sign Up',
+    canActivate: [guestGuard],
   },
   {
-    path: '',
+    path: 'login',
     component: LoginComponent,
     title: 'Login',
+    canActivate: [guestGuard],
   },
   {
     path: 'dashboard',
     component: Dashboard,
     title: 'Dashboard',
+    canActivate: [authGuard],
   },
 ];
