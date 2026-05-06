@@ -2,6 +2,8 @@ import { CanActivateFn, Router, Routes } from '@angular/router';
 import { SignUpComponent } from './sign-up-component/sign-up-component';
 import { LoginComponent } from './login-component/login-component';
 import { Dashboard } from './pages/dashboard/dashboard';
+import { Budget } from './pages/budget/budget';
+import { TransactionList } from './transaction-list/transaction-list';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase.config';
 import { inject } from '@angular/core';
@@ -54,6 +56,18 @@ export const routes: Routes = [
     path: 'dashboard',
     component: Dashboard,
     title: 'Dashboard',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'budgets',
+    component: Budget,
+    title: 'Budgets',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'transactions',
+    component: TransactionList,
+    title: 'Transactions',
     canActivate: [authGuard],
   },
 ];
