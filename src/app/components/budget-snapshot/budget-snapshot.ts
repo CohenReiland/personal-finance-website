@@ -17,7 +17,7 @@ export class BudgetSnapshot {
   // To provide the user with the most important data, they're shown as follows:
   // BREACH status first, CAUTION second, then OK
   // Then, within each severity tier the highest percentages are displayed first
-  // After that, it falls back on which Category was created earlier
+  // After that, it falls back on which Category was created earlier (Budget array starts sorted like this)
 
   readonly sortedBudgets = computed<BudgetWithDerived[]>(() => {
     const severity = { BREACH: 0, CAUTION: 1, OK: 2 } as const;

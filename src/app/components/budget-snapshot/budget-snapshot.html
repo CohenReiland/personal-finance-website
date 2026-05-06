@@ -1,8 +1,53 @@
 <div class="card">
     <div class="card-head">
         <span class="id">▸ BUDGET.SNAPSHOT</span>
+        <span class="meta">{{ headerMeta() }}</span>
     </div>
-    <div class="card-body">
-        <p class="text-fg-3">Budget snapshot under construction</p>
-    </div>
+    @if ( isEmpty() ){
+        <div class="card-body">
+            <p class="text-fg-3 text-sm">
+                No budgets yet. Add one from the Budgets page to see them appear here.
+            </p>
+        </div>
+    } @else {
+        <table class="tbl">
+            <thead>
+                <tr>
+                  <th style="width: 24px;">#</th>
+                  <th>CATEGORY</th>
+                  <th class="num">SPENT</th>
+                  <th class="num">LIMIT</th>
+                  <th class="num">% USED</th>
+                  <th>STATUS</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (b of sortedBudgets(); track b.id; let i = $index)
+                {
+                    <tr>
+                        <td>{{ (i+1).toString().padStart(2, '0') }}</td>
+                        <td>
+                            <div class="cat">{{b.category}}</div>
+                            <div class="bar"
+                            [style.--w.%]="b.percentUsed"
+                            [class.warn]="b.status === 'CAUTION'"
+                            [class.over]="b.status === 'BREACH'">
+                            </div>
+                        </td>
+                        <td class ="num">{{ b.spent | currency:'USD':'symbol':'1.2-2'}}</td>
+                        <td class ="num">{{ b.limit | currency:'USD':'symbol':'1.2-2'}}</td>
+                        <td>
+                            <span
+                            class="tag"
+                            [class.ok]="b.status === 'OK'"
+                            [class.warn]="b.status === 'CAUTION'"
+                            [class.over]="b.status === 'BREACH'">
+                            {{b.status}}
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
 </div>
