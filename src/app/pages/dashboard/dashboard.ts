@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { BudgetService } from '../../services/budget.service';
-import { BudgetSnapshot } from '../../components/budget-snapshot/budget-snapshot';
+import { BudgetSnapshot } from '../../budget-snapshot/budget-snapshot';
 
 @Component({
   selector: 'app-dashboard',
