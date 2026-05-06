@@ -19,10 +19,10 @@ export const routes: Routes = [
     path: 'dashboard',
     component: Dashboard,
     title: 'Dashboard',
-  }
+  },
   {
-    path: 'budget',
+    path: 'budgets',
     component: Budget,
-    title: 'Budget',
+    title: 'Budgets',
   }
 ];
