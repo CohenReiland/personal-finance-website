@@ -29,12 +29,21 @@ export class TransactionService {
 
     for (const transaction of this.transactions()) {
       if (transaction.Type === 'Expense' ) {
-        sum -= transaction.Amount
-      } else {
-        sum += transaction.Amount;
+        sum += transaction.Amount
       }
     }
     return sum;
+  })
+
+  totalIncome = computed(() => {
+    let income = 0;
+
+    for (const transaction of this.transactions()) {
+      if (transaction.Type === 'Income' ) {
+        income += transaction.Amount
+      }
+    }
+    return income;
   })
 
   async loadTransactions() {

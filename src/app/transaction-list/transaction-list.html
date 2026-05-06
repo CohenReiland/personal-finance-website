@@ -1,6 +1,9 @@
 <div class="container">
+  <p>
+    total transactions | spent | {{ transactionService.totalSpent() }} | Income |
+    {{ transactionService.totalIncome() }}
+  </p>
   <div class="search-section">
-    <p>total transactions test {{ transactionService.totalSpent() }}</p>
     <input type="text" class="input" placeholder="Search transactions..." />
   </div>
 
