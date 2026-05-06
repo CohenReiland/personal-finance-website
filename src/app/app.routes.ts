@@ -5,11 +5,6 @@ import { TransactionList } from './transaction-list/transaction-list';
 
 export const routes: Routes = [
   {
-    path: '', //this rediects the default path to login
-    redirectTo: 'login',
-    pathMatch: 'full',
-  },
-  {
     path: 'signup',
     component: SignUpComponent,
     title: 'Sign Up',
