@@ -1,7 +1,8 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, TRANSLATIONS } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { BudgetService } from '../../services/budget.service';
 import { BudgetSnapshot } from '../../budget-snapshot/budget-snapshot';
+import { TransactionService } from '../../services/transaction-service';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,8 @@ import { BudgetSnapshot } from '../../budget-snapshot/budget-snapshot';
 })
 export class Dashboard {
   private readonly budgetService = inject(BudgetService);
-  
+  public readonly transactionService = inject(TransactionService);
+
   // Budgetservice signals
   readonly totalRemaining = this.budgetService.totalRemaining;
   readonly totalSpent = this.budgetService.totalSpent
