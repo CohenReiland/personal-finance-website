@@ -8,6 +8,11 @@ import {
   orderBy,
   QuerySnapshot,
   Timestamp,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -30,7 +35,6 @@ import { auth, db } from '../firebase.config';
  */
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
-
   // ---------- Auth state as an Observable ----------
 
   /**
@@ -42,11 +46,11 @@ export class BudgetService {
    * onAuthStateChanged is the unsubscribe handle — RxJS calls it when the
    * Observable's consumer unsubscribes.
    */
-  private readonly user$ = new Observable<User | null>(subscriber => {
+  private readonly user$ = new Observable<User | null>((subscriber) => {
     const unsubscribe = onAuthStateChanged(
       auth,
-      user => subscriber.next(user),
-      err => subscriber.error(err)
+      (user) => subscriber.next(user),
+      (err) => subscriber.error(err),
     );
     return unsubscribe;
   });
@@ -60,23 +64,23 @@ export class BudgetService {
    * listener.
    */
   private readonly budgets$: Observable<Budget[]> = this.user$.pipe(
-    switchMap(currentUser => {
+    switchMap((currentUser) => {
       if (!currentUser) {
         return of([] as Budget[]);
       }
 
       const ref = collection(
         db,
-        `users/${currentUser.uid}/budgets`
+        `users/${currentUser.uid}/budgets`,
       ) as CollectionReference<DocumentData>;
 
       const q = query(ref, orderBy('createdAt', 'asc'));
 
-      return new Observable<Budget[]>(subscriber => {
+      return new Observable<Budget[]>((subscriber) => {
         const unsubscribe = onSnapshot(
           q,
           (snapshot: QuerySnapshot<DocumentData>) => {
-            const rows: Budget[] = snapshot.docs.map(doc => {
+            const rows: Budget[] = snapshot.docs.map((doc) => {
               const data = doc.data();
               return {
                 id: doc.id,
@@ -90,11 +94,11 @@ export class BudgetService {
             });
             subscriber.next(rows);
           },
-          err => subscriber.error(err)
+          (err) => subscriber.error(err),
         );
         return unsubscribe;
       });
-    })
+    }),
   );
 
   /**
@@ -110,37 +114,30 @@ export class BudgetService {
    * attached to each entry. This is what most consumers actually want.
    */
   readonly budgetsWithDerived = computed<BudgetWithDerived[]>(() =>
-    this.budgets().map(b => this.enrichBudget(b))
+    this.budgets().map((b) => this.enrichBudget(b)),
   );
 
   // ---------- Derived: aggregates ----------
 
   /** Sum of all budget limits across categories. */
-  readonly totalLimit = computed(() =>
-    this.budgets().reduce((sum, b) => sum + b.limit, 0)
-  );
+  readonly totalLimit = computed(() => this.budgets().reduce((sum, b) => sum + b.limit, 0));
 
   /** Sum of all spending across categories. */
-  readonly totalSpent = computed(() =>
-    this.budgets().reduce((sum, b) => sum + b.spent, 0)
-  );
+  readonly totalSpent = computed(() => this.budgets().reduce((sum, b) => sum + b.spent, 0));
 
   /** Total remaining (can be negative if overall spending exceeds limits). */
-  readonly totalRemaining = computed(() =>
-    this.totalLimit() - this.totalSpent()
-  );
+  readonly totalRemaining = computed(() => this.totalLimit() - this.totalSpent());
 
   /** Number of categories currently over budget. */
-  readonly overBudgetCount = computed(() =>
-    this.budgets().filter(b => b.spent > b.limit).length
-  );
+  readonly overBudgetCount = computed(() => this.budgets().filter((b) => b.spent > b.limit).length);
 
   /** Number of categories at >=80% but not yet over. */
-  readonly cautionCount = computed(() =>
-    this.budgets().filter(b => {
-      const pct = b.limit === 0 ? 0 : (b.spent / b.limit) * 100;
-      return pct >= 80 && pct < 100;
-    }).length
+  readonly cautionCount = computed(
+    () =>
+      this.budgets().filter((b) => {
+        const pct = b.limit === 0 ? 0 : (b.spent / b.limit) * 100;
+        return pct >= 80 && pct < 100;
+      }).length,
   );
 
   // ---------- Pure helpers ----------
@@ -153,31 +150,76 @@ export class BudgetService {
    * it without going back to the service signal.
    */
   enrichBudget(b: Budget): BudgetWithDerived {
-    const percentUsed = b.limit === 0
-      ? 0
-      : Math.min((b.spent / b.limit) * 100, 999);
+    const percentUsed = b.limit === 0 ? 0 : Math.min((b.spent / b.limit) * 100, 999);
     const remaining = b.limit - b.spent;
     const status: BudgetStatus =
-      b.spent > b.limit       ? 'BREACH'
-      : percentUsed >= 80     ? 'CAUTION'
-      :                         'OK';
+      b.spent > b.limit ? 'BREACH' : percentUsed >= 80 ? 'CAUTION' : 'OK';
     return { ...b, percentUsed, remaining, status };
   }
 
   // ---------- Mutations (stubs — Step 5) ----------
 
-  addBudget(input: { category: string; limit: number }): Promise<void> {
-    throw new Error('Not implemented yet — Step 5');
+  // ---------- Mutations ----------
+
+  /**
+   * Add a new budget category for the current user.
+   * Firestore generates the document ID; serverTimestamp() captures
+   * createdAt/updatedAt at the server's clock.
+   *
+   * Resolves once the write is durable on the server (or queued offline).
+   * Throws if no user is signed in or if security rules reject the write.
+   */
+  async addBudget(input: { category: string; limit: number }): Promise<void> {
+    const uid = this.requireUid();
+    const ref = collection(db, `users/${uid}/budgets`) as CollectionReference<DocumentData>;
+    await addDoc(ref, {
+      category: input.category,
+      limit: input.limit,
+      spent: 0,
+      period: 'monthly',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
   }
 
-  updateBudget(
+  /**
+   * Update one or more mutable fields on an existing budget.
+   * Always bumps updatedAt to the current server time.
+   *
+   * Only allows changes to category, limit, or spent — id, period, and
+   * createdAt are intentionally unchangeable.
+   */
+  async updateBudget(
     id: string,
-    changes: Partial<Pick<Budget, 'category' | 'limit' | 'spent'>>
+    changes: Partial<Pick<Budget, 'category' | 'limit' | 'spent'>>,
   ): Promise<void> {
-    throw new Error('Not implemented yet — Step 5');
+    const uid = this.requireUid();
+    const ref = doc(db, `users/${uid}/budgets/${id}`);
+    await updateDoc(ref, {
+      ...changes,
+      updatedAt: serverTimestamp(),
+    });
   }
 
-  deleteBudget(id: string): Promise<void> {
-    throw new Error('Not implemented yet — Step 5');
+  /**
+   * Delete a budget category permanently.
+   * No soft-delete or archive yet — could be added later if needed.
+   */
+  async deleteBudget(id: string): Promise<void> {
+    const uid = this.requireUid();
+    const ref = doc(db, `users/${uid}/budgets/${id}`);
+    await deleteDoc(ref);
+  }
+
+  /**
+   * Returns the current user's UID, or throws if no user is signed in.
+   * Centralizes the null check so each mutation method doesn't repeat it.
+   */
+  private requireUid(): string {
+    const uid = auth.currentUser?.uid;
+    if (!uid) {
+      throw new Error('Cannot perform budget operation: no user signed in.');
+    }
+    return uid;
   }
 }
