@@ -23,7 +23,8 @@ export class SettingsComponent {
   private readonly authService = inject(AuthService);
 
   protected currentUser = this.authService.currentUser();
-  protected submitted = false;
+  protected profileSubmitted = false;
+  protected passwordSubmitted = false;
   protected profileError = '';
   protected passwordError = '';
   protected readonly isLoading = this.authService.isLoading;
@@ -53,7 +54,7 @@ export class SettingsComponent {
 
   // Updates user profile information based on filled out form
   protected async profileSubmit(): Promise<void> {
-    this.submitted = true;
+    this.profileSubmitted = true;
     this.profileError = '';
 
     if (this.profileForm.invalid) {
@@ -72,7 +73,7 @@ export class SettingsComponent {
 
   // Updates password based on form information
   protected async submit(): Promise<void> {
-    this.submitted = true;
+    this.passwordSubmitted = true;
     this.passwordError = '';
 
     if (this.passwordForm.invalid) {

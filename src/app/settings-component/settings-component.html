@@ -22,7 +22,7 @@
               formControlName="firstName"
               [placeholder]="currentUser?.firstName"
             />
-            @if (submitted && profileForm.controls.firstName.invalid) {
+            @if (profileSubmitted && profileForm.controls.firstName.invalid) {
               <div class="form-error">First name is required.</div>
             }
           </div>
@@ -37,7 +37,7 @@
               formControlName="lastName"
               [placeholder]="currentUser?.lastName"
             />
-            @if (submitted && profileForm.controls.lastName.invalid) {
+            @if (profileSubmitted && profileForm.controls.lastName.invalid) {
               <div class="form-error">Last name is required.</div>
             }
           </div>
@@ -52,7 +52,7 @@
               formControlName="email"
               [placeholder]="currentUser?.email"
             />
-            @if (submitted && profileForm.controls.email.invalid) {
+            @if (profileSubmitted && profileForm.controls.email.invalid) {
               <div class="form-error">Email must be a valid email address.</div>
             }
           </div>
@@ -85,7 +85,7 @@
               formControlName="password"
               placeholder="MIN. 6 CHARACTERS"
             />
-            @if (submitted && passwordForm.controls.password.invalid) {
+            @if (passwordSubmitted && passwordForm.controls.password.invalid) {
               <div class="form-error">Password must be at least 6 characters long.</div>
             }
           </div>
@@ -100,7 +100,7 @@
               formControlName="confirmPassword"
               placeholder="RE-ENTER PASSWORD"
             />
-            @if (submitted && passwordForm.hasError('passwordMismatch')) {
+            @if (passwordSubmitted && passwordForm.hasError('passwordMismatch')) {
               <div class="form-error">Passwords do not match.</div>
             }
           </div>
