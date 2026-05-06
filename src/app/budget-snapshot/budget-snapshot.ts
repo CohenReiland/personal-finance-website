@@ -1,7 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
-import { BudgetService } from '../../services/budget.service';
-import { BudgetWithDerived } from '../../models/budget';
+import { BudgetService } from '../services/budget.service';
+import { BudgetWithDerived } from '../models/budget';
 
 @Component({
   selector: 'app-budget-snapshot',
