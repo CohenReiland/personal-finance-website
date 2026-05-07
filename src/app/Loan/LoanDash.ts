@@ -20,38 +20,76 @@ import { FormsModule } from '@angular/forms';
           <button class="btn addition" routerLink="/loan/add">Add Loan</button>
         </div>
       </div>
+      <div class="dashboard-row">
+      <div class="loan-panel">
+      <div class="loan-card">
       @for (loan of loans; track loan.id) {
-        <div (click)="loan.id && editLoan(loan.id)" class="clickable">
-          <div class="form-row">
-            <div>
-                Name: {{ loan.name }}
-            Principal: {{ loan.amount }}
-            Payment Date: {{ loan.lastPaidDate | date: 'MMM d, y' }}
-            Payment Amount: {{ loan.monthlyPayment }}
-            Interest Rate: {{ loan.interestRate }}
-            Notes: {{ loan.notes }}</div>
+        <div (click)="loan.id && editLoan(loan.id)" class="clickable loan-grid">
+          <div class="cell">
+            <div><span class="label">Name:</span><span class="value">{{ loan.name }}</span></div> 
+            <div><span class="label">Principal</span><span class="value">{{ loan.amount }}</span></div>
           </div>
-        </div>
+          <div class="cell"> 
+            <div><span class="label">Payment Date: </span><span class="value">{{ loan.lastPaidDate | date: 'MMM d, y' }}</span></div> 
+            <div><span class="label">Monthly Payment</span><span class="value">{{ loan.monthlyPayment }}</span></div>
+          </div>  
+          <div class="cell"> 
+            <div><span class="label">Interest Rate: </span><span class="value">{{ loan.interestRate }}</span></div>
+            <!--<div><span class="label">Est. Pay-off Time(Months): </span><span class="value"></span>{{getLoanMonths(loan)}}</div>-->
+            <div><span class="label">Notes: </span><span class="value">{{ loan.notes }}</span></div>
+          </div>  
+          </div>
       } @empty {
         <div>
           <span> No Loans, please add one using the button above </span>
         </div>
       }
-    </section>
-    <section>
-      <div>
-        <div style="width:400px; margin:auto;">
-          <canvas baseChart [data]="LoanData" [options]="chartOptions" [type]="'pie'"> </canvas>
-        </div>
+    </div>
+    </div>
+      <div class="chart-panel">
+        <h3>Loan Distribution</h3>
+        <canvas baseChart [data]="LoanData" [options]="chartOptions" [type]="'pie'"> </canvas>
       </div>
+    </div>
     </section>
+    
   `,
   styles: `
+  .dashboard-row {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+}
+.loan-panel {
+    flex: 1;
+    max-width: 650px;
+}
+
+.chart-panel {
+    width: 400px;
+    padding: 20px;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+}
     canvas {
       max-width: 400px;
       margin-top: 20px;
-      background: white;
+      background: #2a2a2a;
     }
+    
+.chart-section {
+    width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #111;
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+}
+
 
     .addition {
       background: var(--accent);
@@ -65,12 +103,7 @@ import { FormsModule } from '@angular/forms';
       font-size: var(--text-14);
       font-weight: 700;
     }
-    .label {
-      background: var(--panel);
-      font-size: calc(var(--text-14) + 1px);
-      font-weight: 600;
-      color: var(--fg-2);
-    }
+
 
     .input,
     .text-box {
@@ -118,6 +151,89 @@ import { FormsModule } from '@angular/forms';
     .loan-row div {
       min-width: 120px;
     }
+    
+.loan-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 700px;
+}
+
+.loan-card {
+    background: var(--panel);
+    padding: 16px 20px;
+    border-radius: 8px;
+    border: 1px solid #2a2a2a;
+}
+.loan-card {
+    background: var(--panel);
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    position: relative;
+}
+
+.loan-card:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: #1f1f1f;
+}
+
+
+
+.loan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+}
+
+.loan-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: #1f1f1f;
+}
+
+
+.loan-grid .cell {
+    border-bottom: 1px solid #1f1f1f;
+    padding-bottom: 6px;
+}
+
+
+.cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.label {
+    font-size: 11px;
+    color: #6fa9ff;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+
+.value {
+    font-size: 14px;
+    color: #fff;
+}
+
+
+.span-2 {
+    grid-column: span 2;
+}
+
 
     .subscription-card .form-row .field {
       display: flex;
@@ -140,9 +256,10 @@ export class LoanDash {
 
   constructor(
     private auth: AuthService,
-    private LoanService: LoanService,
+    private loanService: LoanService,
     private router: Router,
     private cdr: ChangeDetectorRef,
+    
   ) {
     effect(() => {
       const user = this.auth.currentUser(); // ✅ reactive signal
@@ -158,7 +275,7 @@ export class LoanDash {
   }
 
   async getLoans(uid: string) {
-    this.loans = await this.LoanService.LoadLoans(uid);
+    this.loans = await this.loanService.LoadLoans(uid);
     console.log('Loans Loaded', this.loans);
     this.cdr.detectChanges();
     this.LoanData = {
@@ -189,7 +306,7 @@ export class LoanDash {
     const user = this.auth.currentUser();
     if (!user) return;
 
-    await this.LoanService.deleteLoan(user.id, LoanID);
+    await this.loanService.deleteLoan(user.id, LoanID);
     await this.getLoans(user.id);
   }
   totalExpenses() {
@@ -238,4 +355,9 @@ export class LoanDash {
       },
     },
   };
+  
+  getLoanMonths(loan: Loan): number | null {
+  return this.loanService.LoanCalculation(loan);
+  }
+
 }
