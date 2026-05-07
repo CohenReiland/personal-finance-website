@@ -47,6 +47,10 @@
     position: relative;
 }
 
+.sidebar button {
+    position: relative;
+}
+
 .nav-action {
     appearance: none;
     border: 0;

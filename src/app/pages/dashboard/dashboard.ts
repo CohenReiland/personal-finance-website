@@ -3,13 +3,15 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { BudgetService } from '../../services/budget.service';
 import { BudgetSnapshot } from '../../budget-snapshot/budget-snapshot';
 import { TransactionService } from '../../services/transaction-service';
+import { TransactionSnapshot } from '../../transaction-snapshot/transaction-snapshot';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     CurrencyPipe,
     DatePipe,
-    BudgetSnapshot
+    BudgetSnapshot,
+    TransactionSnapshot
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
@@ -31,7 +33,7 @@ export class Dashboard {
   //Fancy local clock - updates once a minute so the Lastsync line is fresh
   readonly today = signal(new Date());
 
-  constructor(){
+  constructor() {
     setInterval(() => this.today.set(new Date()), 60_000);
   }
 

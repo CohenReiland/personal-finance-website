@@ -1,4 +1,4 @@
-import { Injectable, computed } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
 import {
   collection,
   CollectionReference,
@@ -19,6 +19,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Observable, of, switchMap } from 'rxjs';
 import { Budget, BudgetStatus, BudgetWithDerived } from '../models/budget';
 import { auth, db } from '../firebase.config';
+import { TransactionService } from './transaction-service';
 
 /**
  * BudgetService — owns the user's budget categories.
@@ -35,6 +36,7 @@ import { auth, db } from '../firebase.config';
  */
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
+  private readonly transactionService = inject(TransactionService);
   // ---------- Auth state as an Observable ----------
 
   /**
@@ -123,18 +125,22 @@ export class BudgetService {
   readonly totalLimit = computed(() => this.budgets().reduce((sum, b) => sum + b.limit, 0));
 
   /** Sum of all spending across categories. */
-  readonly totalSpent = computed(() => this.budgets().reduce((sum, b) => sum + b.spent, 0));
+  readonly totalSpent = computed(() =>
+    this.budgetsWithDerived().reduce((sum, b) => sum + b.spent, 0),
+  );
 
   /** Total remaining (can be negative if overall spending exceeds limits). */
   readonly totalRemaining = computed(() => this.totalLimit() - this.totalSpent());
 
   /** Number of categories currently over budget. */
-  readonly overBudgetCount = computed(() => this.budgets().filter((b) => b.spent > b.limit).length);
+  readonly overBudgetCount = computed(
+    () => this.budgetsWithDerived().filter((b) => b.spent > b.limit).length,
+  );
 
   /** Number of categories at >=80% but not yet over. */
   readonly cautionCount = computed(
     () =>
-      this.budgets().filter((b) => {
+      this.budgetsWithDerived().filter((b) => {
         const pct = b.limit === 0 ? 0 : (b.spent / b.limit) * 100;
         return pct >= 80 && pct < 100;
       }).length,
@@ -150,11 +156,32 @@ export class BudgetService {
    * it without going back to the service signal.
    */
   enrichBudget(b: Budget): BudgetWithDerived {
-    const percentUsed = b.limit === 0 ? 0 : Math.min((b.spent / b.limit) * 100, 999);
-    const remaining = b.limit - b.spent;
+    const spent = this.spentByCategory().get(this.normalizeCategory(b.category)) ?? 0;
+    const percentUsed = b.limit === 0 ? 0 : Math.min((spent / b.limit) * 100, 999);
+    const remaining = b.limit - spent;
     const status: BudgetStatus =
-      b.spent > b.limit ? 'BREACH' : percentUsed >= 80 ? 'CAUTION' : 'OK';
-    return { ...b, percentUsed, remaining, status };
+      spent > b.limit ? 'BREACH' : percentUsed >= 80 ? 'CAUTION' : 'OK';
+    return { ...b, spent, percentUsed, remaining, status };
+  }
+
+  private readonly spentByCategory = computed(() => {
+    const totals = new Map<string, number>();
+
+    for (const transaction of this.transactionService.transactions()) {
+      if (transaction.Type !== 'Expense') {
+        continue;
+      }
+
+      const categoryKey = this.normalizeCategory(transaction.Category);
+      const current = totals.get(categoryKey) ?? 0;
+      totals.set(categoryKey, current + transaction.Amount);
+    }
+
+    return totals;
+  });
+
+  private normalizeCategory(value: string): string {
+    return value.trim().toLowerCase();
   }
 
   // ---------- Mutations (stubs — Step 5) ----------
