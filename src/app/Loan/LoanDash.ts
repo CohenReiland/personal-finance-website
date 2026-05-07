@@ -23,12 +23,13 @@ import { FormsModule } from '@angular/forms';
       @for (loan of loans; track loan.id) {
         <div (click)="loan.id && editLoan(loan.id)" class="clickable">
           <div class="form-row">
-            <div>Name: {{ loan.name }}</div>
-            <div>Principal: {{ loan.amount }}</div>
-            <div>Payment Date: {{ loan.lastPaidDate | date: 'MMM d, y' }}</div>
-            <div>Payment Amount: {{ loan.monthlyPayment }}</div>
-            <div>Interest Rate: {{ loan.interestRate }}</div>
-            <div>Notes: {{ loan.notes }}</div>
+            <div>
+                Name: {{ loan.name }}
+            Principal: {{ loan.amount }}
+            Payment Date: {{ loan.lastPaidDate | date: 'MMM d, y' }}
+            Payment Amount: {{ loan.monthlyPayment }}
+            Interest Rate: {{ loan.interestRate }}
+            Notes: {{ loan.notes }}</div>
           </div>
         </div>
       } @empty {

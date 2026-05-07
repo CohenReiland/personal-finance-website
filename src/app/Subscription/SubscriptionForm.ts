@@ -29,30 +29,30 @@ import { SubscriptionService } from "./SubscriptionService";
                 <div class="form-row">
                         <div class="label"> Name </div>
                         <div class="field">
-                        <input class="input" type="text" placeholder="Subscription Name" [(ngModel)]="subscription.name"/>
+                        <input class="input" type="text" placeholder="Subscription Name" [(ngModel)]="subscription.name"name="name"/>
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="label"> Amount </div>
                         <div class="field">
-                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="subscription.amount"/>
+                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="subscription.amount" name="amount"/>
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="label">  Renewal Date </div>
                         <div class="field">
-                        <input class="input" type="date" placeholder="" [(ngModel)]="subscription.renewalDate"/>
+                        <input class="input" type="date" placeholder="" [(ngModel)]="subscription.renewalDate" name="renewalDate"/>
                     </div>
                     <div class="form-row">
                         <div class="label"> Notes </div>
                         <div class="field">
-                        <textarea class="text-box" rows="4" placeholder="Type Text Here" [(ngModel)] ="subscription.notes"></textarea>
+                        <textarea class="text-box" rows="4" placeholder="Type Text Here" [(ngModel)] ="subscription.notes" name="notes"></textarea>
                     </div>
                 </div>
                 </div>
                 <div class="row" style="padding-top: var(--space-md)">
-                    <button class="btn cancel" type="submit" routerLink="/subscription" > Cancel</button>
-                    <button class="btn confirm" (click)="confirm()"> Confirm </button>
+                    <button class="btn cancel" type="button" routerLink="/subscription" > Cancel</button>
+                    <button class="btn confirm" type="button" (click)="confirm()"> Confirm </button>
                 </div>
             </form>
     </div>
@@ -161,8 +161,10 @@ import { SubscriptionService } from "./SubscriptionService";
 
         const Sub: Subscription = {
             ...this.subscription,
+            name: this.subscription.name,
             amount: Number(this.subscription.amount),
-            renewalDate: new Date(this.subscription.renewalDate).toISOString()
+            renewalDate: this.subscription.renewalDate ? new Date(this.subscription.renewalDate).toISOString() : "",
+            notes: this.subscription.notes,
        };
 
        if(this.SubscriptionID) {
