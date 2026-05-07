@@ -65,7 +65,7 @@
       <span><span class="num">02</span> &nbsp; Reset Password</span>
     </div>
     <div class="card-body stack-lg">
-      <form class="stack" [formGroup]="passwordForm" (ngSubmit)="submit()" novalidate>
+      <form class="stack" [formGroup]="passwordForm" (ngSubmit)="passwordSubmit()" novalidate>
         <div class="form-row">
           <div class="label">PASSWORD</div>
           <div class="field">

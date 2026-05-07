@@ -80,13 +80,14 @@ export class SettingsComponent {
 
     try {
       await this.authService.updateUser(this.currentUser()!.id, { firstName, lastName, email });
+      await this.router.navigate(['/dashboard']);
     } catch (error: unknown) {
       this.profileError = 'Failed to create account. Please try again.';
     }
   }
 
   // Updates password based on form information
-  protected async submit(): Promise<void> {
+  protected async passwordSubmit(): Promise<void> {
     this.passwordSubmitted = true;
     this.passwordError = '';
 
@@ -99,6 +100,7 @@ export class SettingsComponent {
 
     try {
       await this.authService.changePassword(password);
+      await this.router.navigate(['/dashboard']);
     } catch (error: unknown) {
       this.passwordError = 'Failed to update password. Please try again.';
     }
