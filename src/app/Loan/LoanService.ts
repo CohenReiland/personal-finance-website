@@ -44,12 +44,16 @@ export class LoanService{
         let M = loan.monthlyPayment;
         let PT = loan.amount;
         
+          if (!IR || !M || !PT) return null;
+
         let LoanNumerator = Math.log10(M / (M - (PT*IR)));
         let LoanDenominator = Math.log10(1 + IR);
         try{
         n = LoanNumerator / LoanDenominator
+        return isFinite(n) ? n : null;
         } catch(error: unknown){
             this.LoanError = "Error! Payment too low or invalid interest rate";
+            return null;
         }
        }
     }

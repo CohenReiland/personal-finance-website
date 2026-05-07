@@ -12,35 +12,59 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
   selector: 'app-subscription',
   imports: [CommonModule, RouterModule, BaseChartDirective],
   template: `
-    <section class="subscriptionPage">
-      <div class="subscription-header">
-        <div class="subscription-brand">
-          <span class="SP"> </span>Subscriptions |
-          <button class="btn addition" routerLink="/subscription/add">Add Subscription</button>
-        </div>
-      </div>
-      @for (Sub of subscriptions; track Sub.id) {
-        <div (click)="Sub.id && editSubscription(Sub.id)" class="clickable">
-          <div class="form-row">
-            <div>
-              Name: {{ Sub.name }} Amount: {{ Sub.name }} Renewal: {{ Sub.renewalDate | date: 'MMM d, y' }} Notes:
-              {{ Sub.notes }}
+<section class="subscriptionPage">
+
+  <!-- HEADER -->
+  <div class="subscription-header">
+    <div class="subscription-brand">
+      <span class="SP"></span>Subscriptions |
+      <button class="btn addition" routerLink="/subscription/add">
+        Add Subscription
+      </button>
+    </div>
+  </div>
+  <div class="dashboard-row">
+    <div class="loan-panel">
+      @for (sub of subscriptions; track sub.id) {
+        <div class="loan-card clickable">
+          <div class="loan-grid">
+            <div class="cell">
+              <span class="label">Name</span>
+              <span class="value">{{ sub.name }}</span>
+            </div>
+
+            <div class="cell">
+              <span class="label">Amount</span>
+              <span class="value">{{ sub.amount }}</span>
+            </div>
+
+            <div class="cell">
+              <span class="label">Renewal Date</span>
+              <span class="value">
+                {{ sub.renewalDate | date:'MMM d, y' }}
+              </span>
+            </div>
+            <div class="cell span-2">
+              <span class="label">Notes</span>
+              <span class="value">{{ sub.notes }}</span>
             </div>
           </div>
         </div>
       } @empty {
-        <div>
-          <span> No Subscriptions, please add one using the button above </span>
-        </div>
+        <div>No subscriptions yet</div>
       }
-    </section>
-    <section>
-      <div>
-        <div>
-          <canvas baseChart [data]="SubData" [options]="chartOptions" type="pie"></canvas>
-        </div>
-      </div>
-    </section>
+    </div>
+    <div class="chart-panel">
+      <h3>Subscription Distribution</h3>
+      <canvas
+        baseChart
+        [data]="SubData"
+        [type]="'pie'">
+      </canvas>
+    </div>
+  </div>
+</section>
+
   `,
   styles: `
      canvas {
@@ -114,6 +138,94 @@ import { ChartData, ChartOptions, ChartType } from 'chart.js';
       width: 447px;
       border: 1px solid #2a2a2a;
     }
+    .dashboard-row {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.loan-panel {
+    flex: 1;
+    max-width: 650px;
+}
+
+.chart-panel {
+    width: 400px;
+    padding: 20px;
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+}
+
+.loan-card {
+    background: var(--panel);
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+     position: relative;
+}
+
+.loan-grid .cell {
+    border-bottom: 1px solid #1f1f1f;
+    padding-bottom: 6px;
+}
+
+
+.loan-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 20px;
+    position: relative;
+}
+
+
+.loan-grid::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: #1f1f1f;
+}
+
+
+.cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.label {
+    font-size: 11px;
+    color: #6fa9ff;
+    text-transform: uppercase;
+}
+
+.value {
+    font-size: 14px;
+    color: white;
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+
+.loan-card:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 10%;
+    width: 80%;
+    height: 1px;
+    background: #1f1f1f;
+}
+
   `,
 })
 export class SubscriptionDash {
