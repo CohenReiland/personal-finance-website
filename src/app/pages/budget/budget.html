@@ -3,13 +3,12 @@
   <h1>BUDGET<span class="punct">.</span></h1>
   <div class="meta">
     <strong>{{ headerMeta() }}</strong>
-    TOTAL ALLOCATED {{ totalLimit() | currency:'USD':'symbol':'1.0-0' }}<br>
-    SPENT {{ totalSpent() | currency:'USD':'symbol':'1.2-2' }}
+    TOTAL ALLOCATED {{ totalLimit() | currency: 'USD' : 'symbol' : '1.0-0' }}<br />
+    SPENT {{ totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
   </div>
 </div>
 
 <div class="budget-grid">
-
   <!-- LEFT: Add Form -->
   <div>
     <div class="section-label">
@@ -26,79 +25,128 @@
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="form-row">
           <div class="label">CATEGORY *</div>
-          <input class="input" formControlName="category" placeholder="e.g. GROCERIES"
-                 maxlength="40" [attr.disabled]="isSubmitting() ? true : null">
+          <select
+            class="select"
+            formControlName="category"
+            name="budget-category"
+            id="budget-category"
+            [attr.disabled]="isSubmitting() ? true : null"
+          >
+            <option value="" disabled>Select category</option>
+            <option value="work">work</option>
+            <option value="personal">personal</option>
+            <option value="Grocery">Grocery</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Rent">Rent</option>
+            <option value="other">other</option>
+          </select>
         </div>
 
         <div class="form-row">
           <div class="label">LIMIT_USD *</div>
-          <input class="input" formControlName="limit" type="number" inputmode="decimal"
-                 placeholder="0.00" step="0.01" min="0.01" max="999999"
-                 [attr.disabled]="isSubmitting() ? true : null">
+          <input
+            class="input"
+            formControlName="limit"
+            type="number"
+            inputmode="decimal"
+            placeholder="0.00"
+            step="0.01"
+            min="0.01"
+            max="999999"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
         </div>
 
         <div class="form-row">
           <div class="label">PERIOD</div>
-          <input class="input" value="MONTHLY" readonly>
+          <input class="input" value="MONTHLY" readonly />
         </div>
 
         @if (form.get('category')?.touched && form.get('category')?.invalid) {
-          <div class="form-row" style="border-bottom: none;">
-            <div class="label" style="background: transparent; border-right: none;"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm);">
-              @if (form.get('category')?.hasError('required')) { ▸ Category is required. }
-              @else if (form.get('category')?.hasError('maxlength')) { ▸ Category must be 40 characters or fewer. }
-              @else if (form.get('category')?.hasError('whitespaceOnly')) { ▸ Category cannot be blank. }
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              @if (form.get('category')?.hasError('required')) {
+                ▸ Category is required.
+              } @else if (form.get('category')?.hasError('maxlength')) {
+                ▸ Category must be 40 characters or fewer.
+              } @else if (form.get('category')?.hasError('whitespaceOnly')) {
+                ▸ Category cannot be blank.
+              }
             </div>
           </div>
         }
         @if (form.get('limit')?.touched && form.get('limit')?.invalid) {
-          <div class="form-row" style="border-bottom: none;">
-            <div class="label" style="background: transparent; border-right: none;"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm);">
-              @if (form.get('limit')?.hasError('required')) { ▸ Limit is required. }
-              @else if (form.get('limit')?.hasError('min')) { ▸ Limit must be greater than $0. }
-              @else if (form.get('limit')?.hasError('max')) { ▸ Limit must be $999,999 or less. }
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              @if (form.get('limit')?.hasError('required')) {
+                ▸ Limit is required.
+              } @else if (form.get('limit')?.hasError('min')) {
+                ▸ Limit must be greater than $0.
+              } @else if (form.get('limit')?.hasError('max')) {
+                ▸ Limit must be $999,999 or less.
+              }
             </div>
           </div>
         }
 
-        <div class="row" style="padding: var(--space-md);">
+        <div class="row" style="padding: var(--space-md)">
           <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
-            @if (isSubmitting()) { ▸ SAVING... } @else { ▸ EXECUTE }
+            @if (isSubmitting()) {
+              ▸ SAVING...
+            } @else {
+              ▸ EXECUTE
+            }
           </button>
-          <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">RESET</button>
+          <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
+            RESET
+          </button>
         </div>
 
         @if (submitSuccess()) {
-          <div class="form-row" style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm);">
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
             <span class="text-ok text-sm">▸ {{ submitSuccess() }}</span>
           </div>
         }
         @if (submitError()) {
-          <div class="form-row" style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm);">
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
             <span class="text-bad text-sm">▸ {{ submitError() }}</span>
           </div>
         }
       </form>
     </div>
 
-    <div class="section-label" style="margin-top: var(--space-xl);">
+    <div class="section-label" style="margin-top: var(--space-xl)">
       <span><span class="num">02</span> &nbsp; SUMMARY</span>
       <span>30d</span>
     </div>
 
-    <div class="stat-grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
       <div class="stat">
         <div class="stat-label"><span class="ticker">▸</span>TOTAL LIMIT</div>
-        <div class="stat-value">{{ totalLimit() | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="stat-value">{{ totalLimit() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
         <div class="stat-delta flat">{{ budgets().length }} CATEGORIES</div>
       </div>
       <div class="stat">
         <div class="stat-label"><span class="ticker">▸</span>BREACH</div>
         <div class="stat-value">{{ overBudgetCount() }}</div>
-        <div class="stat-delta" [class.up]="overBudgetCount() === 0" [class.down]="overBudgetCount() > 0">
-          @if (overBudgetCount() > 0) { OVER BUDGET } @else { ALL CLEAR }
+        <div
+          class="stat-delta"
+          [class.up]="overBudgetCount() === 0"
+          [class.down]="overBudgetCount() > 0"
+        >
+          @if (overBudgetCount() > 0) {
+            OVER BUDGET
+          } @else {
+            ALL CLEAR
+          }
         </div>
       </div>
     </div>
@@ -118,20 +166,28 @@
       </div>
 
       @if (deleteError()) {
-        <div style="padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--bad); background: rgba(255, 64, 64, 0.05);">
+        <div
+          style="
+            padding: var(--space-sm) var(--space-md);
+            border-bottom: 1px solid var(--bad);
+            background: rgba(255, 64, 64, 0.05);
+          "
+        >
           <span class="text-bad text-sm">▸ {{ deleteError() }}</span>
         </div>
       }
 
       @if (isEmpty()) {
         <div class="card-body">
-          <p class="text-fg-3 text-sm">No budgets yet. Add your first category using the form on the left.</p>
+          <p class="text-fg-3 text-sm">
+            No budgets yet. Add your first category using the form on the left.
+          </p>
         </div>
       } @else {
         <table class="tbl">
           <thead>
             <tr>
-              <th style="width: 24px;">#</th>
+              <th style="width: 24px">#</th>
               <th>CATEGORY</th>
               <th class="num">SPENT</th>
               <th class="num">LIMIT</th>
@@ -142,32 +198,56 @@
           </thead>
           <tbody>
             @for (b of budgets(); track b.id; let i = $index) {
-
               @if (editingId() !== b.id) {
                 <tr>
                   <td>{{ (i + 1).toString().padStart(2, '0') }}</td>
                   <td>
                     <div class="cat">{{ b.category }}</div>
-                    <div class="bar" [style.--w.%]="b.percentUsed"
-                         [class.warn]="b.status === 'CAUTION'" [class.over]="b.status === 'BREACH'"></div>
+                    <div
+                      class="bar"
+                      [style.--w.%]="b.percentUsed"
+                      [class.warn]="b.status === 'CAUTION'"
+                      [class.over]="b.status === 'BREACH'"
+                    ></div>
                   </td>
-                  <td class="num">{{ b.spent | currency:'USD':'symbol':'1.2-2' }}</td>
-                  <td class="num">{{ b.limit | currency:'USD':'symbol':'1.2-2' }}</td>
-                  <td class="num pct" [class.warn]="b.status === 'CAUTION'" [class.over]="b.status === 'BREACH'">
-                    {{ b.percentUsed | number:'1.1-1' }}%
+                  <td class="num">{{ b.spent | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
+                  <td class="num">{{ b.limit | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
+                  <td
+                    class="num pct"
+                    [class.warn]="b.status === 'CAUTION'"
+                    [class.over]="b.status === 'BREACH'"
+                  >
+                    {{ b.percentUsed | number: '1.1-1' }}%
                   </td>
                   <td>
-                    <span class="tag" [class.ok]="b.status === 'OK'" [class.warn]="b.status === 'CAUTION'" [class.over]="b.status === 'BREACH'">
+                    <span
+                      class="tag"
+                      [class.ok]="b.status === 'OK'"
+                      [class.warn]="b.status === 'CAUTION'"
+                      [class.over]="b.status === 'BREACH'"
+                    >
                       {{ b.status }}
                     </span>
                   </td>
                   <td>
                     <div class="row-actions">
-                      <button class="btn-icon" (click)="startEdit(b)"
-                              [disabled]="editingId() !== null || deletingId() !== null">EDIT</button>
-                      <button class="btn-icon danger" (click)="deleteBudget(b)"
-                              [disabled]="editingId() !== null || deletingId() !== null">
-                        @if (deletingId() === b.id) { ... } @else { DEL }
+                      <button
+                        class="btn-icon"
+                        (click)="startEdit(b)"
+                        [disabled]="editingId() !== null || deletingId() !== null"
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        class="btn-icon danger"
+                        (click)="deleteBudget(b)"
+                        [disabled]="editingId() !== null || deletingId() !== null"
+                      >
+                        @if (deletingId() === b.id) {
+                          ...
+                        } @else {
+                          DEL
+                        }
                       </button>
                     </div>
                   </td>
@@ -178,55 +258,114 @@
                 <tr class="editing" [formGroup]="editForm">
                   <td>{{ (i + 1).toString().padStart(2, '0') }}</td>
                   <td>
-                    <input class="input-inline" formControlName="category" placeholder="CATEGORY"
-                           maxlength="40" [attr.disabled]="isUpdating() ? true : null">
+                    <select
+                      class="select"
+                      formControlName="category"
+                      name="budget-category-edit"
+                      id="budget-category-edit"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    >
+                      <option value="" disabled>Select category</option>
+                      <option value="work">work</option>
+                      <option value="personal">personal</option>
+                      <option value="Grocery">Grocery</option>
+                      <option value="Shopping">Shopping</option>
+                      <option value="Rent">Rent</option>
+                      <option value="other">other</option>
+                    </select>
                   </td>
-                  <td class="num">{{ b.spent | currency:'USD':'symbol':'1.2-2' }}</td>
+                  <td class="num">{{ b.spent | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
                   <td class="num">
-                    <input class="input-inline num" formControlName="limit" type="number" inputmode="decimal"
-                           step="0.01" min="0.01" max="999999"
-                           [attr.disabled]="isUpdating() ? true : null">
+                    <input
+                      class="input-inline num"
+                      formControlName="limit"
+                      type="number"
+                      inputmode="decimal"
+                      step="0.01"
+                      min="0.01"
+                      max="999999"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
                   </td>
-                  <td class="num pct" [class.warn]="b.status === 'CAUTION'" [class.over]="b.status === 'BREACH'">
-                    {{ b.percentUsed | number:'1.1-1' }}%
+                  <td
+                    class="num pct"
+                    [class.warn]="b.status === 'CAUTION'"
+                    [class.over]="b.status === 'BREACH'"
+                  >
+                    {{ b.percentUsed | number: '1.1-1' }}%
                   </td>
                   <td>
-                    <span class="tag" [class.ok]="b.status === 'OK'" [class.warn]="b.status === 'CAUTION'" [class.over]="b.status === 'BREACH'">
+                    <span
+                      class="tag"
+                      [class.ok]="b.status === 'OK'"
+                      [class.warn]="b.status === 'CAUTION'"
+                      [class.over]="b.status === 'BREACH'"
+                    >
                       {{ b.status }}
                     </span>
                   </td>
                   <td>
                     <div class="row-actions">
-                      <button class="btn-icon save" (click)="saveEdit()" [disabled]="editForm.invalid || isUpdating()">
-                        @if (isUpdating()) { ... } @else { SAVE }
+                      <button
+                        class="btn-icon save"
+                        (click)="saveEdit()"
+                        [disabled]="editForm.invalid || isUpdating()"
+                      >
+                        @if (isUpdating()) {
+                          ...
+                        } @else {
+                          SAVE
+                        }
                       </button>
-                      <button class="btn-icon" (click)="cancelEdit()" [disabled]="isUpdating()">CANCEL</button>
+                      <button class="btn-icon" (click)="cancelEdit()" [disabled]="isUpdating()">
+                        CANCEL
+                      </button>
                     </div>
                   </td>
                 </tr>
 
                 @if (updateError()) {
                   <tr class="editing-error">
-                    <td colspan="7" class="text-bad text-sm" style="padding: var(--space-sm) var(--space-md);">
+                    <td
+                      colspan="7"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
                       ▸ {{ updateError() }}
                     </td>
                   </tr>
                 }
                 @if (editForm.get('category')?.touched && editForm.get('category')?.invalid) {
                   <tr class="editing-error">
-                    <td colspan="7" class="text-bad text-sm" style="padding: var(--space-sm) var(--space-md);">
-                      @if (editForm.get('category')?.hasError('required')) { ▸ Category is required. }
-                      @else if (editForm.get('category')?.hasError('maxlength')) { ▸ Category must be 40 characters or fewer. }
-                      @else if (editForm.get('category')?.hasError('whitespaceOnly')) { ▸ Category cannot be blank. }
+                    <td
+                      colspan="7"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      @if (editForm.get('category')?.hasError('required')) {
+                        ▸ Category is required.
+                      } @else if (editForm.get('category')?.hasError('maxlength')) {
+                        ▸ Category must be 40 characters or fewer.
+                      } @else if (editForm.get('category')?.hasError('whitespaceOnly')) {
+                        ▸ Category cannot be blank.
+                      }
                     </td>
                   </tr>
                 }
                 @if (editForm.get('limit')?.touched && editForm.get('limit')?.invalid) {
                   <tr class="editing-error">
-                    <td colspan="7" class="text-bad text-sm" style="padding: var(--space-sm) var(--space-md);">
-                      @if (editForm.get('limit')?.hasError('required')) { ▸ Limit is required. }
-                      @else if (editForm.get('limit')?.hasError('min')) { ▸ Limit must be greater than $0. }
-                      @else if (editForm.get('limit')?.hasError('max')) { ▸ Limit must be $999,999 or less. }
+                    <td
+                      colspan="7"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      @if (editForm.get('limit')?.hasError('required')) {
+                        ▸ Limit is required.
+                      } @else if (editForm.get('limit')?.hasError('min')) {
+                        ▸ Limit must be greater than $0.
+                      } @else if (editForm.get('limit')?.hasError('max')) {
+                        ▸ Limit must be $999,999 or less.
+                      }
                     </td>
                   </tr>
                 }
@@ -237,5 +376,4 @@
       }
     </div>
   </div>
-
 </div>

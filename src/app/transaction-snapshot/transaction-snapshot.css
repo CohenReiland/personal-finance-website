@@ -1,0 +1,18 @@
+.card {
+  color: white;
+}
+
+.tbl th.num,
+.tbl td.num {
+  text-align: left;
+}
+
+.neg {
+  color: var(--bad);
+}
+
+.pos {
+  color: var(--ok);
+}
+
+

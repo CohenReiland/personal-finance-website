@@ -24,6 +24,13 @@ export class TransactionService {
 
   transactionCount = computed(() => this.transactions().length);
 
+  recentTransactions = computed(() => {
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    
+    return this.transactions().filter(t => t.Date >= sevenDaysAgo);
+  });
+
   constructor() {
     effect(() => {
       const userId = this.authService.currentUser()?.id;

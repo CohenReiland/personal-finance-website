@@ -1,0 +1,40 @@
+<div class="card">
+  <div class="card-head">
+    <span class="id">▸ TRANSACTION.SNAPSHOT</span>
+    <span class="meta">{{ headerMeta() }}</span>
+  </div>
+  @if (isEmpty()) {
+    <div class="card-body">
+      <p class="text-fg-3 text-sm">
+        No recent transactions. Start tracking your expenses from the Transactions page.
+      </p>
+    </div>
+  } @else {
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>NAME</th>
+          <th>CATEGORY</th>
+          <th class="num">AMOUNT</th>
+          <th>DATE</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of displayTransactions(); track t.id ?? $index; let i = $index) {
+          <tr>
+            <td>{{ (i + 1).toString().padStart(2, '0') }}</td>
+            <td>{{ t.Name }}</td>
+            <td>
+              <div class="cat">{{ t.Category }}</div>
+            </td>
+            <td class="num" [class.neg]="t.Type === 'Expense'" [class.pos]="t.Type === 'Income'">
+              {{ t.Type === 'Expense' ? '−' : '+' }}${{ t.Amount }}
+            </td>
+            <td>{{ t.Date | date: 'MM/dd/yyyy' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
