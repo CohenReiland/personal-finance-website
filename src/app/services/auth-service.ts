@@ -110,6 +110,12 @@ export class AuthService {
     // finds the user document by ID and updates with new information
     const userRef = doc(db, 'users', id);
     await updateDoc(userRef, user);
+
+    // Updates the local current user signal
+    const existing = this.currentUser();
+    if (existing && existing.id === id) {
+      this.currentUser.set({ ...existing, ...user });
+    }
   }
 
   // Resets a user's password by sending an email (For login page)
