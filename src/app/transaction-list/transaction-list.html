@@ -68,12 +68,15 @@
               id="transaction-category"
               [value]="editingTransaction?.Category ?? 'personal'"
             >
-              <option value="work">work</option>
-              <option value="personal">personal</option>
+              <option value="" disabled>Select category</option>
+              <option value="work">Salary</option>
+              <option value="personal">Personal</option>
               <option value="Grocery">Grocery</option>
               <option value="Shopping">Shopping</option>
               <option value="Rent">Rent</option>
-              <option value="other">other</option>
+              <option value="Rent">Food</option>
+              <option value="Rent">Health</option>
+              <option value="other">Other</option>
             </select>
           </div>
 

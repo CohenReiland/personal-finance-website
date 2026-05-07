@@ -9,6 +9,6 @@ export interface Transaction {
     Type: ExpenseType
 }
 
-export type TransactionCategory = 'work' | 'personal' | 'Grocery' | 'Shopping' | 'Rent' | 'other';
+export type TransactionCategory = 'Salary' | 'Personal' | 'Grocery' | 'Shopping' | 'Rent' | 'Other';
 
 export type ExpenseType = 'Income' | 'Expense'
