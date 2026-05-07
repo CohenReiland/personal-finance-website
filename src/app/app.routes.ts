@@ -4,6 +4,7 @@ import { LoginComponent } from './login-component/login-component';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Budget } from './pages/budget/budget';
 import { TransactionList } from './transaction-list/transaction-list';
+import { SettingsComponent } from './settings-component/settings-component';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase.config';
 import { inject } from '@angular/core';
@@ -68,6 +69,12 @@ export const routes: Routes = [
     path: 'transactions',
     component: TransactionList,
     title: 'Transactions',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    title: 'Settings',
     canActivate: [authGuard],
   },
 ];

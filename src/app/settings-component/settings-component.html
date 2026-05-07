@@ -1,0 +1,121 @@
+<div class="page-head">
+  <h1>Settings<span class="punct">.</span></h1>
+  <div class="meta">
+    <!-- <strong>{{ today | date: 'MM / dd / yyyy' }}</strong
+    ><br /> -->
+  </div>
+</div>
+
+<div class="grid-dash">
+  <div>
+    <div class="section-label">
+      <span><span class="num">01</span> &nbsp; Edit Profile</span>
+    </div>
+    <div class="card-body stack-lg">
+      <form class="stack" [formGroup]="profileForm" (ngSubmit)="profileSubmit()" novalidate>
+        <div class="form-row">
+          <div class="label">FIRST NAME</div>
+          <div class="field">
+            <input
+              class="input"
+              type="text"
+              formControlName="firstName"
+              [placeholder]="currentUser?.firstName"
+            />
+            @if (profileSubmitted && profileForm.controls.firstName.invalid) {
+              <div class="form-error">First name is required.</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="label">LAST NAME</div>
+          <div class="field">
+            <input
+              class="input"
+              type="text"
+              formControlName="lastName"
+              [placeholder]="currentUser?.lastName"
+            />
+            @if (profileSubmitted && profileForm.controls.lastName.invalid) {
+              <div class="form-error">Last name is required.</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="label">EMAIL</div>
+          <div class="field">
+            <input
+              class="input"
+              type="email"
+              formControlName="email"
+              [placeholder]="currentUser?.email"
+            />
+            @if (profileSubmitted && profileForm.controls.email.invalid) {
+              <div class="form-error">Email must be a valid email address.</div>
+            }
+          </div>
+        </div>
+        @if (profileError) {
+          <div class="form-error">{{ profileError }}</div>
+        }
+
+        <div class="row" style="padding-top: var(--space-md)">
+          <button class="btn btn-primary" type="submit" [disabled]="isLoading()">
+            {{ isLoading() ? 'Updating...' : 'Update Profile' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label">
+      <span><span class="num">02</span> &nbsp; Reset Password</span>
+    </div>
+    <div class="card-body stack-lg">
+      <form class="stack" [formGroup]="passwordForm" (ngSubmit)="submit()" novalidate>
+        <div class="form-row">
+          <div class="label">PASSWORD</div>
+          <div class="field">
+            <input
+              class="input"
+              type="password"
+              formControlName="password"
+              placeholder="MIN. 6 CHARACTERS"
+            />
+            @if (passwordSubmitted && passwordForm.controls.password.invalid) {
+              <div class="form-error">Password must be at least 6 characters long.</div>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="label">CONFIRM PW</div>
+          <div class="field">
+            <input
+              class="input"
+              type="password"
+              formControlName="confirmPassword"
+              placeholder="RE-ENTER PASSWORD"
+            />
+            @if (passwordSubmitted && passwordForm.hasError('passwordMismatch')) {
+              <div class="form-error">Passwords do not match.</div>
+            }
+          </div>
+        </div>
+
+        @if (passwordError) {
+          <div class="form-error">{{ passwordError }}</div>
+        }
+
+        <div class="row" style="padding-top: var(--space-md)">
+          <button class="btn btn-primary" type="submit" [disabled]="isLoading()">
+            {{ isLoading() ? 'Updating...' : 'UPDATE PASSWORD' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
