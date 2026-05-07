@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import {
   addDoc,
   collection,
@@ -7,7 +7,7 @@ import {
   getDocs,
   query,
   updateDoc,
-  orderBy,
+  where,
   Timestamp,
 } from 'firebase/firestore';
 import { db } from '../firebase.config';
@@ -23,6 +23,19 @@ export class TransactionService {
   authService = inject(AuthService);
 
   transactionCount = computed(() => this.transactions().length);
+
+  constructor() {
+    effect(() => {
+      const userId = this.authService.currentUser()?.id;
+
+      if (!userId) {
+        this.transactions.set([]);
+        return;
+      }
+
+      void this.loadTransactions(userId);
+    });
+  }
 
   totalSpent = computed(() => {
     let sum = 0;
@@ -46,8 +59,13 @@ export class TransactionService {
     return income;
   })
 
-  async loadTransactions() {
-    const q = query(this.transactionCollection, orderBy('Date', 'desc'));
+  async loadTransactions(userId = this.authService.currentUser()?.id) {
+    if (!userId) {
+      this.transactions.set([]);
+      return;
+    }
+
+    const q = query(this.transactionCollection, where('userId', '==', userId));
     const snapshot = await getDocs(q);
 
     const data = snapshot.docs.map((docSnap) => {
@@ -75,6 +93,8 @@ export class TransactionService {
         id: docSnap.id,
       } satisfies Transaction;
     });
+
+    data.sort((left, right) => right.Date.getTime() - left.Date.getTime());
 
     this.transactions.set(data);
   }
