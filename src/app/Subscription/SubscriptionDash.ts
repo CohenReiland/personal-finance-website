@@ -208,7 +208,7 @@ export class SubscriptionDash {
     datasets: [
       {
         data: this.subscriptions.map((v) => v.amount),
-        backgroundColor: ['#3d9eff', '#72FF13', '#E60000'],
+        backgroundColor: ['#3d9eff', '#72FF13', '#E60000','#FFFF33', '#FF5E00', '#BF00FF'],
        // borderColor: '#2a2a2a',
        // borderWidth: 2,
       },

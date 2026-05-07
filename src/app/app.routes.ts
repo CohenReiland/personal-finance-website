@@ -90,7 +90,7 @@ export const routes: Routes = [
   {
     path: 'loan/:id/edit',
     component: LoanForm,
-    title: 'Edit Loan'
+    title: 'Edit Loan',
     canActivate: [authGuard],
   },
   {
