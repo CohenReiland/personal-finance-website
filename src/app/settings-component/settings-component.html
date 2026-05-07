@@ -16,12 +16,7 @@
         <div class="form-row">
           <div class="label">FIRST NAME</div>
           <div class="field">
-            <input
-              class="input"
-              type="text"
-              formControlName="firstName"
-              [placeholder]="currentUser?.firstName"
-            />
+            <input class="input" type="text" formControlName="firstName" placeholder="FIRST NAME" />
             @if (profileSubmitted && profileForm.controls.firstName.invalid) {
               <div class="form-error">First name is required.</div>
             }
@@ -31,12 +26,7 @@
         <div class="form-row">
           <div class="label">LAST NAME</div>
           <div class="field">
-            <input
-              class="input"
-              type="text"
-              formControlName="lastName"
-              [placeholder]="currentUser?.lastName"
-            />
+            <input class="input" type="text" formControlName="lastName" placeholder="LAST NAME" />
             @if (profileSubmitted && profileForm.controls.lastName.invalid) {
               <div class="form-error">Last name is required.</div>
             }
@@ -50,7 +40,7 @@
               class="input"
               type="email"
               formControlName="email"
-              [placeholder]="currentUser?.email"
+              placeholder="EMAIL@EMAIL.COM"
             />
             @if (profileSubmitted && profileForm.controls.email.invalid) {
               <div class="form-error">Email must be a valid email address.</div>
@@ -75,7 +65,7 @@
       <span><span class="num">02</span> &nbsp; Reset Password</span>
     </div>
     <div class="card-body stack-lg">
-      <form class="stack" [formGroup]="passwordForm" (ngSubmit)="submit()" novalidate>
+      <form class="stack" [formGroup]="passwordForm" (ngSubmit)="passwordSubmit()" novalidate>
         <div class="form-row">
           <div class="label">PASSWORD</div>
           <div class="field">
