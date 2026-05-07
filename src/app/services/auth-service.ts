@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -23,6 +24,7 @@ export class AuthService {
 
   // Signal to show loading state
   isLoading = signal<boolean>(false);
+  private router = inject(Router);
 
   // Constructor to initialize the service and listen to authentication state
   constructor() {
@@ -100,6 +102,7 @@ export class AuthService {
     // Logs out the current user from Firebase and sets the current user to null
     await signOut(auth);
     this.currentUser.set(null);
+    await this.router.navigateByUrl('/');
   }
 
   // Updates a user's information in the database
