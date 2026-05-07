@@ -17,4 +17,24 @@ export const routes: Routes = [
     component: LoginComponent,
     title: 'Login',
   },
+  {
+    path: 'dashboard',
+    component: Dashboard,
+    title: 'Dashboard',
+  },
+  {
+    path: 'budgets',
+    component: Budget,
+    title: 'Budgets',
+  },
+  {
+    path: 'transactions',
+    component: TransactionList,
+    title: 'Transactions'
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent,
+    title: 'Settings',
+  },
 ];
