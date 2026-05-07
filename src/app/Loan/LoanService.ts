@@ -16,7 +16,9 @@ export class LoanService{
         return collection(db, 'users', uid, 'loans');
        } 
        async CreateLoan(uid: string, loan: Loan): Promise<void> {
-        await addDoc(this.LoanCollection(uid), loan);
+        const docRef = doc(this.LoanCollection(uid));
+        loan.id = docRef.id;
+        await setDoc(docRef, loan);
        }
        async LoadLoans(uid: string): Promise<Loan[]>{
         const SubSnap = await getDocs(this.LoanCollection(uid));
@@ -26,14 +28,14 @@ export class LoanService{
         }))
        }
        async LoadLoan(uid: string, LoanID: string): Promise<Loan | null> {
-        const SubSnap = await getDoc(doc(db, 'users', uid, 'loan', LoanID));
+        const SubSnap = await getDoc(doc(db, 'users', uid, 'loans', LoanID));
         return SubSnap.exists() ? {id: SubSnap.id, ...(SubSnap.data() as Loan)} : null;
       }
        updateLoan(uid: string, LoanID: string, data: Partial<Loan>): Promise<void> {
         return updateDoc(doc(db, 'users', uid, 'loans', LoanID), data);
        }
        deleteLoan(uid: string, LoanID:string): Promise<void> {
-        return deleteDoc(doc(db, 'users', uid, 'loan', LoanID));
+        return deleteDoc(doc(db, 'users', uid, 'loans', LoanID));
        }
        //oh boy here is the behemoth
        LoanCalculation(loan: Loan){

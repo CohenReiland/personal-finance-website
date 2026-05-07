@@ -26,42 +26,42 @@ import { LoanService } from './LoanService';
                 <div class="form-row">
                         <div class="label"> Name </div>
                         <div class="field">
-                        <input class="input" type="text" placeholder="Loan Name" [(ngModel)]="loan.name"/>
+                        <input class="input" type="text" placeholder="Loan Name" [(ngModel)]="loan.name" name="name"/>
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="label"> Principal Amount </div>
                         <div class="field">
-                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="loan.amount"/>
+                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="loan.amount" name="amount"/>
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="label">  Last Paid Date </div>
                         <div class="field">
-                        <input class="input" type="date" placeholder="" [(ngModel)]="loan.lastPaidDate"/>
+                        <input class="input" type="date" placeholder="" [(ngModel)]="loan.lastPaidDate" name="lastPaidDate"/>
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="label"> Monthly Interest (As Decimal) </div>
                         <div class="field">
-                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="loan.interestRate"/>
+                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="loan.interestRate" name="interestRate"/>
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="label"> Monthly Payment </div>
                         <div class="field">
-                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="loan.monthlyPayment"/>
+                        <input class="input" type="number" placeholder="0.00" [(ngModel)]="loan.monthlyPayment" name="monthlyPayment"/>
                     </div>
                     </div>
                     <div class="form-row">
                         <div class="label"> Notes </div>
                         <div class="field">
-                        <textarea class="text-box" rows="4" placeholder="Type Text Here" [(ngModel)] ="loan.notes"></textarea>
+                        <textarea class="text-box" rows="4" placeholder="Type Text Here" [(ngModel)] ="loan.notes" name="notes"></textarea>
                     </div>
                 </div>
                 <div class="row" style="padding-top: var(--space-md)">
-                    <button class="btn cancel" type="submit" routerLink="/loan" > Cancel</button>
-                    <button class="btn confirm" (click)="confirm()"> Confirm </button>
+                    <button class="btn cancel" type="button" routerLink="/loan" > Cancel</button>
+                    <button class="btn confirm" type="button" (click)="confirm()"> Confirm </button>
                 </div>
             </form>
     </div>
@@ -139,12 +139,12 @@ import { LoanService } from './LoanService';
 })
 export class LoanForm {
   loan: Loan = {
-    name: '',
+    name: "",
     amount: 0,
     monthlyPayment: 0,
     interestRate: 0,
-    id: '',
-    notes: '',
+    id: "",
+    notes: "",
     lastPaidDate: new Date().toISOString().substring(0, 10),
   };
   LoanID: string | null = null;
@@ -172,8 +172,12 @@ export class LoanForm {
 
     const Sub: Loan = {
       ...this.loan,
+      name: this.loan.name,
       amount: Number(this.loan.amount),
-      lastPaidDate: new Date(this.loan.lastPaidDate).toISOString(),
+      interestRate: Number(this.loan.interestRate),
+      monthlyPayment: Number(this.loan.monthlyPayment),
+      lastPaidDate: this.loan.lastPaidDate ? new Date(this.loan.lastPaidDate).toISOString() : "",
+      notes: this.loan.notes,
     };
 
     if (this.LoanID) {
