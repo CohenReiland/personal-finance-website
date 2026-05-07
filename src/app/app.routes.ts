@@ -75,5 +75,6 @@ export const routes: Routes = [
     path: 'settings',
     component: SettingsComponent,
     title: 'Settings',
+    canActivate: [authGuard],
   },
 ];
