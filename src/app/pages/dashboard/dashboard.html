@@ -1,0 +1,99 @@
+<div class="page-head">
+  <h1>DASHBOARD<span class="punct">.</span></h1>
+  <div class="meta">
+    <strong>{{ today() | date: 'MM / dd / yyyy' }}</strong>
+    LAST SYNC {{ today() | date: 'HH:mm:ss' }} UTC <br />
+    LIVE
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-label">
+    <span><span class="num">01</span> &nbsp; KEY METRICS</span>
+    <span>4 DATA POINTS</span>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat">
+      <div class="stat-label"><span class="ticker">▸</span>REMAINING INCOME</div>
+      <div class="stat-value">
+        {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
+      </div>
+      <div class="stat-delta flat">ACROSS {{ budgetCount() }} CATEGORIES</div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label"><span class="ticker">▸</span>SPENT</div>
+      <div class="stat-value">
+        {{ transactionService.totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
+      </div>
+      <div class="stat-delta flat">
+        OF {{ totalLimit() | currency: 'USD' : 'symbol' : '1.2-2' }}
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label"><span class="ticker">▸</span>BUDGET CAUTION COUNTER</div>
+      <div class="stat-value">{{ cautionCount() }}</div>
+      <div class="stat-delta" [class.up]="cautionCount() === 0" [class.down]="cautionCount() > 0">
+        @if (cautionCount() > 0) {
+          NEAR LIMIT
+        } @else {
+          ALL CLEAR
+        }
+      </div>
+    </div>
+
+    <div class="stat">
+      <div class="stat-label"><span class="ticker">▸</span>BUDGET BREACH COUNTER</div>
+      <div class="stat-value">{{ overBudgetCount() }}</div>
+      <div
+        class="stat-delta"
+        [class.up]="overBudgetCount() === 0"
+        [class.down]="overBudgetCount() > 0"
+      >
+        @if (overBudgetCount() > 0) {
+          OVER BUDGET
+        } @else {
+          NO BREACH
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Section 02 & 03: Budget snapshot + recent activity, side by side -->
+<div class="grid-dash">
+  <div class="section">
+    <div class="section-label">
+      <span><span class="num">02</span> &nbsp; ALLOCATION</span>
+      <span>BY CATEGORY</span>
+    </div>
+    <app-budget-snapshot />
+  </div>
+
+  <div class="section">
+    <div class="section-label">
+      <span><span class="num">03</span> &nbsp; RECENT ACTIVITY</span>
+      <span>LAST 7d</span>
+    </div>
+    <!--
+      For Aidan: you can drop your TransactionsSnapshot component here.
+      Add it to this file's @Component imports array, then place
+      <app-your-selector /> below this comment.
+    -->
+  </div>
+</div>
+
+<!-- Section 04: Data visualization — full width -->
+<div class="section">
+  <div class="section-label">
+    <span><span class="num">04</span> &nbsp; ANALYTICS</span>
+    <span>SPEND TRENDS</span>
+  </div>
+  <!--
+    for Eddie: you can also drop your DataVisualization component here.
+    Add it to this file's @Component imports array, then place
+    <app-your-selector /> below this comment.
+  -->
+</div>

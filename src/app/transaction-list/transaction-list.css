@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3xl) var(--space-3xl);
+  /* margin: 0 auto; */
+  box-sizing: border-box;
+}
+
+.search-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 0 var(--space-lg);
+}
+
+.search-section .input {
+  max-width: 720px;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto var(--space-lg);
+  color: var(--fg);
+}
+
+.card .tbl td,
+.card .tbl th {
+  font-size: var(--text-14);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.card .tbl th {
+  font-size: var(--text-13);
+}
+
+.card .tbl th:last-child,
+.card .tbl td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.add-btn {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: right;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+
+.modal-shell {
+  width: min(720px, calc(100% - 2 * var(--space-lg)));
+}
+
+.modal-card {
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+}
+
+.modal-form .form-row .label {
+  min-width: 140px;
+  font-size: 13px;
+}
+
+.modal-form .form-row .input{
+  font-size: 14px;
+}
