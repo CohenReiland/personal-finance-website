@@ -1,4 +1,4 @@
-@if (currentUser != null) {
+<!-- @if (currentUser != null) {
   <div class="statusbar">
     <span class="pill">FF/313</span>
     <span class="live">SYS_LIVE</span>
@@ -10,11 +10,17 @@
     >
     <span class="item">FY <span class="v">25/26</span></span>
   </div>
-}
+} -->
 
-<div class="app-shell">
-  <app-navbar></app-navbar>
+@if (currentUser != null) {
+  <div class="app-shell">
+    <app-navbar></app-navbar>
+    <main class="main">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+} @else {
   <main class="main">
     <router-outlet></router-outlet>
   </main>
-</div>
+}

@@ -5,7 +5,7 @@
     <a
       id="home"
       class="nav-link d-flex align-items-center"
-      [routerLink]="authService.currentUser() ? ['/dashboard'] : ['']"
+      routerLink="/dashboard"
       data-label="Home"
     >
       <img id="home-img" src="/images/nav/home.svg" alt="Home" />
@@ -13,7 +13,7 @@
     <a
       id="subscriptions"
       class="nav-link d-flex align-items-center"
-      [routerLink]="authService.currentUser() ? ['/subscriptions'] : ['']"
+      routerLink="/subscriptions"
       data-label="Subscriptions"
     >
       <img id="subscriptions-img" src="/images/nav/calendarClock.svg" alt="Subscriptions" />
@@ -21,7 +21,7 @@
     <a
       id="transactions"
       class="nav-link d-flex align-items-center"
-      [routerLink]="authService.currentUser() ? ['/transactions'] : ['']"
+      routerLink="/transactions"
       data-label="Transactions"
     >
       <img id="transactions-img" src="/images/nav/card.svg" alt="Transactions" />
@@ -29,7 +29,7 @@
     <a
       id="budgets"
       class="nav-link d-flex align-items-center"
-      [routerLink]="authService.currentUser() ? ['/budgets'] : ['']"
+      routerLink="/budgets"
       data-label="budgets"
     >
       <img id="budgets-img" src="/images/nav/chart.svg" alt="budgets" />
@@ -37,7 +37,7 @@
     <a
       id="settings"
       class="nav-link d-flex align-items-center"
-      [routerLink]="authService.currentUser() ? ['/settings'] : ['']"
+      routerLink="/settings"
       data-label="Settings"
     >
       <img id="settings-img" src="/images/nav/settings.svg" alt="Settings" />
@@ -57,7 +57,7 @@
         <a
           id="login"
           class="nav-link d-flex align-items-center nav-action"
-          routerLink="/login"
+          routerLink=""
           data-label="Login"
         >
           <img id="login-img" src="/images/nav/login.svg" alt="Login" />

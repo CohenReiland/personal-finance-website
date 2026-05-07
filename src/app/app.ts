@@ -14,6 +14,8 @@ export class App {
   protected readonly title = signal('frameworks-final-project');
   private readonly authService = inject(AuthService);
 
-  protected readonly currentUser: User | null = this.authService.currentUser();
+  protected get currentUser(): User | null {
+    return this.authService.currentUser();
+  }
   protected readonly sessionTime = signal('00:00:00');
 }
