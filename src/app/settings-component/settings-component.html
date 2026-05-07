@@ -1,17 +1,18 @@
-<section class="signup-page">
-  <div class="signup-header">
-    <div class="signup-brand">FF<span class="punct">/</span>313</div>
-    <div class="signup-brand-sub">STUDENT FINANCE DASHBOARD</div>
+<div class="page-head">
+  <h1>Settings<span class="punct">.</span></h1>
+  <div class="meta">
+    <!-- <strong>{{ today | date: 'MM / dd / yyyy' }}</strong
+    ><br /> -->
   </div>
+</div>
 
-  <div class="card signup-card">
-    <div class="card-head">
-      <span class="id">▸ AUTH.CREATE_ACCOUNT</span>
-      <span class="meta">NEW USER REGISTRATION</span>
+<div class="grid-dash">
+  <div>
+    <div class="section-label">
+      <span><span class="num">01</span> &nbsp; Edit Profile</span>
     </div>
-
     <div class="card-body stack-lg">
-      <form class="stack" [formGroup]="signupForm" (ngSubmit)="submit()" novalidate>
+      <form class="stack" [formGroup]="profileForm" (ngSubmit)="profileSubmit()" novalidate>
         <div class="form-row">
           <div class="label">FIRST NAME</div>
           <div class="field">
@@ -19,9 +20,9 @@
               class="input"
               type="text"
               formControlName="firstName"
-              placeholder="ENTER FIRST NAME"
+              [placeholder]="currentUser?.firstName"
             />
-            @if (submitted && signupForm.controls.firstName.invalid) {
+            @if (profileSubmitted && profileForm.controls.firstName.invalid) {
               <div class="form-error">First name is required.</div>
             }
           </div>
@@ -34,9 +35,9 @@
               class="input"
               type="text"
               formControlName="lastName"
-              placeholder="ENTER LAST NAME"
+              [placeholder]="currentUser?.lastName"
             />
-            @if (submitted && signupForm.controls.lastName.invalid) {
+            @if (profileSubmitted && profileForm.controls.lastName.invalid) {
               <div class="form-error">Last name is required.</div>
             }
           </div>
@@ -49,14 +50,32 @@
               class="input"
               type="email"
               formControlName="email"
-              placeholder="NAME@EXAMPLE.COM"
+              [placeholder]="currentUser?.email"
             />
-            @if (submitted && signupForm.controls.email.invalid) {
+            @if (profileSubmitted && profileForm.controls.email.invalid) {
               <div class="form-error">Email must be a valid email address.</div>
             }
           </div>
         </div>
+        @if (profileError) {
+          <div class="form-error">{{ profileError }}</div>
+        }
 
+        <div class="row" style="padding-top: var(--space-md)">
+          <button class="btn btn-primary" type="submit" [disabled]="isLoading()">
+            {{ isLoading() ? 'Updating...' : 'Update Profile' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <div class="section-label">
+      <span><span class="num">02</span> &nbsp; Reset Password</span>
+    </div>
+    <div class="card-body stack-lg">
+      <form class="stack" [formGroup]="passwordForm" (ngSubmit)="submit()" novalidate>
         <div class="form-row">
           <div class="label">PASSWORD</div>
           <div class="field">
@@ -66,7 +85,7 @@
               formControlName="password"
               placeholder="MIN. 6 CHARACTERS"
             />
-            @if (submitted && signupForm.controls.password.invalid) {
+            @if (passwordSubmitted && passwordForm.controls.password.invalid) {
               <div class="form-error">Password must be at least 6 characters long.</div>
             }
           </div>
@@ -81,24 +100,22 @@
               formControlName="confirmPassword"
               placeholder="RE-ENTER PASSWORD"
             />
-            @if (submitted && signupForm.hasError('passwordMismatch')) {
+            @if (passwordSubmitted && passwordForm.hasError('passwordMismatch')) {
               <div class="form-error">Passwords do not match.</div>
             }
           </div>
         </div>
 
-        @if (signupError) {
-          <div class="form-error">{{ signupError }}</div>
+        @if (passwordError) {
+          <div class="form-error">{{ passwordError }}</div>
         }
 
         <div class="row" style="padding-top: var(--space-md)">
           <button class="btn btn-primary" type="submit" [disabled]="isLoading()">
-            {{ isLoading() ? 'INITIALIZING...' : 'CREATE ACCOUNT' }}
+            {{ isLoading() ? 'Updating...' : 'UPDATE PASSWORD' }}
           </button>
         </div>
       </form>
-
-      <div class="signup-footer">ALREADY REGISTERED? <a routerLink="">LOGIN</a></div>
     </div>
   </div>
-</section>
+</div>

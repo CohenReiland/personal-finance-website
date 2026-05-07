@@ -1,0 +1,137 @@
+<div class="container">
+  <div class="search-section">
+    <input type="text" class="input" placeholder="Search transactions..." />
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <span class="id">▸ TRANSACTIONS</span>
+      <span class="meta">{{ transactionService.transactions().length }} ITEMS</span>
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>NAME</th>
+          <th>CATEGORY</th>
+          <th class="num">AMOUNT</th>
+          <th>DATE</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (transaction of transactionService.transactions(); track transaction.id ?? $index) {
+          <app-transaction-item
+            [transaction]="transaction"
+            (editRequested)="openEdit($event)"
+            (deleteRequested)="deleteTransaction($event)"
+          ></app-transaction-item>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="add-btn">
+    <button class="btn btn-primary" type="button" (click)="openAdd()">▸ ADD EXPENSE</button>
+  </div>
+</div>
+
+@if (isAddOpen) {
+  <div class="modal-backdrop" (click)="closeAdd()">
+    <div class="modal-shell" (click)="$event.stopPropagation()">
+      <div class="card modal-card">
+        <div class="card-head">
+          <span class="id"
+            >▸ {{ editingTransaction ? 'EDIT.TRANSACTION' : 'ADD.TRANSACTION' }}</span
+          >
+          <button class="btn btn-ghost" type="button" (click)="closeAdd()">CLOSE</button>
+        </div>
+
+        <form class="modal-form">
+          <div class="form-row">
+            <div class="label">NAME *</div>
+            <input
+              #nameInput
+              class="input"
+              type="text"
+              [value]="editingTransaction?.Name ?? ''"
+              placeholder="e.g. Trader Joe's"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="label">CATEGORY *</div>
+            <select
+              #categoryInput
+              class="select"
+              name="transaction-category"
+              id="transaction-category"
+              [value]="editingTransaction?.Category ?? 'personal'"
+            >
+              <option value="work">work</option>
+              <option value="personal">personal</option>
+              <option value="Grocery">Grocery</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Rent">Rent</option>
+              <option value="other">other</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="label">AMOUNT *</div>
+            <input
+              #amountInput
+              class="input"
+              type="number"
+              [value]="editingTransaction?.Amount ?? ''"
+              placeholder="0.00"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="label">DATE *</div>
+            <input
+              #dateInput
+              class="input"
+              type="date"
+              [value]="formatDateInput(editingTransaction)"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="label">TYPE</div>
+            <select
+              #type
+              class="select"
+              name="transaction-type"
+              id="transaction-type"
+              [value]="editingTransaction?.Type ?? 'Expense'"
+            >
+              <option value="Expense">Expense</option>
+              <option value="Income">Income</option>
+            </select>
+          </div>
+
+          <div class="row" style="padding: var(--space-md)">
+            <button
+              class="btn btn-primary"
+              type="button"
+              (click)="
+                saveTransaction(
+                  nameInput.value,
+                  categoryInput.value,
+                  amountInput.value,
+                  dateInput.value,
+                  type.value
+                )
+              "
+            >
+              ▸ {{ editingTransaction ? 'SAVE CHANGES' : 'SAVE' }}
+            </button>
+            <button class="btn" type="button" (click)="closeAdd()">CANCEL</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

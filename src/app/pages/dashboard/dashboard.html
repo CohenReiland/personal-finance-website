@@ -1,10 +1,10 @@
 <div class="page-head">
-    <h1>DASHBOARD<span class="punct">.</span></h1>
-    <div class="meta">
+  <h1>DASHBOARD<span class="punct">.</span></h1>
+  <div class="meta">
     <strong>{{ today() | date: 'MM / dd / yyyy' }}</strong>
-    LAST SYNC {{ today() | date:'HH:mm:ss' }} UTC <br>
+    LAST SYNC {{ today() | date: 'HH:mm:ss' }} UTC <br />
     LIVE
-    </div>
+  </div>
 </div>
 
 <div class="section">
@@ -17,30 +17,25 @@
     <div class="stat">
       <div class="stat-label"><span class="ticker">▸</span>REMAINING INCOME</div>
       <div class="stat-value">
-        {{ totalRemaining() | currency:'USD':'symbol':'1.2-2' }}
+        {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
       </div>
-      <div class="stat-delta flat">
-        ACROSS {{ budgetCount() }} CATEGORIES
-      </div>
+      <div class="stat-delta flat">ACROSS {{ budgetCount() }} CATEGORIES</div>
     </div>
 
     <div class="stat">
       <div class="stat-label"><span class="ticker">▸</span>SPENT</div>
       <div class="stat-value">
-        {{ totalSpent() | currency:'USD':'symbol':'1.2-2' }}
+        {{ transactionService.totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
       </div>
       <div class="stat-delta flat">
-        OF {{ totalLimit() | currency:'USD':'symbol':'1.2-2' }}
+        OF {{ totalLimit() | currency: 'USD' : 'symbol' : '1.2-2' }}
       </div>
     </div>
 
     <div class="stat">
       <div class="stat-label"><span class="ticker">▸</span>BUDGET CAUTION COUNTER</div>
       <div class="stat-value">{{ cautionCount() }}</div>
-      <div
-        class="stat-delta"
-        [class.up]="cautionCount() === 0"
-        [class.down]="cautionCount() > 0">
+      <div class="stat-delta" [class.up]="cautionCount() === 0" [class.down]="cautionCount() > 0">
         @if (cautionCount() > 0) {
           NEAR LIMIT
         } @else {
@@ -55,7 +50,8 @@
       <div
         class="stat-delta"
         [class.up]="overBudgetCount() === 0"
-        [class.down]="overBudgetCount() > 0">
+        [class.down]="overBudgetCount() > 0"
+      >
         @if (overBudgetCount() > 0) {
           OVER BUDGET
         } @else {
@@ -68,7 +64,6 @@
 
 <!-- Section 02 & 03: Budget snapshot + recent activity, side by side -->
 <div class="grid-dash">
-
   <div class="section">
     <div class="section-label">
       <span><span class="num">02</span> &nbsp; ALLOCATION</span>
@@ -88,7 +83,6 @@
       <app-your-selector /> below this comment.
     -->
   </div>
-
 </div>
 
 <!-- Section 04: Data visualization — full width -->
