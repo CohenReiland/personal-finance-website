@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -22,12 +22,26 @@ export class SettingsComponent {
   private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
 
-  protected currentUser = this.authService.currentUser();
+  protected currentUser = this.authService.currentUser;
   protected profileSubmitted = false;
   protected passwordSubmitted = false;
   protected profileError = '';
   protected passwordError = '';
   protected readonly isLoading = this.authService.isLoading;
+
+  // Constructor to grab the profile values and insert them into the form
+  constructor() {
+    effect(() => {
+      const user = this.currentUser();
+      if (!user) return;
+
+      this.profileForm.patchValue({
+        firstName: user.firstName ?? '',
+        lastName: user.lastName ?? '',
+        email: user.email ?? '',
+      });
+    });
+  }
 
   // Matches the password and the reentered password
   matchPassword: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {
@@ -65,7 +79,7 @@ export class SettingsComponent {
     const { firstName, lastName, email } = this.profileForm.getRawValue();
 
     try {
-      await this.authService.updateUser(this.currentUser!.id, { firstName, lastName, email });
+      await this.authService.updateUser(this.currentUser()!.id, { firstName, lastName, email });
     } catch (error: unknown) {
       this.profileError = 'Failed to create account. Please try again.';
     }
