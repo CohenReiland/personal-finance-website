@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Subscription } from "./SubscriptionModel";
+import { Subscription } from "../models/subscription";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { FirebaseApp } from "firebase/app";
 import { setDoc, updateDoc, deleteDoc, doc, collection, addDoc, getDoc, getDocs} from "firebase/firestore";
 import { db } from "../firebase.config";
 import { useDeviceLanguage } from "firebase/auth";
-import { SubscriptionForm } from "./SubscriptionForm";
 
 @Injectable({providedIn: 'root'})
 export class SubscriptionService{
@@ -32,6 +31,6 @@ export class SubscriptionService{
         return updateDoc(doc(db, 'users', uid, 'subscriptions', SubscriptionID), data);
        }
        deleteSubscription(uid: string, SubscriptionID:string): Promise<void> {
-        return deleteDoc(doc(db, 'users', uid, 'subscription', SubscriptionID));
+        return deleteDoc(doc(db, 'users', uid, 'subscriptions', SubscriptionID));
        }
     }

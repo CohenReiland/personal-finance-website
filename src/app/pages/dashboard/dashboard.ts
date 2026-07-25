@@ -5,7 +5,7 @@ import { BudgetSnapshot } from '../../budget-snapshot/budget-snapshot';
 import { TransactionService } from '../../services/transaction-service';
 import { TransactionSnapshot } from '../../transaction-snapshot/transaction-snapshot';
 import { BaseChartDirective } from 'ng2-charts';
-import { SubscriptionService } from '../../Subscription/SubscriptionService';
+import { SubscriptionService } from '../../services/subscription-service';
 import { ChartData, ChartOptions } from 'chart.js';
 
 @Component({
