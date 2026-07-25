@@ -4,81 +4,87 @@
   color: var(--fg);
 }
 
-.container {
-  width: 100%;
-  max-width: 1200px;
+/* 2-column layout. Collapses to single column under 1100px. */
+.page-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: var(--space-lg);
+}
+@media (max-width: 1100px) {
+  .page-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Inline action buttons in table rows. */
+.row-actions {
   display: flex;
-  flex-direction: column;
-  padding: var(--space-3xl) var(--space-3xl);
-  /* margin: 0 auto; */
-  box-sizing: border-box;
+  gap: var(--space-2xs);
+  justify-content: flex-end;
 }
 
-.search-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 0 0 var(--space-lg);
-}
-
-.search-section .input {
-  max-width: 720px;
-  width: 100%;
-}
-
-.card {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto var(--space-lg);
-  color: var(--fg);
-}
-
-.card .tbl td,
-.card .tbl th {
-  font-size: var(--text-14);
-  padding: var(--space-md) var(--space-lg);
-}
-
-.card .tbl th {
-  font-size: var(--text-13);
-}
-
-.card .tbl th:last-child,
-.card .tbl td:last-child {
-  width: 1%;
+.btn-icon {
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  padding: 4px 8px;
+  background: transparent;
+  border: 1px solid var(--line-hi);
+  color: var(--fg-2);
+  cursor: pointer;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all var(--t-fast) var(--ease);
   white-space: nowrap;
 }
+.btn-icon:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn-icon.danger:hover:not(:disabled) {
+  border-color: var(--bad);
+  color: var(--bad);
+}
+.btn-icon.save {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.btn-icon.save:hover:not(:disabled) {
+  background: var(--ok);
+  color: var(--bg);
+}
+.btn-icon:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
-.add-btn {
+/* The active editing row gets an accent outline. */
+.tbl tr.editing {
+  background: var(--panel-2);
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+.tbl tr.editing td {
+  background: var(--panel-2);
+}
+.tbl tr.editing-error td {
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--accent);
+}
+
+/* Inline inputs replacing cells. */
+.input-inline {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 4px 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-11);
+  color: var(--fg);
+  outline: none;
+}
+.input-inline.num {
   text-align: right;
 }
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: grid;
-  place-items: center;
-  z-index: 9999;
-}
-
-.modal-shell {
-  width: min(720px, calc(100% - 2 * var(--space-lg)));
-}
-
-.modal-card {
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
-}
-
-.modal-form .form-row .label {
-  min-width: 140px;
-  font-size: 13px;
-}
-
-.modal-form .form-row .input{
-  font-size: 14px;
+.input-inline:focus {
+  box-shadow: 0 0 0 2px var(--accent-soft);
 }
