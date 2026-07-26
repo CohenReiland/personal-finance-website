@@ -22,7 +22,13 @@
       </div>
       <div class="stat">
         <div class="stat-label"><span class="ticker">▸</span>NET</div>
-        <div class="stat-value">{{ net() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
+        <div
+          class="stat-value"
+          [class.text-ok]="net() >= 500"
+          [class.text-bad]="net() <= -500"
+        >
+          {{ net() | currency: 'USD' : 'symbol' : '1.0-0' }}
+        </div>
       </div>
     </div>
 
