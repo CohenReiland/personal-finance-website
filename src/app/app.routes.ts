@@ -3,8 +3,7 @@ import { SignUpComponent } from './sign-up-component/sign-up-component';
 import { LoginComponent } from './login-component/login-component';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { Subscription } from './subscription/subscription';
-import { LoanDash } from './Loan/LoanDash';
-import { LoanForm } from './Loan/LoanForm';
+import { Loan } from './loan/loan';
 import { Budget } from './pages/budget/budget';
 import { TransactionList } from './transaction-list/transaction-list';
 import { SettingsComponent } from './settings-component/settings-component';
@@ -68,18 +67,8 @@ export const routes: Routes = [
   },
   {
     path: 'loan',
-    component: LoanDash,
+    component: Loan,
     title: 'Loan',
-  },
-  {
-    path: 'loan/add',
-    component: LoanForm,
-    title: 'Add Loan',
-  },
-  {
-    path: 'loan/:id/edit',
-    component: LoanForm,
-    title: 'Edit Loan',
     canActivate: [authGuard],
   },
   {
