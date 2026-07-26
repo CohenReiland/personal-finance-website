@@ -17,6 +17,7 @@ interface TransactionForm {
   amount: FormControl<number | null>;
   date: FormControl<string>;
   type: FormControl<ExpenseType>;
+  notes: FormControl<string>;
 }
 
 function today(): string {
@@ -65,6 +66,10 @@ export class TransactionList {
       validators: [Validators.required],
     }),
     type: new FormControl<ExpenseType>('Expense', { nonNullable: true }),
+    notes: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.maxLength(150)],
+    }),
   });
 
   readonly isSubmitting = signal(false);
@@ -86,8 +91,16 @@ export class TransactionList {
         Amount: value.amount!,
         Date: new Date(value.date),
         Type: value.type,
+        Notes: value.notes.trim(),
       });
-      this.form.reset({ name: '', category: '', amount: null, date: today(), type: 'Expense' });
+      this.form.reset({
+        name: '',
+        category: '',
+        amount: null,
+        date: today(),
+        type: 'Expense',
+        notes: '',
+      });
       this.submitSuccess.set('Transaction added.');
       setTimeout(() => this.submitSuccess.set(null), 3000);
     } catch (err) {
@@ -100,7 +113,14 @@ export class TransactionList {
   }
 
   onReset(): void {
-    this.form.reset({ name: '', category: '', amount: null, date: today(), type: 'Expense' });
+    this.form.reset({
+      name: '',
+      category: '',
+      amount: null,
+      date: today(),
+      type: 'Expense',
+      notes: '',
+    });
     this.submitError.set(null);
     this.submitSuccess.set(null);
   }
@@ -126,6 +146,10 @@ export class TransactionList {
       validators: [Validators.required],
     }),
     type: new FormControl<ExpenseType>('Expense', { nonNullable: true }),
+    notes: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.maxLength(150)],
+    }),
   });
 
   readonly isUpdating = signal(false);
@@ -139,6 +163,7 @@ export class TransactionList {
       amount: transaction.Amount,
       date: new Date(transaction.Date).toISOString().slice(0, 10),
       type: transaction.Type,
+      notes: transaction.Notes ?? '',
     });
     this.editingId.set(transaction.id ?? null);
     this.updateError.set(null);
@@ -148,7 +173,14 @@ export class TransactionList {
     if (this.isUpdating()) return;
     this.editingId.set(null);
     this.updateError.set(null);
-    this.editForm.reset({ name: '', category: '', amount: null, date: '', type: 'Expense' });
+    this.editForm.reset({
+      name: '',
+      category: '',
+      amount: null,
+      date: '',
+      type: 'Expense',
+      notes: '',
+    });
   }
 
   async saveEdit(transaction: Transaction): Promise<void> {
@@ -167,9 +199,17 @@ export class TransactionList {
         Amount: value.amount!,
         Date: new Date(value.date),
         Type: value.type,
+        Notes: value.notes.trim(),
       });
       this.editingId.set(null);
-      this.editForm.reset({ name: '', category: '', amount: null, date: '', type: 'Expense' });
+      this.editForm.reset({
+        name: '',
+        category: '',
+        amount: null,
+        date: '',
+        type: 'Expense',
+        notes: '',
+      });
     } catch (err) {
       this.updateError.set(err instanceof Error ? err.message : 'Could not save changes.');
     } finally {

@@ -83,6 +83,7 @@ export class TransactionService {
         Amount: number;
         Date: Timestamp | Date | string;
         Type: ExpenseType;
+        Notes?: string;
       };
 
       const rawDate = raw.Date;

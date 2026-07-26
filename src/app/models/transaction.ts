@@ -6,7 +6,8 @@ export interface Transaction {
     Category: TransactionCategory,
     Amount: number,
     Date: Date,
-    Type: ExpenseType
+    Type: ExpenseType,
+    Notes?: string
 }
 
 export type TransactionCategory = 'Salary' | 'Personal' | 'Grocery' | 'Shopping' | 'Rent' | 'Food' | 'Health' | 'Other';

@@ -429,16 +429,16 @@ a.link:hover {
 }
 .page-head .meta {
   font-family: var(--font-mono);
-  font-size: var(--text-10);
+  font-size: var(--text-11);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--fg-3);
+  color: var(--fg-2);
   text-align: right;
 }
 .page-head .meta strong {
   color: var(--fg);
   display: block;
-  font-size: var(--text-12);
+  font-size: var(--text-14);
   margin-bottom: var(--space-2xs);
 }
 

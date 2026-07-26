@@ -9,22 +9,31 @@
 </div>
 
 <div class="page-grid">
-  <!-- LEFT: Add Form -->
+  <!-- LEFT: Summary + Add Form -->
   <div>
     <div class="section-label">
-      <span><span class="num">01</span> &nbsp; NEW TRANSACTION</span>
-      <span>FORM</span>
+      <span><span class="num">01</span> &nbsp; SUMMARY</span>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>TOTAL INCOME</div>
+        <div class="stat-value">{{ totalIncome() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>NET</div>
+        <div class="stat-value">{{ net() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-top: var(--space-xl)">
+      <span><span class="num">02</span> &nbsp; NEW TRANSACTION</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ FORM.NEW_TRANSACTION</span>
-        <span class="meta">REQUIRED *</span>
-      </div>
-
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="form-row">
-          <div class="label">NAME *</div>
+          <div class="label">NAME</div>
           <input
             class="input"
             formControlName="name"
@@ -35,7 +44,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">CATEGORY *</div>
+          <div class="label">CATEGORY</div>
           <select
             class="select"
             formControlName="category"
@@ -56,7 +65,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">AMOUNT_USD *</div>
+          <div class="label">AMOUNT</div>
           <input
             class="input"
             formControlName="amount"
@@ -71,7 +80,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">DATE *</div>
+          <div class="label">DATE</div>
           <input
             class="input"
             formControlName="date"
@@ -92,6 +101,17 @@
             <option value="Expense">Expense</option>
             <option value="Income">Income</option>
           </select>
+        </div>
+
+        <div class="form-row">
+          <div class="label">NOTES</div>
+          <textarea
+            class="textarea"
+            formControlName="notes"
+            rows="3"
+            placeholder="Optional Notes"
+            [attr.disabled]="isSubmitting() ? true : null"
+          ></textarea>
         </div>
 
         @if (form.get('name')?.touched && form.get('name')?.invalid) {
@@ -138,13 +158,21 @@
             </div>
           </div>
         }
+        @if (form.get('notes')?.touched && form.get('notes')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              ▸ Notes must be 150 characters or fewer.
+            </div>
+          </div>
+        }
 
         <div class="row" style="padding: var(--space-md)">
           <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
             @if (isSubmitting()) {
               ▸ SAVING...
             } @else {
-              ▸ EXECUTE
+              EXECUTE
             }
           </button>
           <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
@@ -170,45 +198,15 @@
         }
       </form>
     </div>
-
-    <div class="section-label" style="margin-top: var(--space-xl)">
-      <span><span class="num">02</span> &nbsp; SUMMARY</span>
-      <span>ALL TIME</span>
-    </div>
-
-    <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
-      <div class="stat">
-        <div class="stat-label"><span class="ticker">▸</span>TOTAL INCOME</div>
-        <div class="stat-value">{{ totalIncome() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
-        <div class="stat-delta flat">{{ transactionService.transactionCount() }} TOTAL</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label"><span class="ticker">▸</span>NET</div>
-        <div class="stat-value">{{ net() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
-        <div class="stat-delta" [class.up]="net() >= 0" [class.down]="net() < 0">
-          @if (net() >= 0) {
-            IN THE BLACK
-          } @else {
-            OVER SPENT
-          }
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- RIGHT: Existing Transactions Table -->
   <div>
     <div class="section-label">
       <span><span class="num">03</span> &nbsp; ALL TRANSACTIONS</span>
-      <span>{{ transactionService.transactionCount() }} ITEMS</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ TRANSACTIONS.TABLE</span>
-        <span class="meta">SORT: NEWEST FIRST</span>
-      </div>
-
       @if (deleteError()) {
         <div
           style="
@@ -237,6 +235,7 @@
               <th class="num">AMOUNT</th>
               <th>DATE</th>
               <th>TYPE</th>
+              <th>NOTES</th>
               <th></th>
             </tr>
           </thead>
@@ -254,9 +253,8 @@
                     [class.text-ok]="t.Type === 'Income'"
                     [class.text-bad]="t.Type === 'Expense'"
                   >
-                    {{ t.Type === 'Expense' ? '−' : '+' }}{{
-                      t.Amount | currency: 'USD' : 'symbol' : '1.2-2'
-                    }}
+                    {{ t.Type === 'Expense' ? '−' : '+'
+                    }}{{ t.Amount | currency: 'USD' : 'symbol' : '1.2-2' }}
                   </td>
                   <td>{{ t.Date | date: 'MM/dd/yy' }}</td>
                   <td>
@@ -268,6 +266,7 @@
                       {{ t.Type }}
                     </span>
                   </td>
+                  <td class="notes-cell">{{ t.Notes || '—' }}</td>
                   <td>
                     <div class="row-actions">
                       <button
@@ -356,6 +355,14 @@
                     </select>
                   </td>
                   <td>
+                    <input
+                      class="input-inline"
+                      formControlName="notes"
+                      type="text"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td>
                     <div class="row-actions">
                       <button
                         class="btn-icon save"
@@ -378,7 +385,7 @@
                 @if (updateError()) {
                   <tr class="editing-error">
                     <td
-                      colspan="7"
+                      colspan="8"
                       class="text-bad text-sm"
                       style="padding: var(--space-sm) var(--space-md)"
                     >
@@ -389,7 +396,7 @@
                 @if (editForm.get('name')?.touched && editForm.get('name')?.invalid) {
                   <tr class="editing-error">
                     <td
-                      colspan="7"
+                      colspan="8"
                       class="text-bad text-sm"
                       style="padding: var(--space-sm) var(--space-md)"
                     >
@@ -400,7 +407,7 @@
                 @if (editForm.get('amount')?.touched && editForm.get('amount')?.invalid) {
                   <tr class="editing-error">
                     <td
-                      colspan="7"
+                      colspan="8"
                       class="text-bad text-sm"
                       style="padding: var(--space-sm) var(--space-md)"
                     >
