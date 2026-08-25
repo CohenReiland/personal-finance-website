@@ -10,7 +10,6 @@
 <div class="section">
   <div class="section-label">
     <span><span class="num">01</span> &nbsp; KEY METRICS</span>
-    <span>4 DATA POINTS</span>
   </div>
 
   <div class="stat-grid">
@@ -45,7 +44,7 @@
     </div>
 
     <div class="stat">
-      <div class="stat-label"><span class="ticker">▸</span>BUDGET BREACH COUNTER</div>
+      <div class="stat-label"><span class="ticker">▸</span>OVER BUDGET COUNTER</div>
       <div class="stat-value">{{ overBudgetCount() }}</div>
       <div
         class="stat-delta"
@@ -66,8 +65,7 @@
 <div class="grid-dash">
   <div class="section">
     <div class="section-label">
-      <span><span class="num">02</span> &nbsp; ALLOCATION</span>
-      <span>BY CATEGORY</span>
+      <span><span class="num">02</span> &nbsp; BUDGET ALLOCATION</span>
     </div>
     <app-budget-snapshot />
   </div>
@@ -75,13 +73,7 @@
   <div class="section">
     <div class="section-label">
       <span><span class="num">03</span> &nbsp; RECENT ACTIVITY</span>
-      <span>LAST 7d</span>
     </div>
-    <!--
-      For Aidan: you can drop your component here.
-      Add it to this file's @Component imports array, then place
-      <app-your-selector /> below this comment.
-  -->
     <app-transaction-snapshot></app-transaction-snapshot>
   </div>
 </div>
@@ -89,27 +81,31 @@
 <!-- Section 04: Data visualization — full width -->
 <div class="section">
   <div class="section-label">
-    <span><span class="num">04</span> &nbsp; ANALYTICS</span>
-    <span>SPEND TRENDS</span>
+    <span><span class="num">04</span> &nbsp; SPEND ANALYTICS</span>
   </div>
-  <div style="display:flex; gap:40px; justify-content: center;">
-    <div style="width: 300px;">
-      <h3>Total Budget</h3>
-      <canvas 
-      baseChart
-      [data]="BudgetData"
-      [options]="chartOptions"
-      [type]="'pie'">
-      </canvas>
+
+  <div class="chart-row">
+    <div class="card chart-card">
+      <div class="card-head">
+        <span class="id">TOTAL BUDGET</span>
+      </div>
+      <div class="card-body chart-body">
+        <canvas baseChart [data]="BudgetData" [options]="chartOptions" [type]="'pie'"></canvas>
+      </div>
     </div>
-    <div style="width: 300px;">
-      <h3>Category</h3>
-      <canvas
-      baseChart
-      [data]="BudgetByCategory"
-      [options]="chartOptions"
-      [type]="'pie'">
-      </canvas>
+
+    <div class="card chart-card">
+      <div class="card-head">
+        <span class="id">CATEGORY</span>
+      </div>
+      <div class="card-body chart-body">
+        <canvas
+          baseChart
+          [data]="BudgetByCategory"
+          [options]="chartOptions"
+          [type]="'pie'"
+        ></canvas>
+      </div>
     </div>
   </div>
 </div>

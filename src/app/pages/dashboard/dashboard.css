@@ -1,0 +1,31 @@
+/* Side-by-side pie charts in the analytics section. */
+.chart-row {
+  display: flex;
+  gap: var(--space-2xl);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.chart-card {
+  width: 300px;
+}
+
+.chart-body {
+  display: flex;
+  justify-content: center;
+}
+
+/* Brighter, larger text */
+.section-label {
+  font-size: calc(var(--text-14) + 4px);
+  font-weight: 600;
+  color: var(--fg);
+}
+.stat-label {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-0);
+}
+.stat-delta {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-2);
+}
