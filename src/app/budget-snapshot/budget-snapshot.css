@@ -1,3 +1,19 @@
-.card {
-    color: white;
+/* Brighter, larger text */
+.tbl th {
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--fg);
+}
+.tbl td {
+  font-size: var(--text-14);
+  color: var(--fg);
+}
+.tbl td.num {
+  color: var(--fg);
+}
+
+.tag {
+  font-size: var(--text-11);
+  font-weight: 800;
+  padding: 4px var(--space-sm);
 }
