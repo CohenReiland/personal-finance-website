@@ -84,28 +84,77 @@
     <span><span class="num">04</span> &nbsp; SPEND ANALYTICS</span>
   </div>
 
-  <div class="chart-row">
-    <div class="card chart-card">
-      <div class="card-head">
-        <span class="id">TOTAL BUDGET</span>
+  @if (hasBudgets()) {
+    <div class="chart-row">
+      <div class="card chart-card">
+        <div class="card-head">
+          <span class="id">TOTAL BUDGET</span>
+        </div>
+        <div class="card-body">
+          <div class="chart-canvas-wrap">
+            <canvas
+              baseChart
+              [data]="BudgetData"
+              [options]="chartOptions"
+              [plugins]="totalBudgetPlugins"
+              [type]="'doughnut'"
+            ></canvas>
+          </div>
+          <div class="chart-legend">
+            <div class="chart-legend-row">
+              <span class="chart-legend-swatch" [style.background]="spentColor"></span>
+              <span class="chart-legend-label">Spent</span>
+              <span class="chart-legend-amount">
+                {{ totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </span>
+            </div>
+            <div class="chart-legend-row">
+              <span class="chart-legend-swatch" [style.background]="remainingColor"></span>
+              <span class="chart-legend-label">Remaining</span>
+              <span class="chart-legend-amount">
+                {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="card-body chart-body">
-        <canvas baseChart [data]="BudgetData" [options]="chartOptions" [type]="'pie'"></canvas>
-      </div>
-    </div>
 
-    <div class="card chart-card">
-      <div class="card-head">
-        <span class="id">CATEGORY</span>
-      </div>
-      <div class="card-body chart-body">
-        <canvas
-          baseChart
-          [data]="BudgetByCategory"
-          [options]="chartOptions"
-          [type]="'pie'"
-        ></canvas>
+      <div class="card chart-card">
+        <div class="card-head">
+          <span class="id">SPEND BY CATEGORY</span>
+        </div>
+        <div class="card-body">
+          <div class="chart-canvas-wrap">
+            <canvas
+              baseChart
+              [data]="BudgetByCategory"
+              [options]="chartOptions"
+              [plugins]="categoryPlugins"
+              [type]="'doughnut'"
+            ></canvas>
+          </div>
+          <div class="chart-legend chart-legend-scroll">
+            @for (row of categoryRows(); track row.category) {
+              <div class="chart-legend-row">
+                <span class="chart-legend-swatch" [style.background]="row.color"></span>
+                <span class="chart-legend-label">{{ row.category }}</span>
+                <span class="chart-legend-amount">
+                  {{ row.spent | currency: 'USD' : 'symbol' : '1.2-2' }}
+                </span>
+                <span class="chart-legend-pct">{{ row.percent | number: '1.0-0' }}%</span>
+              </div>
+            }
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  } @else {
+    <div class="card">
+      <div class="card-body">
+        <p class="text-fg-3 text-sm">
+          No budget data yet. Add a budget to see your spending breakdown here.
+        </p>
+      </div>
+    </div>
+  }
 </div>
