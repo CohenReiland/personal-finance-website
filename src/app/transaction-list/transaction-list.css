@@ -65,9 +65,7 @@
   color: var(--fg-2);
 }
 
-/* Fixed layout with explicit column widths so NOTES reliably wraps inside
-   its own column instead of growing to fit its content and pushing the
-   actions column off-screen. */
+/* Fixed column widths so NOTES wraps correctly. */
 .tbl {
   table-layout: fixed;
 }
@@ -95,8 +93,7 @@
 .tbl td:nth-child(7) {
   width: 12%;
 }
-/* 6th column (NOTES) is left without an explicit width, so it absorbs
-   whatever space remains. */
+/* 6th column (NOTES) has a dynamic width. */
 
 .tbl th:not(:nth-child(6)),
 .tbl td:not(.notes-cell) {
