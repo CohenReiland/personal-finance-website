@@ -1,7 +1,6 @@
-import { Component, computed, inject, output } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { TransactionService } from '../services/transaction-service';
-import { Transaction } from '../models/transaction';
 
 @Component({
   selector: 'app-transaction-snapshot',
@@ -12,20 +11,11 @@ import { Transaction } from '../models/transaction';
 })
 export class TransactionSnapshot {
   private readonly transactionService = inject(TransactionService);
-  editRequested = output<Transaction>();
-  deleteRequested = output<Transaction>();
 
-  // Sort recent transactions by date (newest first) and limit to 5
+  // Transactions from the last 7 days, newest first, capped to 5 rows.
   readonly displayTransactions = computed(() => {
     return this.transactionService.recentTransactions().slice(0, 5);
   });
 
-  // Check if there are no recent transactions
   readonly isEmpty = computed(() => this.displayTransactions().length === 0);
-
-  // Dynamic header showing count of recent transactions
-  readonly headerMeta = computed(() => {
-    const total = this.displayTransactions().length;
-    return total === 0 ? 'NO DATA' : `${total} TRANSACTION${total !== 1 ? 'S' : ''}`;
-  });
 }

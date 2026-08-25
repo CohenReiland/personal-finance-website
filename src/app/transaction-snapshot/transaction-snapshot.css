@@ -1,18 +1,17 @@
-.card {
-  color: white;
+/* Brighter, larger text */
+.tbl th {
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--fg);
 }
-
-.tbl th.num,
-.tbl td.num {
-  text-align: left;
+.tbl td {
+  font-size: var(--text-14);
+  color: var(--fg);
 }
-
-.neg {
-  color: var(--bad);
-}
-
-.pos {
+/* These need to out-specify ".tbl td" above to still win. */
+.tbl td.text-ok {
   color: var(--ok);
 }
-
-
+.tbl td.text-bad {
+  color: var(--bad);
+}
