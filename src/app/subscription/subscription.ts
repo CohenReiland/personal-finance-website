@@ -15,12 +15,24 @@ import { SubscriptionService } from '../services/subscription-service';
 interface SubscriptionForm {
   name: FormControl<string>;
   amount: FormControl<number | null>;
-  renewalDate: FormControl<string>;
+  billingDay: FormControl<number | null>;
   notes: FormControl<string>;
 }
 
-function today(): string {
-  return new Date().toISOString().slice(0, 10);
+// Next calendar date a subscription recurring on `billingDay` will charge,
+// looking forward from `today`. Clamps to the last day of short months
+// (e.g. billingDay 31 lands on Feb 28/29).
+function nextChargeDate(billingDay: number, today = new Date()): Date {
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const daysInThisMonth = new Date(year, month + 1, 0).getDate();
+
+  if (today.getDate() <= Math.min(billingDay, daysInThisMonth)) {
+    return new Date(year, month, Math.min(billingDay, daysInThisMonth));
+  }
+
+  const daysInNextMonth = new Date(year, month + 2, 0).getDate();
+  return new Date(year, month + 1, Math.min(billingDay, daysInNextMonth));
 }
 
 @Component({
@@ -44,11 +56,16 @@ export class Subscription {
   );
 
   readonly nextRenewal = computed(() => {
-    const now = new Date();
-    return this.subscriptions()
-      .filter((s) => s.renewalDate && new Date(s.renewalDate) >= now)
-      .sort((a, b) => new Date(a.renewalDate).getTime() - new Date(b.renewalDate).getTime())[0] ?? null;
+    const upcoming = this.subscriptions()
+      .map((s) => ({ subscription: s, chargeDate: nextChargeDate(s.billingDay) }))
+      .sort((a, b) => a.chargeDate.getTime() - b.chargeDate.getTime());
+    return upcoming[0] ?? null;
   });
+
+  // Exposed for the table — the "next charge" column per row.
+  protected nextCharge(billingDay: number): Date {
+    return nextChargeDate(billingDay);
+  }
 
   readonly headerMeta = computed(() => {
     const count = this.subscriptions().length;
@@ -85,9 +102,8 @@ export class Subscription {
     amount: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0.01), Validators.max(999_999)],
     }),
-    renewalDate: new FormControl<string>(today(), {
-      nonNullable: true,
-      validators: [Validators.required],
+    billingDay: new FormControl<number | null>(new Date().getDate(), {
+      validators: [Validators.required, Validators.min(1), Validators.max(31)],
     }),
     notes: new FormControl<string>('', {
       nonNullable: true,
@@ -114,11 +130,11 @@ export class Subscription {
       await this.subscriptionService.CreateSubscription(user.id, {
         name: value.name.trim(),
         amount: value.amount!,
-        renewalDate: new Date(value.renewalDate).toISOString(),
+        billingDay: value.billingDay!,
         notes: value.notes.trim(),
       });
       await this.loadSubscriptions(user.id);
-      this.form.reset({ name: '', amount: null, renewalDate: today(), notes: '' });
+      this.form.reset({ name: '', amount: null, billingDay: new Date().getDate(), notes: '' });
       this.submitSuccess.set('Subscription added.');
       setTimeout(() => this.submitSuccess.set(null), 3000);
     } catch (err) {
@@ -131,7 +147,7 @@ export class Subscription {
   }
 
   onReset(): void {
-    this.form.reset({ name: '', amount: null, renewalDate: today(), notes: '' });
+    this.form.reset({ name: '', amount: null, billingDay: new Date().getDate(), notes: '' });
     this.submitError.set(null);
     this.submitSuccess.set(null);
   }
@@ -148,9 +164,8 @@ export class Subscription {
     amount: new FormControl<number | null>(null, {
       validators: [Validators.required, Validators.min(0.01), Validators.max(999_999)],
     }),
-    renewalDate: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
+    billingDay: new FormControl<number | null>(null, {
+      validators: [Validators.required, Validators.min(1), Validators.max(31)],
     }),
     notes: new FormControl<string>('', {
       nonNullable: true,
@@ -166,7 +181,7 @@ export class Subscription {
     this.editForm.reset({
       name: subscription.name,
       amount: subscription.amount,
-      renewalDate: subscription.renewalDate ? subscription.renewalDate.slice(0, 10) : today(),
+      billingDay: subscription.billingDay,
       notes: subscription.notes ?? '',
     });
     this.editingId.set(subscription.id ?? null);
@@ -177,7 +192,7 @@ export class Subscription {
     if (this.isUpdating()) return;
     this.editingId.set(null);
     this.updateError.set(null);
-    this.editForm.reset({ name: '', amount: null, renewalDate: '', notes: '' });
+    this.editForm.reset({ name: '', amount: null, billingDay: null, notes: '' });
   }
 
   async saveEdit(subscription: SubscriptionRecord): Promise<void> {
@@ -193,12 +208,12 @@ export class Subscription {
       await this.subscriptionService.updateSubscription(user.id, id, {
         name: value.name.trim(),
         amount: value.amount!,
-        renewalDate: new Date(value.renewalDate).toISOString(),
+        billingDay: value.billingDay!,
         notes: value.notes.trim(),
       });
       await this.loadSubscriptions(user.id);
       this.editingId.set(null);
-      this.editForm.reset({ name: '', amount: null, renewalDate: '', notes: '' });
+      this.editForm.reset({ name: '', amount: null, billingDay: null, notes: '' });
     } catch (err) {
       this.updateError.set(err instanceof Error ? err.message : 'Could not save changes.');
     } finally {

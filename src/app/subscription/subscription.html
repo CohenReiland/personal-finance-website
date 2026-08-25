@@ -12,18 +12,12 @@
   <div>
     <div class="section-label">
       <span><span class="num">01</span> &nbsp; NEW SUBSCRIPTION</span>
-      <span>FORM</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ FORM.NEW_SUBSCRIPTION</span>
-        <span class="meta">REQUIRED *</span>
-      </div>
-
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="form-row">
-          <div class="label">NAME *</div>
+          <div class="label">NAME</div>
           <input
             class="input"
             formControlName="name"
@@ -34,7 +28,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">AMOUNT_USD *</div>
+          <div class="label">AMOUNT</div>
           <input
             class="input"
             formControlName="amount"
@@ -49,11 +43,15 @@
         </div>
 
         <div class="form-row">
-          <div class="label">RENEWAL DATE *</div>
+          <div class="label">BILLING DAY</div>
           <input
             class="input"
-            formControlName="renewalDate"
-            type="date"
+            formControlName="billingDay"
+            type="number"
+            inputmode="numeric"
+            placeholder="e.g. 4"
+            min="1"
+            max="31"
             [attr.disabled]="isSubmitting() ? true : null"
           />
         </div>
@@ -71,45 +69,57 @@
 
         @if (form.get('name')?.touched && form.get('name')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
               @if (form.get('name')?.hasError('required')) {
-                ▸ Name is required.
+                Name is required.
               } @else if (form.get('name')?.hasError('maxlength')) {
-                ▸ Name must be 60 characters or fewer.
+                Name must be 60 characters or fewer.
               } @else if (form.get('name')?.hasError('whitespaceOnly')) {
-                ▸ Name cannot be blank.
+                Name cannot be blank.
               }
             </div>
           </div>
         }
         @if (form.get('amount')?.touched && form.get('amount')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
               @if (form.get('amount')?.hasError('required')) {
-                ▸ Amount is required.
+                Amount is required.
               } @else if (form.get('amount')?.hasError('min')) {
-                ▸ Amount must be greater than $0.
+                Amount must be greater than $0.
               } @else if (form.get('amount')?.hasError('max')) {
-                ▸ Amount must be $999,999 or less.
+                Amount must be $999,999 or less.
               }
             </div>
           </div>
         }
-        @if (form.get('renewalDate')?.touched && form.get('renewalDate')?.invalid) {
+        @if (form.get('billingDay')?.touched && form.get('billingDay')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
-              ▸ Renewal date is required.
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('billingDay')?.hasError('required')) {
+                Billing day is required.
+              } @else {
+                Billing day must be between 1 and 31.
+              }
             </div>
           </div>
         }
         @if (form.get('notes')?.touched && form.get('notes')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
-              ▸ Notes must be 200 characters or fewer.
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              Notes must be 200 characters or fewer.
             </div>
           </div>
         }
@@ -117,9 +127,9 @@
         <div class="row" style="padding: var(--space-md)">
           <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
             @if (isSubmitting()) {
-              ▸ SAVING...
+              SAVING...
             } @else {
-              ▸ EXECUTE
+              EXECUTE
             }
           </button>
           <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
@@ -147,8 +157,7 @@
     </div>
 
     <div class="section-label" style="margin-top: var(--space-xl)">
-      <span><span class="num">02</span> &nbsp; SUMMARY</span>
-      <span>ALL TIME</span>
+      <span><span class="num">02</span> &nbsp; ALL TIME SUMMARY</span>
     </div>
 
     <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
@@ -158,13 +167,13 @@
         <div class="stat-delta flat">{{ subscriptions().length }} ACTIVE</div>
       </div>
       <div class="stat">
-        <div class="stat-label"><span class="ticker">▸</span>NEXT RENEWAL</div>
+        <div class="stat-label"><span class="ticker">▸</span>NEXT CHARGE</div>
         @if (nextRenewal(); as next) {
-          <div class="stat-value">{{ next.renewalDate | date: 'MM/dd/yy' }}</div>
-          <div class="stat-delta flat">{{ next.name }}</div>
+          <div class="stat-value">{{ next.chargeDate | date: 'MM/dd/yy' }}</div>
+          <div class="stat-delta flat">{{ next.subscription.name }}</div>
         } @else {
           <div class="stat-value">—</div>
-          <div class="stat-delta flat">NO UPCOMING</div>
+          <div class="stat-delta flat">NO SUBSCRIPTIONS</div>
         }
       </div>
     </div>
@@ -174,15 +183,9 @@
   <div>
     <div class="section-label">
       <span><span class="num">03</span> &nbsp; ACTIVE SUBSCRIPTIONS</span>
-      <span>{{ subscriptions().length }} SUB</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ SUBSCRIPTIONS.TABLE</span>
-        <span class="meta">SORT: AS-ENTERED</span>
-      </div>
-
       @if (deleteError()) {
         <div
           style="
@@ -208,7 +211,7 @@
               <th style="width: 24px">#</th>
               <th>NAME</th>
               <th class="num">AMOUNT</th>
-              <th>RENEWAL DATE</th>
+              <th>NEXT CHARGE</th>
               <th>NOTES</th>
               <th></th>
             </tr>
@@ -222,7 +225,7 @@
                     <div class="cat">{{ s.name }}</div>
                   </td>
                   <td class="num">{{ s.amount | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
-                  <td>{{ s.renewalDate | date: 'MM/dd/yy' }}</td>
+                  <td>{{ nextCharge(s.billingDay) | date: 'MM/dd/yy' }}</td>
                   <td class="notes-cell">{{ s.notes || '—' }}</td>
                   <td>
                     <div class="row-actions">
@@ -275,8 +278,11 @@
                   <td>
                     <input
                       class="input-inline"
-                      formControlName="renewalDate"
-                      type="date"
+                      formControlName="billingDay"
+                      type="number"
+                      inputmode="numeric"
+                      min="1"
+                      max="31"
                       [attr.disabled]="isUpdating() ? true : null"
                     />
                   </td>
