@@ -1,11 +1,13 @@
-/* 2-column layout for the Budget page. Collapses to single column under 1100px. */
+/* 2-column layout for the Budget page. */
 .budget-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
   gap: var(--space-lg);
 }
 @media (max-width: 1100px) {
-  .budget-grid { grid-template-columns: 1fr; }
+  .budget-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Inline action buttons in table rows. */
@@ -17,8 +19,8 @@
 
 .btn-icon {
   font-family: var(--font-mono);
-  font-size: var(--text-10);
-  padding: 4px 8px;
+  font-size: var(--text-11);
+  padding: 6px 10px;
   background: transparent;
   border: 1px solid var(--line-hi);
   color: var(--fg-2);
@@ -50,9 +52,18 @@
 }
 
 /* The active editing row gets an accent outline. */
-.tbl tr.editing { background: var(--panel-2); outline: 1px solid var(--accent); outline-offset: -1px; }
-.tbl tr.editing td { background: var(--panel-2); }
-.tbl tr.editing-error td { background: var(--panel-2); border-bottom: 1px solid var(--accent); }
+.tbl tr.editing {
+  background: var(--panel-2);
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+.tbl tr.editing td {
+  background: var(--panel-2);
+}
+.tbl tr.editing-error td {
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--accent);
+}
 
 /* Inline inputs replacing cells. */
 .input-inline {
@@ -61,9 +72,67 @@
   background: var(--bg-2);
   border: 1px solid var(--accent);
   font-family: var(--font-mono);
-  font-size: var(--text-11);
+  font-size: calc(var(--text-14) + 2px);
   color: var(--fg);
   outline: none;
 }
-.input-inline.num { text-align: right; }
-.input-inline:focus { box-shadow: 0 0 0 2px var(--accent-soft); }
+.input-inline.num {
+  text-align: right;
+}
+.input-inline:focus {
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+/* Brighter, larger text */
+.section-label {
+  font-size: calc(var(--text-14) + 4px);
+  font-weight: 600;
+  color: var(--fg);
+}
+.label {
+  background: var(--panel);
+  white-space: nowrap;
+  font-size: calc(var(--text-14) + 2px);
+  font-weight: 600;
+  color: var(--fg-2);
+}
+.input,
+.select {
+  background: var(--bg-2);
+  font-size: calc(var(--text-14) + 2px);
+  font-weight: 600;
+  color: var(--fg-3);
+}
+.form-error {
+  font-size: var(--text-14);
+  font-weight: 600;
+  padding-left: var(--space-sm);
+}
+.btn.btn-primary {
+  font-size: calc(var(--text-14) + 2px);
+  font-weight: 900;
+}
+.btn:not(.btn-primary) {
+  font-size: calc(var(--text-14) + 1px);
+  font-weight: 700;
+}
+.tbl th {
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--fg);
+}
+.tbl td {
+  font-size: var(--text-14);
+  color: var(--fg);
+}
+.tbl td.num {
+  color: var(--fg);
+}
+.stat-label {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-0);
+}
+.stat-delta {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-2);
+}
