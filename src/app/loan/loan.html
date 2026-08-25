@@ -12,18 +12,12 @@
   <div>
     <div class="section-label">
       <span><span class="num">01</span> &nbsp; NEW LOAN</span>
-      <span>FORM</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ FORM.NEW_LOAN</span>
-        <span class="meta">REQUIRED *</span>
-      </div>
-
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="form-row">
-          <div class="label">NAME *</div>
+          <div class="label">NAME</div>
           <input
             class="input"
             formControlName="name"
@@ -34,7 +28,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">PRINCIPAL_USD *</div>
+          <div class="label">PRINCIPAL</div>
           <input
             class="input"
             formControlName="amount"
@@ -49,7 +43,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">LAST PAID DATE *</div>
+          <div class="label">LAST PAID DATE</div>
           <input
             class="input"
             formControlName="lastPaidDate"
@@ -59,7 +53,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">MONTHLY INTEREST *</div>
+          <div class="label">MONTHLY INTEREST</div>
           <input
             class="input"
             formControlName="interestRate"
@@ -74,7 +68,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">MONTHLY PAYMENT_USD *</div>
+          <div class="label">MONTHLY PAYMENT</div>
           <input
             class="input"
             formControlName="monthlyPayment"
@@ -101,71 +95,65 @@
 
         @if (form.get('name')?.touched && form.get('name')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div class="form-error" style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)">
               @if (form.get('name')?.hasError('required')) {
-                ▸ Name is required.
+                Name is required.
               } @else if (form.get('name')?.hasError('maxlength')) {
-                ▸ Name must be 60 characters or fewer.
+                Name must be 60 characters or fewer.
               } @else if (form.get('name')?.hasError('whitespaceOnly')) {
-                ▸ Name cannot be blank.
+                Name cannot be blank.
               }
             </div>
           </div>
         }
         @if (form.get('amount')?.touched && form.get('amount')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div class="form-error" style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)">
               @if (form.get('amount')?.hasError('required')) {
-                ▸ Principal is required.
+                Principal is required.
               } @else if (form.get('amount')?.hasError('min')) {
-                ▸ Principal must be greater than $0.
+                Principal must be greater than $0.
               } @else if (form.get('amount')?.hasError('max')) {
-                ▸ Principal must be $999,999 or less.
+                Principal must be $999,999 or less.
               }
             </div>
           </div>
         }
         @if (form.get('lastPaidDate')?.touched && form.get('lastPaidDate')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
-              ▸ Last paid date is required.
+            <div class="form-error" style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)">
+              Last paid date is required.
             </div>
           </div>
         }
         @if (form.get('interestRate')?.touched && form.get('interestRate')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div class="form-error" style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)">
               @if (form.get('interestRate')?.hasError('required')) {
-                ▸ Interest rate is required.
+                Interest rate is required.
               } @else {
-                ▸ Interest rate must be between 0 and 1 (as a decimal).
+                Interest rate must be between 0 and 1 (as a decimal).
               }
             </div>
           </div>
         }
         @if (form.get('monthlyPayment')?.touched && form.get('monthlyPayment')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div class="form-error" style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)">
               @if (form.get('monthlyPayment')?.hasError('required')) {
-                ▸ Monthly payment is required.
+                Monthly payment is required.
               } @else if (form.get('monthlyPayment')?.hasError('min')) {
-                ▸ Monthly payment must be greater than $0.
+                Monthly payment must be greater than $0.
               } @else if (form.get('monthlyPayment')?.hasError('max')) {
-                ▸ Monthly payment must be $999,999 or less.
+                Monthly payment must be $999,999 or less.
               }
             </div>
           </div>
         }
         @if (form.get('notes')?.touched && form.get('notes')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
-              ▸ Notes must be 200 characters or fewer.
+            <div class="form-error" style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)">
+              Notes must be 200 characters or fewer.
             </div>
           </div>
         }
@@ -173,9 +161,9 @@
         <div class="row" style="padding: var(--space-md)">
           <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
             @if (isSubmitting()) {
-              ▸ SAVING...
+              SAVING...
             } @else {
-              ▸ EXECUTE
+              EXECUTE
             }
           </button>
           <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
@@ -203,8 +191,7 @@
     </div>
 
     <div class="section-label" style="margin-top: var(--space-xl)">
-      <span><span class="num">02</span> &nbsp; SUMMARY</span>
-      <span>ALL TIME</span>
+      <span><span class="num">02</span> &nbsp; ALL TIME SUMMARY</span>
     </div>
 
     <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
@@ -225,15 +212,9 @@
   <div>
     <div class="section-label">
       <span><span class="num">03</span> &nbsp; ACTIVE LOANS</span>
-      <span>{{ loans().length }} LOAN</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ LOANS.TABLE</span>
-        <span class="meta">SORT: AS-ENTERED</span>
-      </div>
-
       @if (deleteError()) {
         <div
           style="
@@ -259,9 +240,9 @@
               <th style="width: 24px">#</th>
               <th>NAME</th>
               <th class="num">PRINCIPAL</th>
-              <th class="num">MONTHLY PAYMENT</th>
-              <th class="num">INTEREST RATE</th>
-              <th class="num">EST. PAYOFF (MO)</th>
+              <th class="num">PAYMENT</th>
+              <th class="num">RATE</th>
+              <th class="num">PAYOFF (MO)</th>
               <th>LAST PAID</th>
               <th>NOTES</th>
               <th></th>

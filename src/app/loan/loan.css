@@ -72,7 +72,7 @@
   background: var(--bg-2);
   border: 1px solid var(--accent);
   font-family: var(--font-mono);
-  font-size: var(--text-11);
+  font-size: calc(var(--text-14) + 2px);
   color: var(--fg);
   outline: none;
 }
@@ -88,5 +88,63 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--fg-2);
+}
+
+/* Brighter, larger text */
+.form-row {
+  grid-template-columns: 250px 1fr;
+}
+.section-label {
+  font-size: calc(var(--text-14) + 4px);
+  font-weight: 600;
+  color: var(--fg);
+}
+.label {
+  background: var(--panel);
+  white-space: nowrap;
+  font-size: calc(var(--text-14) + 2px);
+  font-weight: 600;
+  color: var(--fg-2);
+}
+.input,
+.textarea {
+  background: var(--bg-2);
+  font-size: calc(var(--text-14) + 2px);
+  font-weight: 600;
+  color: var(--fg-3);
+}
+.form-error {
+  font-size: var(--text-14);
+  font-weight: 600;
+  padding-left: var(--space-sm);
+}
+.btn.btn-primary {
+  font-size: calc(var(--text-14) + 2px);
+  font-weight: 900;
+}
+.btn:not(.btn-primary) {
+  font-size: calc(var(--text-14) + 1px);
+  font-weight: 700;
+}
+.tbl th {
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--fg);
+  white-space: nowrap;
+}
+.tbl td {
+  font-size: var(--text-14);
+  color: var(--fg);
+}
+.tbl td.num {
+  color: var(--fg);
+}
+.stat-label {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-0);
+}
+.stat-delta {
+  font-size: calc(var(--text-12) + 2px);
   color: var(--fg-2);
 }
