@@ -1,37 +1,37 @@
 .sidebar {
-	width: 105px;
-	display: flex;
-    z-index: 1000;
-	flex-direction: column;
-	align-items: center;
-    justify-content: flex-start;
-	border-right: 1px solid var(--line);
-	background-color: var(--bg-2);
-	padding: var(--space-2xl) 0;
-    position: sticky;
-    top: 0;
-    align-self: start;
-    height: 100vh;
-    overflow: visible;
+  width: 105px;
+  display: flex;
+  z-index: 1000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  border-right: 1px solid var(--line);
+  background-color: var(--bg-2);
+  padding: var(--space-2xl) 0;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow: visible;
 }
 
 .sidebar .nav {
-    width: 100%;
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2xl);
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xl);
 }
 
 .sidebar .login-logout {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    margin-top: auto;
-    width: 100%;
-    align-items: center;
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-top: auto;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 #home-img,
@@ -40,57 +40,57 @@
 #budgets-img,
 #settings-img,
 #logout-img {
-	width: 25px;
-	height: 25px;
+  width: 25px;
+  height: 25px;
 }
 
 .sidebar a {
-    position: relative;
+  position: relative;
 }
 
 .sidebar button {
-    position: relative;
+  position: relative;
 }
 
 .nav-action {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
 }
 
 .nav-text {
-    width: 100%;
-    justify-content: center;
-    color: var(--fg-2);
-    font-family: var(--font-mono);
-    font-size: var(--text-10);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+  width: 100%;
+  justify-content: center;
+  color: var(--fg-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-10);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 .sidebar a:hover::after,
 .sidebar button:hover::after {
-    content: attr(data-label);
-    position: absolute;
-    left: 65px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: white;
-    background: #2c2c2cc5;
-    padding: 4px 8px;
-    border-radius: 6px;
-    white-space: nowrap;
-    z-index: 1001;
-    pointer-events: none;
+  content: attr(data-label);
+  position: absolute;
+  left: 65px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  background: #2c2c2cc5;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 1001;
+  pointer-events: none;
 }
 
 .sidebar a:hover img,
 .sidebar button:hover img {
-  filter: brightness(.5);
+  filter: brightness(0.5);
 }
 
 .text-break {
-    height: 60px;
+  height: 60px;
 }

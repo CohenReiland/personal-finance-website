@@ -41,9 +41,7 @@ export class Loan {
   readonly loans = signal<LoanRecord[]>([]);
   readonly isEmpty = computed(() => this.loans().length === 0);
 
-  readonly totalPrincipal = computed(() =>
-    this.loans().reduce((sum, l) => sum + l.amount, 0),
-  );
+  readonly totalPrincipal = computed(() => this.loans().reduce((sum, l) => sum + l.amount, 0));
 
   readonly totalMonthlyPayment = computed(() =>
     this.loans().reduce((sum, l) => sum + l.monthlyPayment, 0),
@@ -51,9 +49,7 @@ export class Loan {
 
   readonly headerMeta = computed(() => {
     const count = this.loans().length;
-    return count === 0
-      ? 'NO ACTIVE LOANS'
-      : `${count} ACTIVE ${count === 1 ? 'LOAN' : 'LOANS'}`;
+    return count === 0 ? 'NO ACTIVE LOANS' : `${count} ACTIVE ${count === 1 ? 'LOAN' : 'LOANS'}`;
   });
 
   constructor() {
@@ -70,12 +66,12 @@ export class Loan {
   }
 
   private async loadLoans(uid: string): Promise<void> {
-    const data = await this.loanService.LoadLoans(uid);
+    const data = await this.loanService.loadLoans(uid);
     this.loans.set(data);
   }
 
   estimatedPayoffMonths(loan: LoanRecord): number | null {
-    return this.loanService.LoanCalculation(loan);
+    return this.loanService.loanCalculation(loan);
   }
 
   // ---------- Add form ----------
@@ -120,7 +116,7 @@ export class Loan {
 
     try {
       const value = this.form.getRawValue();
-      await this.loanService.CreateLoan(user.id, {
+      await this.loanService.createLoan(user.id, {
         name: value.name.trim(),
         amount: value.amount!,
         lastPaidDate: new Date(value.lastPaidDate).toISOString(),

@@ -88,7 +88,7 @@ export class Subscription {
   }
 
   private async loadSubscriptions(uid: string): Promise<void> {
-    const data = await this.subscriptionService.LoadSubscriptions(uid);
+    const data = await this.subscriptionService.loadSubscriptions(uid);
     this.subscriptions.set(data);
   }
 
@@ -127,7 +127,7 @@ export class Subscription {
 
     try {
       const value = this.form.getRawValue();
-      await this.subscriptionService.CreateSubscription(user.id, {
+      await this.subscriptionService.createSubscription(user.id, {
         name: value.name.trim(),
         amount: value.amount!,
         billingDay: value.billingDay!,

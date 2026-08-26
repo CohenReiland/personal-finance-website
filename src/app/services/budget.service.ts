@@ -159,8 +159,7 @@ export class BudgetService {
     const spent = this.spentByCategory().get(this.normalizeCategory(b.category)) ?? 0;
     const percentUsed = b.limit === 0 ? 0 : Math.min((spent / b.limit) * 100, 999);
     const remaining = b.limit - spent;
-    const status: BudgetStatus =
-      spent > b.limit ? 'BREACH' : percentUsed >= 80 ? 'CAUTION' : 'OK';
+    const status: BudgetStatus = spent > b.limit ? 'BREACH' : percentUsed >= 80 ? 'CAUTION' : 'OK';
     return { ...b, spent, percentUsed, remaining, status };
   }
 
@@ -183,8 +182,6 @@ export class BudgetService {
   private normalizeCategory(value: string): string {
     return value.trim().toLowerCase();
   }
-
-  // ---------- Mutations (stubs — Step 5) ----------
 
   // ---------- Mutations ----------
 

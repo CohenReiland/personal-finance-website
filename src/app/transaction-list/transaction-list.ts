@@ -124,7 +124,7 @@ export class TransactionList {
       setTimeout(() => this.submitSuccess.set(null), 3000);
     } catch (err) {
       this.submitError.set(
-        err instanceof Error ? err.message : 'Could not save transaction. Please try again.'
+        err instanceof Error ? err.message : 'Could not save transaction. Please try again.',
       );
     } finally {
       this.isSubmitting.set(false);

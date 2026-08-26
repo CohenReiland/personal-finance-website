@@ -1,15 +1,16 @@
 export interface Transaction {
-    id?: string,
-    transactionId?: string,
-    userId?: string,
-    Name: string,
-    Category: TransactionCategory,
-    Amount: number,
-    Date: Date,
-    Type: ExpenseType,
-    Notes?: string
+  id?: string;
+  transactionId?: string;
+  userId?: string;
+  Name: string;
+  Category: TransactionCategory;
+  Amount: number;
+  Date: Date;
+  Type: ExpenseType;
+  Notes?: string;
 }
 
-export type TransactionCategory = 'Salary' | 'Personal' | 'Grocery' | 'Shopping' | 'Rent' | 'Food' | 'Health' | 'Other';
+export type TransactionCategory =
+  'Salary' | 'Personal' | 'Grocery' | 'Shopping' | 'Rent' | 'Food' | 'Health' | 'Other';
 
-export type ExpenseType = 'Income' | 'Expense'
+export type ExpenseType = 'Income' | 'Expense';

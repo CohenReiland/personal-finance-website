@@ -7,6 +7,8 @@ import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes), provideCharts(withDefaultRegisterables()), provideCharts(withDefaultRegisterables())
-  ]
+    provideRouter(routes),
+    provideCharts(withDefaultRegisterables()),
+    provideCharts(withDefaultRegisterables()),
+  ],
 };

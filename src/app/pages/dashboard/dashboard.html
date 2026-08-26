@@ -1,184 +1,184 @@
 <div class="dashboard-page">
-<div class="page-head">
-  <h1>DASHBOARD<span class="punct">.</span></h1>
-  <div class="meta">
-    <strong>{{ today() | date: 'MM / dd / yyyy' }}</strong>
-    LAST SYNC {{ today() | date: 'HH:mm:ss' }} UTC <br />
-    LIVE
-  </div>
-</div>
-
-<div class="section">
-  <div class="section-label">
-    <span><span class="num">01</span> &nbsp; KEY METRICS</span>
-  </div>
-
-  <div class="stat-grid">
-    <div class="stat">
-      <div class="stat-label"><span class="ticker">▸</span>REMAINING INCOME</div>
-      <div class="stat-value">
-        {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
-      </div>
-      <div class="stat-delta flat">ACROSS {{ budgetCount() }} CATEGORIES</div>
+  <div class="page-head">
+    <h1>DASHBOARD<span class="punct">.</span></h1>
+    <div class="meta">
+      <strong>{{ today() | date: 'MM / dd / yyyy' }}</strong>
+      LAST SYNC {{ today() | date: 'HH:mm:ss' }} UTC <br />
+      LIVE
     </div>
-
-    <div class="stat">
-      <div class="stat-label"><span class="ticker">▸</span>SPENT</div>
-      <div class="stat-value">
-        {{ transactionService.totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
-      </div>
-      <div class="stat-delta flat">
-        OF {{ totalLimit() | currency: 'USD' : 'symbol' : '1.2-2' }}
-      </div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-label"><span class="ticker">▸</span>BUDGET CAUTION COUNTER</div>
-      <div class="stat-value">{{ cautionCount() }}</div>
-      <div class="stat-delta" [class.up]="cautionCount() === 0" [class.down]="cautionCount() > 0">
-        @if (cautionCount() > 0) {
-          NEAR LIMIT
-        } @else {
-          ALL CLEAR
-        }
-      </div>
-    </div>
-
-    <div class="stat">
-      <div class="stat-label"><span class="ticker">▸</span>OVER BUDGET COUNTER</div>
-      <div class="stat-value">{{ overBudgetCount() }}</div>
-      <div
-        class="stat-delta"
-        [class.up]="overBudgetCount() === 0"
-        [class.down]="overBudgetCount() > 0"
-      >
-        @if (overBudgetCount() > 0) {
-          OVER BUDGET
-        } @else {
-          NO BREACH
-        }
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Section 02 & 03: snapshot + charts, each with a view toggle, side by side -->
-<div class="grid-dash">
-  <div class="section">
-    <div class="section-label">
-      <span>
-        <span class="num">02</span> &nbsp;
-        {{ activeLeftView() === 'budget' ? 'BUDGET ALLOCATION' : 'RECENT ACTIVITY' }}
-      </span>
-      <div class="view-toggle">
-        <button
-          type="button"
-          [class.active]="activeLeftView() === 'budget'"
-          (click)="setLeftView('budget')"
-        >
-          BUDGET
-        </button>
-        <button
-          type="button"
-          [class.active]="activeLeftView() === 'activity'"
-          (click)="setLeftView('activity')"
-        >
-          ACTIVITY
-        </button>
-      </div>
-    </div>
-    @if (activeLeftView() === 'budget') {
-      <app-budget-snapshot />
-    } @else {
-      <app-transaction-snapshot />
-    }
   </div>
 
   <div class="section">
     <div class="section-label">
-      <span>
-        <span class="num">03</span> &nbsp;
-        {{ activeChartView() === 'total' ? 'TOTAL BUDGET' : 'SPEND BY CATEGORY' }}
-      </span>
-      <div class="view-toggle">
-        <button
-          type="button"
-          [class.active]="activeChartView() === 'total'"
-          (click)="setChartView('total')"
+      <span><span class="num">01</span> &nbsp; KEY METRICS</span>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>REMAINING INCOME</div>
+        <div class="stat-value">
+          {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
+        </div>
+        <div class="stat-delta flat">ACROSS {{ budgetCount() }} CATEGORIES</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>SPENT</div>
+        <div class="stat-value">
+          {{ transactionService.totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
+        </div>
+        <div class="stat-delta flat">
+          OF {{ totalLimit() | currency: 'USD' : 'symbol' : '1.2-2' }}
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>BUDGET CAUTION COUNTER</div>
+        <div class="stat-value">{{ cautionCount() }}</div>
+        <div class="stat-delta" [class.up]="cautionCount() === 0" [class.down]="cautionCount() > 0">
+          @if (cautionCount() > 0) {
+            NEAR LIMIT
+          } @else {
+            ALL CLEAR
+          }
+        </div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>OVER BUDGET COUNTER</div>
+        <div class="stat-value">{{ overBudgetCount() }}</div>
+        <div
+          class="stat-delta"
+          [class.up]="overBudgetCount() === 0"
+          [class.down]="overBudgetCount() > 0"
         >
-          TOTAL
-        </button>
-        <button
-          type="button"
-          [class.active]="activeChartView() === 'category'"
-          (click)="setChartView('category')"
-        >
-          CATEGORY
-        </button>
+          @if (overBudgetCount() > 0) {
+            OVER BUDGET
+          } @else {
+            NO BREACH
+          }
+        </div>
       </div>
     </div>
-    @if (hasBudgets()) {
-      <div class="card chart-card">
-        <div class="card-body chart-panel">
-          <div class="chart-canvas-wrap">
-            @if (activeChartView() === 'total') {
-              <canvas
-                baseChart
-                [data]="BudgetData"
-                [options]="chartOptions"
-                [plugins]="totalBudgetPlugins"
-                [type]="'doughnut'"
-              ></canvas>
-            } @else {
-              <canvas
-                baseChart
-                [data]="BudgetByCategory"
-                [options]="chartOptions"
-                [plugins]="categoryPlugins"
-                [type]="'doughnut'"
-              ></canvas>
-            }
-          </div>
-          <div class="chart-legend">
-            @if (activeChartView() === 'total') {
-              <div class="chart-legend-row">
-                <span class="chart-legend-swatch" [style.background]="spentColor"></span>
-                <span class="chart-legend-label">Spent</span>
-                <span class="chart-legend-amount">
-                  {{ totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
-                </span>
-              </div>
-              <div class="chart-legend-row">
-                <span class="chart-legend-swatch" [style.background]="remainingColor"></span>
-                <span class="chart-legend-label">Remaining</span>
-                <span class="chart-legend-amount">
-                  {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
-                </span>
-              </div>
-            } @else {
-              @for (row of categoryRows(); track row.category) {
-                <div class="chart-legend-row">
-                  <span class="chart-legend-swatch" [style.background]="row.color"></span>
-                  <span class="chart-legend-label">{{ row.category }}</span>
-                  <span class="chart-legend-amount">
-                    {{ row.spent | currency: 'USD' : 'symbol' : '1.2-2' }}
-                  </span>
-                  <span class="chart-legend-pct">{{ row.percent | number: '1.0-0' }}%</span>
-                </div>
+  </div>
+
+  <!-- Section 02 & 03: snapshot + charts, each with a view toggle, side by side -->
+  <div class="grid-dash">
+    <div class="section">
+      <div class="section-label">
+        <span>
+          <span class="num">02</span> &nbsp;
+          {{ activeLeftView() === 'budget' ? 'BUDGET ALLOCATION' : 'RECENT ACTIVITY' }}
+        </span>
+        <div class="view-toggle">
+          <button
+            type="button"
+            [class.active]="activeLeftView() === 'budget'"
+            (click)="setLeftView('budget')"
+          >
+            BUDGET
+          </button>
+          <button
+            type="button"
+            [class.active]="activeLeftView() === 'activity'"
+            (click)="setLeftView('activity')"
+          >
+            ACTIVITY
+          </button>
+        </div>
+      </div>
+      @if (activeLeftView() === 'budget') {
+        <app-budget-snapshot />
+      } @else {
+        <app-transaction-snapshot />
+      }
+    </div>
+
+    <div class="section">
+      <div class="section-label">
+        <span>
+          <span class="num">03</span> &nbsp;
+          {{ activeChartView() === 'total' ? 'TOTAL BUDGET' : 'SPEND BY CATEGORY' }}
+        </span>
+        <div class="view-toggle">
+          <button
+            type="button"
+            [class.active]="activeChartView() === 'total'"
+            (click)="setChartView('total')"
+          >
+            TOTAL
+          </button>
+          <button
+            type="button"
+            [class.active]="activeChartView() === 'category'"
+            (click)="setChartView('category')"
+          >
+            CATEGORY
+          </button>
+        </div>
+      </div>
+      @if (hasBudgets()) {
+        <div class="card chart-card">
+          <div class="card-body chart-panel">
+            <div class="chart-canvas-wrap">
+              @if (activeChartView() === 'total') {
+                <canvas
+                  baseChart
+                  [data]="BudgetData"
+                  [options]="chartOptions"
+                  [plugins]="totalBudgetPlugins"
+                  [type]="'doughnut'"
+                ></canvas>
+              } @else {
+                <canvas
+                  baseChart
+                  [data]="BudgetByCategory"
+                  [options]="chartOptions"
+                  [plugins]="categoryPlugins"
+                  [type]="'doughnut'"
+                ></canvas>
               }
-            }
+            </div>
+            <div class="chart-legend">
+              @if (activeChartView() === 'total') {
+                <div class="chart-legend-row">
+                  <span class="chart-legend-swatch" [style.background]="spentColor"></span>
+                  <span class="chart-legend-label">Spent</span>
+                  <span class="chart-legend-amount">
+                    {{ totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
+                </div>
+                <div class="chart-legend-row">
+                  <span class="chart-legend-swatch" [style.background]="remainingColor"></span>
+                  <span class="chart-legend-label">Remaining</span>
+                  <span class="chart-legend-amount">
+                    {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
+                </div>
+              } @else {
+                @for (row of categoryRows(); track row.category) {
+                  <div class="chart-legend-row">
+                    <span class="chart-legend-swatch" [style.background]="row.color"></span>
+                    <span class="chart-legend-label">{{ row.category }}</span>
+                    <span class="chart-legend-amount">
+                      {{ row.spent | currency: 'USD' : 'symbol' : '1.2-2' }}
+                    </span>
+                    <span class="chart-legend-pct">{{ row.percent | number: '1.0-0' }}%</span>
+                  </div>
+                }
+              }
+            </div>
           </div>
         </div>
-      </div>
-    } @else {
-      <div class="card">
-        <div class="card-body">
-          <p class="text-fg-3 text-sm">
-            No budget data yet. Add a budget to see your spending breakdown here.
-          </p>
+      } @else {
+        <div class="card">
+          <div class="card-body">
+            <p class="text-fg-3 text-sm">
+              No budget data yet. Add a budget to see your spending breakdown here.
+            </p>
+          </div>
         </div>
-      </div>
-    }
+      }
+    </div>
   </div>
-</div>
 </div>
