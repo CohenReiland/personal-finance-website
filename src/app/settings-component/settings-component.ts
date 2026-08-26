@@ -82,7 +82,8 @@ export class SettingsComponent {
       await this.authService.updateUser(this.currentUser()!.id, { firstName, lastName, email });
       await this.router.navigate(['/dashboard']);
     } catch (error: unknown) {
-      this.profileError = 'Failed to create account. Please try again.';
+      this.profileError =
+        error instanceof Error ? error.message : 'Failed to update profile. Please try again.';
     }
   }
 
@@ -102,7 +103,8 @@ export class SettingsComponent {
       await this.authService.changePassword(password);
       await this.router.navigate(['/dashboard']);
     } catch (error: unknown) {
-      this.passwordError = 'Failed to update password. Please try again.';
+      this.passwordError =
+        error instanceof Error ? error.message : 'Failed to update password. Please try again.';
     }
   }
 }

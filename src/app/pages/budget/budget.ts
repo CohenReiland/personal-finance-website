@@ -26,7 +26,7 @@ interface EditBudgetForm {
   standalone: true,
   imports: [CurrencyPipe, DecimalPipe, ReactiveFormsModule],
   templateUrl: './budget.html',
-  styleUrls: ['./budget.css'],
+  styleUrl: './budget.css',
 })
 export class Budget {
   private readonly budgetService = inject(BudgetService);

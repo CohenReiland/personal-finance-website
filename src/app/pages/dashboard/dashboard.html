@@ -124,7 +124,7 @@
               @if (activeChartView() === 'total') {
                 <canvas
                   baseChart
-                  [data]="BudgetData"
+                  [data]="budgetData"
                   [options]="chartOptions"
                   [plugins]="totalBudgetPlugins"
                   [type]="'doughnut'"
@@ -132,7 +132,7 @@
               } @else {
                 <canvas
                   baseChart
-                  [data]="BudgetByCategory"
+                  [data]="budgetByCategory"
                   [options]="chartOptions"
                   [plugins]="categoryPlugins"
                   [type]="'doughnut'"

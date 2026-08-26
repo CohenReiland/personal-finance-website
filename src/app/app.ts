@@ -17,5 +17,4 @@ export class App {
   protected get currentUser(): User | null {
     return this.authService.currentUser();
   }
-  protected readonly sessionTime = signal('00:00:00');
 }

@@ -62,7 +62,8 @@ export class SignUpComponent {
       await this.authService.signUp({ firstName, lastName, email, password });
       await this.router.navigate(['/dashboard']);
     } catch (error: unknown) {
-      this.signupError = 'Failed to create account. Please try again.';
+      this.signupError =
+        error instanceof Error ? error.message : 'Failed to create account. Please try again.';
     }
   }
 }

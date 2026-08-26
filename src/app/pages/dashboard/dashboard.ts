@@ -90,12 +90,12 @@ export class Dashboard {
   readonly remainingColor: string;
 
   // Doughnut chart data, populated by buildCharts().
-  public BudgetData: ChartData<'doughnut'> = {
+  public budgetData: ChartData<'doughnut'> = {
     labels: [],
     datasets: [{ data: [], backgroundColor: [] }],
   };
 
-  public BudgetByCategory: ChartData<'doughnut'> = {
+  public budgetByCategory: ChartData<'doughnut'> = {
     labels: [],
     datasets: [{ data: [], backgroundColor: [] }],
   };
@@ -201,7 +201,7 @@ export class Dashboard {
   private buildCharts(): void {
     const rows = this.categoryRows();
 
-    this.BudgetData = {
+    this.budgetData = {
       labels: ['Spent', 'Remaining'],
       datasets: [
         {
@@ -214,7 +214,7 @@ export class Dashboard {
       ],
     };
 
-    this.BudgetByCategory = {
+    this.budgetByCategory = {
       labels: rows.map((r) => r.category),
       datasets: [
         {

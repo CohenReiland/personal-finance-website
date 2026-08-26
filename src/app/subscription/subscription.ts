@@ -195,7 +195,7 @@ export class Subscription {
     this.editForm.reset({ name: '', amount: null, billingDay: null, notes: '' });
   }
 
-  async saveEdit(subscription: SubscriptionRecord): Promise<void> {
+  async saveEdit(): Promise<void> {
     const id = this.editingId();
     const user = this.auth.currentUser();
     if (!id || !user || this.editForm.invalid || this.isUpdating()) return;
