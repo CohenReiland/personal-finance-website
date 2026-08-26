@@ -1,59 +1,107 @@
-# FrameworksFinalProject
+# Personal Finance Website
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+*Collaborative team project for Software Development with Frameworks at North Dakota State University.*
 
-## Development server
+A personal finance tracker built with Angular and Firebase. It handles transactions, budgets, subscriptions, and loans, all from one dashboard.
 
-To start a local development server, run:
+## Features
 
-```bash
-ng serve
-```
+- **Authentication**: Sign up, log in, log out, and reset your password through Firebase Auth. Route guards keep the protected pages locked to signed-in users.
+- **Dashboard**: Budget and transaction snapshots with charts, so you can see where things stand at a glance.
+- **Transactions**: Add, edit, and delete income or expense entries, and tag each one with a category.
+- **Budgets**: Set a budget per category and watch it update in real time through Firestore.
+- **Subscriptions**: Track recurring subscriptions and when they bill next.
+- **Loans**: Track loan balances and see a payoff estimate based on the interest rate and payment amount.
+- **Settings**: Update your profile info or change your password.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Demo
 
-## Code scaffolding
+- **Original group project (end of course)**: [cohenreiland.github.io/frameworks-final-project](https://cohenreiland.github.io/frameworks-final-project/)
+- **Improved version (post-course updates)**: link coming soon
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Tech Stack
 
-```bash
-ng generate component component-name
-```
+- Angular 21
+- TypeScript 5.9
+- Firebase (Authentication + Firestore)
+- Chart.js + ng2-charts
+- Bootstrap 5
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Getting Started
 
-```bash
-ng generate --help
-```
+### Prerequisites
 
-## Building
+You'll need Node.js 20 or later with npm, plus a Firebase project with Email/Password authentication and Firestore turned on.
 
-To build the project run:
+### Setup
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+First, clone the repository and install dependencies:
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
+Then add your Firebase project's config to `src/app/firebase.config.ts`. If you don't already have those values, Firebase's [web setup docs](https://firebase.google.com/docs/web/setup) show you where to find them in your Firebase console.
 
-For end-to-end (e2e) testing, run:
+Once that's done, start the dev server:
 
 ```bash
-ng e2e
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+and open [http://localhost:4200](http://localhost:4200) in your browser.
 
-## Additional Resources
+### Build for Production
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm run build
+```
+
+This outputs the build to `dist/`.
+
+## Usage
+
+Once you're logged in, the dashboard gives you a quick read on your budget usage and recent transactions. From there, transactions let you log income and expenses and sort them by category, budgets let you set spending limits per category, and subscriptions and loans let you track recurring costs and payoff progress. Settings is where you update your profile or password.
+
+All data is scoped to the signed-in user through Firestore security rules, so no one can read or write another user's data.
+
+## Project Structure
+
+```
+src/app/
+├── login-component/       # Login page
+├── sign-up-component/     # Sign-up page
+├── settings-component/    # Profile & password settings
+├── navbar/                # App sidebar navigation
+├── pages/
+│   ├── dashboard/          # Dashboard with charts + snapshots
+│   └── budget/              # Budget management page
+├── loan/                  # Loan tracking page
+├── subscription/          # Subscription tracking page
+├── transaction-list/      # Transaction list & CRUD
+├── transaction-item/      # Single transaction row
+├── transaction-snapshot/  # Dashboard transaction summary
+├── budget-snapshot/       # Dashboard budget summary
+├── services/               # Firebase-backed data services
+├── models/                 # TypeScript interfaces for app data
+├── app.routes.ts            # Route definitions + auth guards
+└── firebase.config.ts        # Firebase project configuration
+```
+
+## Improvements
+
+This project started as a team assignment, and it was left in a working but rough state once the course ended. Since then it's been reworked and improved.
+
+The database turned out to be the biggest problem. Firestore's rules were still set to `allow read, write: if true`, so anyone who found the project ID could read or wipe the entire database. That's fixed now, with rules that scope every user's data to their own account.
+
+There were a couple of access-control gaps too. The dashboard and subscription pages were reachable without logging in, when every other page required it. 
+
+Past the fixes, the UI got a consistency pass across transactions, budgets, loans, subscriptions, and the dashboard, plus a rework of the dashboard's charts. The codebase itself got cleaned up too: dead code and unused imports removed, debug statements pulled out, naming conventions normalized, and Prettier wired in for consistent formatting.
+
+## License
+
+MIT License. See [LICENSE](LICENSE) for details.
+
+## Team
+
+Collaborative team project for Software Development with Frameworks at North Dakota State University.
