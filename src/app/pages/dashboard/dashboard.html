@@ -1,3 +1,4 @@
+<div class="dashboard-page">
 <div class="page-head">
   <h1>DASHBOARD<span class="punct">.</span></h1>
   <div class="meta">
@@ -61,100 +62,123 @@
   </div>
 </div>
 
-<!-- Section 02 & 03: Budget snapshot + recent activity, side by side -->
+<!-- Section 02 & 03: snapshot + charts, each with a view toggle, side by side -->
 <div class="grid-dash">
   <div class="section">
     <div class="section-label">
-      <span><span class="num">02</span> &nbsp; BUDGET ALLOCATION</span>
+      <span>
+        <span class="num">02</span> &nbsp;
+        {{ activeLeftView() === 'budget' ? 'BUDGET ALLOCATION' : 'RECENT ACTIVITY' }}
+      </span>
+      <div class="view-toggle">
+        <button
+          type="button"
+          [class.active]="activeLeftView() === 'budget'"
+          (click)="setLeftView('budget')"
+        >
+          BUDGET
+        </button>
+        <button
+          type="button"
+          [class.active]="activeLeftView() === 'activity'"
+          (click)="setLeftView('activity')"
+        >
+          ACTIVITY
+        </button>
+      </div>
     </div>
-    <app-budget-snapshot />
+    @if (activeLeftView() === 'budget') {
+      <app-budget-snapshot />
+    } @else {
+      <app-transaction-snapshot />
+    }
   </div>
 
   <div class="section">
     <div class="section-label">
-      <span><span class="num">03</span> &nbsp; RECENT ACTIVITY</span>
+      <span>
+        <span class="num">03</span> &nbsp;
+        {{ activeChartView() === 'total' ? 'TOTAL BUDGET' : 'SPEND BY CATEGORY' }}
+      </span>
+      <div class="view-toggle">
+        <button
+          type="button"
+          [class.active]="activeChartView() === 'total'"
+          (click)="setChartView('total')"
+        >
+          TOTAL
+        </button>
+        <button
+          type="button"
+          [class.active]="activeChartView() === 'category'"
+          (click)="setChartView('category')"
+        >
+          CATEGORY
+        </button>
+      </div>
     </div>
-    <app-transaction-snapshot></app-transaction-snapshot>
-  </div>
-</div>
-
-<!-- Section 04: Data visualization — full width -->
-<div class="section">
-  <div class="section-label">
-    <span><span class="num">04</span> &nbsp; SPEND ANALYTICS</span>
-  </div>
-
-  @if (hasBudgets()) {
-    <div class="chart-row">
+    @if (hasBudgets()) {
       <div class="card chart-card">
-        <div class="card-head">
-          <span class="id">TOTAL BUDGET</span>
-        </div>
-        <div class="card-body">
+        <div class="card-body chart-panel">
           <div class="chart-canvas-wrap">
-            <canvas
-              baseChart
-              [data]="BudgetData"
-              [options]="chartOptions"
-              [plugins]="totalBudgetPlugins"
-              [type]="'doughnut'"
-            ></canvas>
+            @if (activeChartView() === 'total') {
+              <canvas
+                baseChart
+                [data]="BudgetData"
+                [options]="chartOptions"
+                [plugins]="totalBudgetPlugins"
+                [type]="'doughnut'"
+              ></canvas>
+            } @else {
+              <canvas
+                baseChart
+                [data]="BudgetByCategory"
+                [options]="chartOptions"
+                [plugins]="categoryPlugins"
+                [type]="'doughnut'"
+              ></canvas>
+            }
           </div>
           <div class="chart-legend">
-            <div class="chart-legend-row">
-              <span class="chart-legend-swatch" [style.background]="spentColor"></span>
-              <span class="chart-legend-label">Spent</span>
-              <span class="chart-legend-amount">
-                {{ totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
-              </span>
-            </div>
-            <div class="chart-legend-row">
-              <span class="chart-legend-swatch" [style.background]="remainingColor"></span>
-              <span class="chart-legend-label">Remaining</span>
-              <span class="chart-legend-amount">
-                {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card chart-card">
-        <div class="card-head">
-          <span class="id">SPEND BY CATEGORY</span>
-        </div>
-        <div class="card-body">
-          <div class="chart-canvas-wrap">
-            <canvas
-              baseChart
-              [data]="BudgetByCategory"
-              [options]="chartOptions"
-              [plugins]="categoryPlugins"
-              [type]="'doughnut'"
-            ></canvas>
-          </div>
-          <div class="chart-legend chart-legend-scroll">
-            @for (row of categoryRows(); track row.category) {
+            @if (activeChartView() === 'total') {
               <div class="chart-legend-row">
-                <span class="chart-legend-swatch" [style.background]="row.color"></span>
-                <span class="chart-legend-label">{{ row.category }}</span>
+                <span class="chart-legend-swatch" [style.background]="spentColor"></span>
+                <span class="chart-legend-label">Spent</span>
                 <span class="chart-legend-amount">
-                  {{ row.spent | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  {{ totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
                 </span>
-                <span class="chart-legend-pct">{{ row.percent | number: '1.0-0' }}%</span>
               </div>
+              <div class="chart-legend-row">
+                <span class="chart-legend-swatch" [style.background]="remainingColor"></span>
+                <span class="chart-legend-label">Remaining</span>
+                <span class="chart-legend-amount">
+                  {{ totalRemaining() | currency: 'USD' : 'symbol' : '1.2-2' }}
+                </span>
+              </div>
+            } @else {
+              @for (row of categoryRows(); track row.category) {
+                <div class="chart-legend-row">
+                  <span class="chart-legend-swatch" [style.background]="row.color"></span>
+                  <span class="chart-legend-label">{{ row.category }}</span>
+                  <span class="chart-legend-amount">
+                    {{ row.spent | currency: 'USD' : 'symbol' : '1.2-2' }}
+                  </span>
+                  <span class="chart-legend-pct">{{ row.percent | number: '1.0-0' }}%</span>
+                </div>
+              }
             }
           </div>
         </div>
       </div>
-    </div>
-  } @else {
-    <div class="card">
-      <div class="card-body">
-        <p class="text-fg-3 text-sm">
-          No budget data yet. Add a budget to see your spending breakdown here.
-        </p>
+    } @else {
+      <div class="card">
+        <div class="card-body">
+          <p class="text-fg-3 text-sm">
+            No budget data yet. Add a budget to see your spending breakdown here.
+          </p>
+        </div>
       </div>
-    </div>
-  }
+    }
+  </div>
+</div>
 </div>

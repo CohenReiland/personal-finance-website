@@ -1,3 +1,18 @@
+/* Flex-grow chain (not height:100%) so the card fills the dashboard's
+   flex-grown column — matches the pattern that works for the chart card. */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
 /* Brighter, larger text */
 .tbl th {
   font-size: var(--text-11);

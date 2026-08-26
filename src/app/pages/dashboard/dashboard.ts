@@ -70,6 +70,18 @@ export class Dashboard {
   // Local clock, refreshed once a minute.
   readonly today = signal(new Date());
 
+  // Which view each toggle-able section is showing.
+  readonly activeLeftView = signal<'budget' | 'activity'>('budget');
+  readonly activeChartView = signal<'total' | 'category'>('total');
+
+  setLeftView(view: 'budget' | 'activity'): void {
+    this.activeLeftView.set(view);
+  }
+
+  setChartView(view: 'total' | 'category'): void {
+    this.activeChartView.set(view);
+  }
+
   // Category colors, cycled if there are more categories than colors.
   private readonly categoryPalette: string[];
   private readonly panelColor: string;
