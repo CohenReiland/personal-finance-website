@@ -59,11 +59,13 @@ export const routes: Routes = [
     path: 'dashboard',
     component: Dashboard,
     title: 'Dashboard',
+    canActivate: [authGuard],
   },
   {
     path: 'subscription',
     component: Subscription,
     title: 'Subscription',
+    canActivate: [authGuard],
   },
   {
     path: 'loan',
