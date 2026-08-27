@@ -11,11 +11,10 @@ import { Navbar } from './navbar/navbar';
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('frameworks-final-project');
+  protected readonly title = signal('personal-finance-website');
   private readonly authService = inject(AuthService);
 
   protected get currentUser(): User | null {
     return this.authService.currentUser();
   }
-  protected readonly sessionTime = signal('00:00:00');
 }

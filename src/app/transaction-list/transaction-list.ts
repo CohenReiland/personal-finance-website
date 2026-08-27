@@ -1,90 +1,208 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+  AbstractControl,
+  ValidationErrors,
+} from '@angular/forms';
 import { TransactionService } from '../services/transaction-service';
-import { TransactionItem } from '../transaction-item/transaction-item';
 import { ExpenseType, Transaction, TransactionCategory } from '../models/transaction';
+
+interface TransactionForm {
+  name: FormControl<string>;
+  category: FormControl<string>;
+  amount: FormControl<number | null>;
+  date: FormControl<string>;
+  type: FormControl<ExpenseType>;
+  notes: FormControl<string>;
+}
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
 
 @Component({
   selector: 'app-transaction-list',
-  imports: [TransactionItem],
+  imports: [CurrencyPipe, DatePipe, ReactiveFormsModule],
   templateUrl: './transaction-list.html',
   styleUrl: './transaction-list.css',
 })
 export class TransactionList {
   transactionService = inject(TransactionService);
-  isAddOpen = false;
-  editingTransaction: Transaction | null = null;
+
+  readonly isEmpty = computed(() => this.transactionService.transactions().length === 0);
+  readonly totalSpent = this.transactionService.totalSpent;
+  readonly totalIncome = this.transactionService.totalIncome;
+  readonly net = computed(() => this.totalIncome() - this.totalSpent());
+
+  readonly headerMeta = computed(() => {
+    const count = this.transactionService.transactionCount();
+    return count === 0 ? 'NO TRANSACTIONS' : `${count} TRANSACTION${count === 1 ? '' : 'S'}`;
+  });
 
   constructor() {
     this.transactionService.loadTransactions();
   }
 
-  openAdd(): void {
-    this.editingTransaction = null;
-    this.isAddOpen = true;
-  }
+  // ---------- Add / Edit form ----------
 
-  openEdit(transaction: Transaction): void {
-    this.editingTransaction = transaction;
-    this.isAddOpen = true;
-  }
+  readonly form = new FormGroup<TransactionForm>({
+    name: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(60), this.notWhitespaceOnly],
+    }),
+    category: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    amount: new FormControl<number | null>(null, {
+      validators: [Validators.required, Validators.min(0.01), Validators.max(999_999)],
+    }),
+    date: new FormControl<string>(today(), {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    type: new FormControl<ExpenseType>('Expense', { nonNullable: true }),
+    notes: new FormControl<string>('', {
+      nonNullable: true,
+      validators: [Validators.maxLength(150)],
+    }),
+  });
 
-  formatDateInput(transaction: Transaction | null): string {
-    if (!transaction) {
-      return '';
+  readonly isSubmitting = signal(false);
+  readonly submitError = signal<string | null>(null);
+  readonly submitSuccess = signal<string | null>(null);
+
+  readonly editingTransaction = signal<Transaction | null>(null);
+  readonly isEditing = computed(() => this.editingTransaction() !== null);
+
+  async onSubmit(): Promise<void> {
+    if (this.form.invalid || this.isSubmitting()) return;
+
+    this.isSubmitting.set(true);
+    this.submitError.set(null);
+    this.submitSuccess.set(null);
+
+    try {
+      const value = this.form.getRawValue();
+      const editing = this.editingTransaction();
+
+      if (editing) {
+        await this.transactionService.updateTransaction({
+          ...editing,
+          Name: value.name.trim(),
+          Category: value.category as TransactionCategory,
+          Amount: value.amount!,
+          Date: new Date(value.date),
+          Type: value.type,
+          Notes: value.notes.trim(),
+        });
+        this.cancelEdit();
+        this.submitSuccess.set('Transaction updated.');
+      } else {
+        await this.transactionService.addTransaction({
+          Name: value.name.trim(),
+          Category: value.category as TransactionCategory,
+          Amount: value.amount!,
+          Date: new Date(value.date),
+          Type: value.type,
+          Notes: value.notes.trim(),
+        });
+        this.form.reset({
+          name: '',
+          category: '',
+          amount: null,
+          date: today(),
+          type: 'Expense',
+          notes: '',
+        });
+        this.submitSuccess.set('Transaction added.');
+      }
+      setTimeout(() => this.submitSuccess.set(null), 3000);
+    } catch (err) {
+      this.submitError.set(
+        err instanceof Error ? err.message : 'Could not save transaction. Please try again.',
+      );
+    } finally {
+      this.isSubmitting.set(false);
     }
-
-    return new Date(transaction.Date).toISOString().slice(0, 10);
   }
 
-  closeAdd(): void {
-    this.isAddOpen = false;
+  onReset(): void {
+    this.form.reset({
+      name: '',
+      category: '',
+      amount: null,
+      date: today(),
+      type: 'Expense',
+      notes: '',
+    });
+    this.submitError.set(null);
+    this.submitSuccess.set(null);
   }
 
-  async saveTransaction(
-    name: string,
-    category: string,
-    amount: string,
-    date: string,
-    type: string
-  ): Promise<void> {
-    const trimmedName = name.trim();
-    const trimmedCategory = category.trim();
-    const trimmedType = type.trim() || 'Expense';
-    const parsedAmount = Number(amount);
-    const parsedDate = date ? new Date(date) : new Date();
-    const parsedCategory = trimmedCategory as TransactionCategory;
-    const parsedType = trimmedType as ExpenseType;
-
-    if (!trimmedName || !trimmedCategory || Number.isNaN(parsedAmount)) {
-      return;
-    }
-
-    const transaction: Transaction = {
-      ...(this.editingTransaction ?? {}),
-      Name: trimmedName,
-      Category: parsedCategory,
-      Amount: parsedAmount,
-      Date: parsedDate,
-      Type: parsedType,
-    };
-
-    if (this.editingTransaction) {
-      await this.transactionService.updateTransaction(transaction);
-    } else {
-      await this.transactionService.addTransaction(transaction);
-    }
-
-    this.editingTransaction = null;
-    this.closeAdd();
+  startEdit(transaction: Transaction): void {
+    if (this.isSubmitting() || this.deletingId() !== null) return;
+    this.form.reset({
+      name: transaction.Name,
+      category: transaction.Category,
+      amount: transaction.Amount,
+      date: new Date(transaction.Date).toISOString().slice(0, 10),
+      type: transaction.Type,
+      notes: transaction.Notes ?? '',
+    });
+    this.editingTransaction.set(transaction);
+    this.submitError.set(null);
+    this.submitSuccess.set(null);
   }
+
+  cancelEdit(): void {
+    this.editingTransaction.set(null);
+    this.form.reset({
+      name: '',
+      category: '',
+      amount: null,
+      date: today(),
+      type: 'Expense',
+      notes: '',
+    });
+    this.submitError.set(null);
+  }
+
+  // ---------- Delete state ----------
+
+  readonly deletingId = signal<string | null>(null);
+  readonly deleteError = signal<string | null>(null);
 
   async deleteTransaction(transaction: Transaction): Promise<void> {
-    const shouldDelete = window.confirm(`Delete ${transaction.Name}?`);
+    if (this.deletingId() !== null || this.isSubmitting()) return;
 
-    if (!shouldDelete) {
-      return;
+    const confirmed = window.confirm(`Delete "${transaction.Name}"? This cannot be undone.`);
+    if (!confirmed) return;
+
+    this.deletingId.set(transaction.id ?? null);
+    this.deleteError.set(null);
+
+    try {
+      await this.transactionService.deleteTransaction(transaction);
+      if (this.editingTransaction()?.id === transaction.id) {
+        this.cancelEdit();
+      }
+    } catch (err) {
+      this.deleteError.set(err instanceof Error ? err.message : 'Could not delete transaction.');
+    } finally {
+      this.deletingId.set(null);
     }
+  }
 
-    await this.transactionService.deleteTransaction(transaction);
+  private notWhitespaceOnly(control: AbstractControl): ValidationErrors | null {
+    const value = control.value as string;
+    if (typeof value === 'string' && value.trim().length === 0 && value.length > 0) {
+      return { whitespaceOnly: true };
+    }
+    return null;
   }
 }

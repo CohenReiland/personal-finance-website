@@ -1,12 +1,14 @@
 {
-  "name": "frameworks-final-project",
+  "name": "personal-finance-website",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "format": "prettier --write \"src/**/*.{ts,html,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,css}\""
   },
   "prettier": {
     "printWidth": 100,
@@ -41,6 +43,7 @@
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.0",
     "jsdom": "^27.1.0",
+    "prettier": "^3.9.6",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

@@ -1,8 +1,4 @@
 <div class="card">
-  <div class="card-head">
-    <span class="id">▸ BUDGET.SNAPSHOT</span>
-    <span class="meta">{{ headerMeta() }}</span>
-  </div>
   @if (isEmpty()) {
     <div class="card-body">
       <p class="text-fg-3 text-sm">
@@ -18,7 +14,7 @@
           <th class="num">SPENT</th>
           <th class="num">LIMIT</th>
           <th class="num">% USED</th>
-          <th>STATUS</th>
+          <th class="num">STATUS</th>
         </tr>
       </thead>
       <tbody>
@@ -37,14 +33,14 @@
             <td class="num">{{ b.spent | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
             <td class="num">{{ b.limit | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
             <td class="num">{{ b.percentUsed | number: '1.1-1' }}%</td>
-            <td>
+            <td class="num">
               <span
                 class="tag"
                 [class.ok]="b.status === 'OK'"
                 [class.warn]="b.status === 'CAUTION'"
                 [class.over]="b.status === 'BREACH'"
               >
-                {{ b.status }}
+                {{ statusLabel(b.status) }}
               </span>
             </td>
           </tr>

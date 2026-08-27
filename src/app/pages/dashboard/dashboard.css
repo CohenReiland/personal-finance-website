@@ -1,0 +1,157 @@
+/* Stretches the snapshot/chart row down to the bottom of the page. */
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Chart side of the grid gets more room than the snapshot side. */
+.grid-dash {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+  flex: 1;
+  min-height: 0;
+}
+
+.grid-dash > .section {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chart-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  animation: chart-fade-in 0.3s ease-out;
+}
+
+.chart-card > .card-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+@keyframes chart-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Pie on the left, legend on the right — both stretch to the card's height. */
+.chart-panel {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-xl);
+  width: 100%;
+}
+
+/* Grows with the card so the doughnut fills the available height. */
+.chart-canvas-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Custom legend in place of Chart.js's default one. Wide enough that
+   category names don't need to be truncated. */
+.chart-legend {
+  flex: 0 0 260px;
+  border-left: 1px solid var(--line);
+  padding-left: var(--space-lg);
+}
+
+.chart-legend-row {
+  display: grid;
+  grid-template-columns: 10px 1fr 72px 40px;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-11);
+}
+
+.chart-legend-row + .chart-legend-row {
+  border-top: 1px solid var(--line);
+}
+
+.chart-legend-row:hover {
+  background: var(--panel-2);
+}
+
+.chart-legend-swatch {
+  width: 10px;
+  height: 10px;
+}
+
+.chart-legend-label {
+  color: var(--fg);
+  font-size: var(--text-12);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chart-legend-amount {
+  color: var(--fg);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  padding-right: var(--space-md);
+}
+
+.chart-legend-pct {
+  color: var(--fg-2);
+  font-size: var(--text-11);
+  text-align: right;
+  padding-right: var(--space-md);
+}
+
+/* Toggle in the section-label row that switches a section's content. */
+.view-toggle {
+  display: flex;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line-hi);
+}
+.view-toggle button {
+  font-family: var(--font-mono);
+  font-size: var(--text-11);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: var(--space-xs) var(--space-md);
+  border: none;
+  background: var(--panel);
+  color: var(--fg-2);
+  cursor: pointer;
+}
+.view-toggle button:hover {
+  color: var(--fg);
+}
+.view-toggle button.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Brighter, larger text */
+.section-label {
+  font-size: calc(var(--text-14) + 4px);
+  font-weight: 600;
+  color: var(--fg);
+}
+.stat-label {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-0);
+}
+.stat-delta {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-2);
+}

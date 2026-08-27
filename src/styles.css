@@ -2,23 +2,19 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* =========================================================================
-   FRAMEWORK FOUR — FF/313 PERSONAL FINANCE
+   PERSONAL FINANCE WEBSITE
    Global Design System — Electric Blue Variant
    ---
-   Owner: Ethan Birnbaum
-   Project: frameworks-final-project
-   Course: Advanced Software / 313
+   Project: personal-finance-website
    ---
    This file is the SINGLE SOURCE OF TRUTH for the application's visual
-   language. Drop this into src/styles.css and reference it from
-   angular.json (it should already be there by default).
+   language.
    ---
-   FOR YOUR TEAMMATES:
+   NOTES:
      1. DO NOT hardcode colors, spacing, or font sizes anywhere.
         Use CSS variables instead: var(--accent), var(--space-md), etc.
      2. PREFER provided component classes (.btn, .card, .input, .tag, .tbl)
-        over writing your own. If you find yourself reinventing one of
-        these, ask Ethan first.
+        over writing your own.
      3. For component-scoped CSS, you CAN reference these variables —
         Angular's emulated encapsulation does not block CSS custom
         properties from cascading into components.
@@ -429,16 +425,16 @@ a.link:hover {
 }
 .page-head .meta {
   font-family: var(--font-mono);
-  font-size: var(--text-10);
+  font-size: var(--text-11);
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--fg-3);
+  color: var(--fg-2);
   text-align: right;
 }
 .page-head .meta strong {
   color: var(--fg);
   display: block;
-  font-size: var(--text-12);
+  font-size: var(--text-14);
   margin-bottom: var(--space-2xs);
 }
 

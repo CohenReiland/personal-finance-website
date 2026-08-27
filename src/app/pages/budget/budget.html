@@ -13,18 +13,12 @@
   <div>
     <div class="section-label">
       <span><span class="num">01</span> &nbsp; NEW ALLOCATION</span>
-      <span>FORM</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ FORM.NEW_BUDGET</span>
-        <span class="meta">REQUIRED *</span>
-      </div>
-
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="form-row">
-          <div class="label">CATEGORY *</div>
+          <div class="label">CATEGORY</div>
           <select
             class="select"
             formControlName="category"
@@ -45,7 +39,7 @@
         </div>
 
         <div class="form-row">
-          <div class="label">LIMIT_USD *</div>
+          <div class="label">LIMIT</div>
           <input
             class="input"
             formControlName="limit"
@@ -66,28 +60,32 @@
 
         @if (form.get('category')?.touched && form.get('category')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
               @if (form.get('category')?.hasError('required')) {
-                ▸ Category is required.
+                Category is required.
               } @else if (form.get('category')?.hasError('maxlength')) {
-                ▸ Category must be 40 characters or fewer.
+                Category must be 40 characters or fewer.
               } @else if (form.get('category')?.hasError('whitespaceOnly')) {
-                ▸ Category cannot be blank.
+                Category cannot be blank.
               }
             </div>
           </div>
         }
         @if (form.get('limit')?.touched && form.get('limit')?.invalid) {
           <div class="form-row" style="border-bottom: none">
-            <div class="label" style="background: transparent; border-right: none"></div>
-            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
               @if (form.get('limit')?.hasError('required')) {
-                ▸ Limit is required.
+                Limit is required.
               } @else if (form.get('limit')?.hasError('min')) {
-                ▸ Limit must be greater than $0.
+                Limit must be greater than $0.
               } @else if (form.get('limit')?.hasError('max')) {
-                ▸ Limit must be $999,999 or less.
+                Limit must be $999,999 or less.
               }
             </div>
           </div>
@@ -96,9 +94,9 @@
         <div class="row" style="padding: var(--space-md)">
           <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
             @if (isSubmitting()) {
-              ▸ SAVING...
+              SAVING...
             } @else {
-              ▸ EXECUTE
+              EXECUTE
             }
           </button>
           <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
@@ -126,8 +124,7 @@
     </div>
 
     <div class="section-label" style="margin-top: var(--space-xl)">
-      <span><span class="num">02</span> &nbsp; SUMMARY</span>
-      <span>30d</span>
+      <span><span class="num">02</span> &nbsp; MONTHLY SUMMARY</span>
     </div>
 
     <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
@@ -137,7 +134,7 @@
         <div class="stat-delta flat">{{ budgets().length }} CATEGORIES</div>
       </div>
       <div class="stat">
-        <div class="stat-label"><span class="ticker">▸</span>BREACH</div>
+        <div class="stat-label"><span class="ticker">▸</span>STATUS</div>
         <div class="stat-value">{{ overBudgetCount() }}</div>
         <div
           class="stat-delta"
@@ -158,15 +155,9 @@
   <div>
     <div class="section-label">
       <span><span class="num">03</span> &nbsp; ACTIVE BUDGETS</span>
-      <span>{{ budgets().length }} CAT</span>
     </div>
 
     <div class="card">
-      <div class="card-head">
-        <span class="id">▸ BUDGETS.TABLE</span>
-        <span class="meta">SORT: AS-ENTERED</span>
-      </div>
-
       @if (deleteError()) {
         <div
           style="

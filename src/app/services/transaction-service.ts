@@ -27,8 +27,8 @@ export class TransactionService {
   recentTransactions = computed(() => {
     const now = new Date();
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    
-    return this.transactions().filter(t => t.Date >= sevenDaysAgo);
+
+    return this.transactions().filter((t) => t.Date >= sevenDaysAgo);
   });
 
   constructor() {
@@ -48,23 +48,23 @@ export class TransactionService {
     let sum = 0;
 
     for (const transaction of this.transactions()) {
-      if (transaction.Type === 'Expense' ) {
-        sum += transaction.Amount
+      if (transaction.Type === 'Expense') {
+        sum += transaction.Amount;
       }
     }
     return sum;
-  })
+  });
 
   totalIncome = computed(() => {
     let income = 0;
 
     for (const transaction of this.transactions()) {
-      if (transaction.Type === 'Income' ) {
-        income += transaction.Amount
+      if (transaction.Type === 'Income') {
+        income += transaction.Amount;
       }
     }
     return income;
-  })
+  });
 
   async loadTransactions(userId = this.authService.currentUser()?.id) {
     if (!userId) {
@@ -83,6 +83,7 @@ export class TransactionService {
         Amount: number;
         Date: Timestamp | Date | string;
         Type: ExpenseType;
+        Notes?: string;
       };
 
       const rawDate = raw.Date;
@@ -111,7 +112,6 @@ export class TransactionService {
     const userId = this.authService.currentUser()?.id;
 
     if (!userId) {
-      console.log("no user id")
       throw new Error('No authenticated user found');
     }
 

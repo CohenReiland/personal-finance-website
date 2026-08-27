@@ -1,0 +1,466 @@
+<!-- Page header -->
+<div class="page-head">
+  <h1>LOANS<span class="punct">.</span></h1>
+  <div class="meta">
+    <strong>{{ headerMeta() }}</strong>
+    TOTAL PRINCIPAL {{ totalPrincipal() | currency: 'USD' : 'symbol' : '1.2-2' }}
+  </div>
+</div>
+
+<div class="page-grid">
+  <!-- LEFT: Add Form -->
+  <div>
+    <div class="section-label">
+      <span><span class="num">01</span> &nbsp; NEW LOAN</span>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="label">NAME</div>
+          <input
+            class="input"
+            formControlName="name"
+            type="text"
+            placeholder="e.g. Car Loan"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">PRINCIPAL</div>
+          <input
+            class="input"
+            formControlName="amount"
+            type="number"
+            inputmode="decimal"
+            placeholder="0.00"
+            step="0.01"
+            min="0.01"
+            max="999999"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">LAST PAID DATE</div>
+          <input
+            class="input"
+            formControlName="lastPaidDate"
+            type="date"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">MONTHLY INTEREST</div>
+          <input
+            class="input"
+            formControlName="interestRate"
+            type="number"
+            inputmode="decimal"
+            placeholder="0.0083"
+            step="0.0001"
+            min="0"
+            max="1"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">MONTHLY PAYMENT</div>
+          <input
+            class="input"
+            formControlName="monthlyPayment"
+            type="number"
+            inputmode="decimal"
+            placeholder="0.00"
+            step="0.01"
+            min="0.01"
+            max="999999"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">NOTES</div>
+          <textarea
+            class="textarea"
+            formControlName="notes"
+            rows="3"
+            placeholder="Optional notes"
+            [attr.disabled]="isSubmitting() ? true : null"
+          ></textarea>
+        </div>
+
+        @if (form.get('name')?.touched && form.get('name')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('name')?.hasError('required')) {
+                Name is required.
+              } @else if (form.get('name')?.hasError('maxlength')) {
+                Name must be 60 characters or fewer.
+              } @else if (form.get('name')?.hasError('whitespaceOnly')) {
+                Name cannot be blank.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('amount')?.touched && form.get('amount')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('amount')?.hasError('required')) {
+                Principal is required.
+              } @else if (form.get('amount')?.hasError('min')) {
+                Principal must be greater than $0.
+              } @else if (form.get('amount')?.hasError('max')) {
+                Principal must be $999,999 or less.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('lastPaidDate')?.touched && form.get('lastPaidDate')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              Last paid date is required.
+            </div>
+          </div>
+        }
+        @if (form.get('interestRate')?.touched && form.get('interestRate')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('interestRate')?.hasError('required')) {
+                Interest rate is required.
+              } @else {
+                Interest rate must be between 0 and 1 (as a decimal).
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('monthlyPayment')?.touched && form.get('monthlyPayment')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('monthlyPayment')?.hasError('required')) {
+                Monthly payment is required.
+              } @else if (form.get('monthlyPayment')?.hasError('min')) {
+                Monthly payment must be greater than $0.
+              } @else if (form.get('monthlyPayment')?.hasError('max')) {
+                Monthly payment must be $999,999 or less.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('notes')?.touched && form.get('notes')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              Notes must be 200 characters or fewer.
+            </div>
+          </div>
+        }
+
+        <div class="row" style="padding: var(--space-md)">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
+            @if (isSubmitting()) {
+              SAVING...
+            } @else {
+              EXECUTE
+            }
+          </button>
+          <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
+            RESET
+          </button>
+        </div>
+
+        @if (submitSuccess()) {
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
+            <span class="text-ok text-sm">▸ {{ submitSuccess() }}</span>
+          </div>
+        }
+        @if (submitError()) {
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
+            <span class="text-bad text-sm">▸ {{ submitError() }}</span>
+          </div>
+        }
+      </form>
+    </div>
+
+    <div class="section-label" style="margin-top: var(--space-xl)">
+      <span><span class="num">02</span> &nbsp; ALL TIME SUMMARY</span>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>TOTAL PRINCIPAL</div>
+        <div class="stat-value">{{ totalPrincipal() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
+        <div class="stat-delta flat">{{ loans().length }} ACTIVE</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>TOTAL MONTHLY PAYMENT</div>
+        <div class="stat-value">
+          {{ totalMonthlyPayment() | currency: 'USD' : 'symbol' : '1.2-2' }}
+        </div>
+        <div class="stat-delta flat">ACROSS ALL LOANS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Existing Loans Table -->
+  <div>
+    <div class="section-label">
+      <span><span class="num">03</span> &nbsp; ACTIVE LOANS</span>
+    </div>
+
+    <div class="card">
+      @if (deleteError()) {
+        <div
+          style="
+            padding: var(--space-sm) var(--space-md);
+            border-bottom: 1px solid var(--bad);
+            background: rgba(255, 64, 64, 0.05);
+          "
+        >
+          <span class="text-bad text-sm">▸ {{ deleteError() }}</span>
+        </div>
+      }
+
+      @if (isEmpty()) {
+        <div class="card-body">
+          <p class="text-fg-3 text-sm">
+            No loans yet. Add your first loan using the form on the left.
+          </p>
+        </div>
+      } @else {
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width: 24px">#</th>
+              <th>NAME</th>
+              <th class="num">PRINCIPAL</th>
+              <th class="num">PAYMENT</th>
+              <th class="num">RATE</th>
+              <th class="num">PAYOFF (MO)</th>
+              <th>LAST PAID</th>
+              <th>NOTES</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (l of loans(); track l.id; let i = $index) {
+              @if (editingId() !== l.id) {
+                <tr>
+                  <td>{{ (i + 1).toString().padStart(2, '0') }}</td>
+                  <td>
+                    <div class="cat">{{ l.name }}</div>
+                  </td>
+                  <td class="num">{{ l.amount | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
+                  <td class="num">{{ l.monthlyPayment | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
+                  <td class="num">{{ l.interestRate | number: '1.2-4' }}</td>
+                  <td class="num">
+                    @if (estimatedPayoffMonths(l); as months) {
+                      {{ months | number: '1.0-1' }}
+                    } @else {
+                      —
+                    }
+                  </td>
+                  <td>{{ l.lastPaidDate | date: 'MM/dd/yy' }}</td>
+                  <td class="notes-cell">{{ l.notes || '—' }}</td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="btn-icon"
+                        (click)="startEdit(l)"
+                        [disabled]="editingId() !== null || deletingId() !== null"
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        class="btn-icon danger"
+                        (click)="deleteLoan(l)"
+                        [disabled]="editingId() !== null || deletingId() !== null"
+                      >
+                        @if (deletingId() === l.id) {
+                          ...
+                        } @else {
+                          DEL
+                        }
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+
+              @if (editingId() === l.id) {
+                <tr class="editing" [formGroup]="editForm">
+                  <td>{{ (i + 1).toString().padStart(2, '0') }}</td>
+                  <td>
+                    <input
+                      class="input-inline"
+                      formControlName="name"
+                      type="text"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td class="num">
+                    <input
+                      class="input-inline num"
+                      formControlName="amount"
+                      type="number"
+                      inputmode="decimal"
+                      step="0.01"
+                      min="0.01"
+                      max="999999"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td class="num">
+                    <input
+                      class="input-inline num"
+                      formControlName="monthlyPayment"
+                      type="number"
+                      inputmode="decimal"
+                      step="0.01"
+                      min="0.01"
+                      max="999999"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td class="num">
+                    <input
+                      class="input-inline num"
+                      formControlName="interestRate"
+                      type="number"
+                      inputmode="decimal"
+                      step="0.0001"
+                      min="0"
+                      max="1"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td class="num">—</td>
+                  <td>
+                    <input
+                      class="input-inline"
+                      formControlName="lastPaidDate"
+                      type="date"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="input-inline"
+                      formControlName="notes"
+                      type="text"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="btn-icon save"
+                        (click)="saveEdit()"
+                        [disabled]="editForm.invalid || isUpdating()"
+                      >
+                        @if (isUpdating()) {
+                          ...
+                        } @else {
+                          SAVE
+                        }
+                      </button>
+                      <button class="btn-icon" (click)="cancelEdit()" [disabled]="isUpdating()">
+                        CANCEL
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                @if (updateError()) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="9"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ {{ updateError() }}
+                    </td>
+                  </tr>
+                }
+                @if (editForm.get('name')?.touched && editForm.get('name')?.invalid) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="9"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ Name is required.
+                    </td>
+                  </tr>
+                }
+                @if (editForm.get('amount')?.touched && editForm.get('amount')?.invalid) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="9"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ Principal must be between $0.01 and $999,999.
+                    </td>
+                  </tr>
+                }
+                @if (
+                  editForm.get('monthlyPayment')?.touched && editForm.get('monthlyPayment')?.invalid
+                ) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="9"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ Monthly payment must be between $0.01 and $999,999.
+                    </td>
+                  </tr>
+                }
+                @if (
+                  editForm.get('interestRate')?.touched && editForm.get('interestRate')?.invalid
+                ) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="9"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ Interest rate must be between 0 and 1.
+                    </td>
+                  </tr>
+                }
+              }
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</div>

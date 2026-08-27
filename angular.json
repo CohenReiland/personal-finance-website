@@ -7,7 +7,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "frameworks-final-project": {
+    "personal-finance-website": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -34,8 +34,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "1.5MB",
+                  "maximumError": "2MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -57,10 +57,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "frameworks-final-project:build:production"
+              "buildTarget": "personal-finance-website:build:production"
             },
             "development": {
-              "buildTarget": "frameworks-final-project:build:development"
+              "buildTarget": "personal-finance-website:build:development"
             }
           },
           "defaultConfiguration": "development"

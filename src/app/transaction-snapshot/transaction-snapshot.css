@@ -1,18 +1,32 @@
+/* Flex-grow chain (not height:100%) so the card fills the dashboard's
+   flex-grown column — matches the pattern that works for the chart card. */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
 .card {
-  color: white;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
 }
 
-.tbl th.num,
-.tbl td.num {
-  text-align: left;
+/* Brighter, larger text */
+.tbl th {
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--fg);
 }
-
-.neg {
-  color: var(--bad);
+.tbl td {
+  font-size: var(--text-14);
+  color: var(--fg);
 }
-
-.pos {
+/* These need to out-specify ".tbl td" above to still win. */
+.tbl td.text-ok {
   color: var(--ok);
 }
-
-
+.tbl td.text-bad {
+  color: var(--bad);
+}

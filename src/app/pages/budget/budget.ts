@@ -26,7 +26,7 @@ interface EditBudgetForm {
   standalone: true,
   imports: [CurrencyPipe, DecimalPipe, ReactiveFormsModule],
   templateUrl: './budget.html',
-  styleUrls: ['./budget.css'],
+  styleUrl: './budget.css',
 })
 export class Budget {
   private readonly budgetService = inject(BudgetService);
@@ -51,18 +51,10 @@ export class Budget {
   readonly form = new FormGroup<AddBudgetForm>({
     category: new FormControl<string>('', {
       nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.maxLength(40),
-        this.notWhitespaceOnly,
-      ],
+      validators: [Validators.required, Validators.maxLength(40), this.notWhitespaceOnly],
     }),
     limit: new FormControl<number | null>(null, {
-      validators: [
-        Validators.required,
-        Validators.min(0.01),
-        Validators.max(999_999),
-      ],
+      validators: [Validators.required, Validators.min(0.01), Validators.max(999_999)],
     }),
   });
 
@@ -77,18 +69,10 @@ export class Budget {
   readonly editForm = new FormGroup<EditBudgetForm>({
     category: new FormControl<string>('', {
       nonNullable: true,
-      validators: [
-        Validators.required,
-        Validators.maxLength(40),
-        this.notWhitespaceOnly,
-      ],
+      validators: [Validators.required, Validators.maxLength(40), this.notWhitespaceOnly],
     }),
     limit: new FormControl<number | null>(null, {
-      validators: [
-        Validators.required,
-        Validators.min(0.01),
-        Validators.max(999_999),
-      ],
+      validators: [Validators.required, Validators.min(0.01), Validators.max(999_999)],
     }),
   });
 
@@ -120,7 +104,7 @@ export class Budget {
       setTimeout(() => this.submitSuccess.set(null), 3000);
     } catch (err) {
       this.submitError.set(
-        err instanceof Error ? err.message : 'Could not save budget. Please try again.'
+        err instanceof Error ? err.message : 'Could not save budget. Please try again.',
       );
     } finally {
       this.isSubmitting.set(false);
@@ -168,9 +152,7 @@ export class Budget {
       this.editingId.set(null);
       this.editForm.reset({ category: '', limit: null });
     } catch (err) {
-      this.updateError.set(
-        err instanceof Error ? err.message : 'Could not save changes.'
-      );
+      this.updateError.set(err instanceof Error ? err.message : 'Could not save changes.');
     } finally {
       this.isUpdating.set(false);
     }
@@ -181,9 +163,7 @@ export class Budget {
   async deleteBudget(budget: BudgetWithDerived): Promise<void> {
     if (this.deletingId() !== null || this.editingId() !== null) return;
 
-    const confirmed = window.confirm(
-      `Delete budget "${budget.category}"? This cannot be undone.`
-    );
+    const confirmed = window.confirm(`Delete budget "${budget.category}"? This cannot be undone.`);
     if (!confirmed) return;
 
     this.deletingId.set(budget.id);
@@ -192,9 +172,7 @@ export class Budget {
     try {
       await this.budgetService.deleteBudget(budget.id);
     } catch (err) {
-      this.deleteError.set(
-        err instanceof Error ? err.message : 'Could not delete budget.'
-      );
+      this.deleteError.set(err instanceof Error ? err.message : 'Could not delete budget.');
     } finally {
       this.deletingId.set(null);
     }

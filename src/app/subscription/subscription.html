@@ -1,0 +1,357 @@
+<!-- Page header -->
+<div class="page-head">
+  <h1>SUBSCRIPTIONS<span class="punct">.</span></h1>
+  <div class="meta">
+    <strong>{{ headerMeta() }}</strong>
+    TOTAL MONTHLY {{ totalMonthly() | currency: 'USD' : 'symbol' : '1.2-2' }}
+  </div>
+</div>
+
+<div class="page-grid">
+  <!-- LEFT: Add Form -->
+  <div>
+    <div class="section-label">
+      <span><span class="num">01</span> &nbsp; NEW SUBSCRIPTION</span>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="label">NAME</div>
+          <input
+            class="input"
+            formControlName="name"
+            type="text"
+            placeholder="e.g. Netflix"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">AMOUNT</div>
+          <input
+            class="input"
+            formControlName="amount"
+            type="number"
+            inputmode="decimal"
+            placeholder="0.00"
+            step="0.01"
+            min="0.01"
+            max="999999"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">BILLING DAY</div>
+          <input
+            class="input"
+            formControlName="billingDay"
+            type="number"
+            inputmode="numeric"
+            placeholder="e.g. 4"
+            min="1"
+            max="31"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">NOTES</div>
+          <textarea
+            class="textarea"
+            formControlName="notes"
+            rows="3"
+            placeholder="Optional notes"
+            [attr.disabled]="isSubmitting() ? true : null"
+          ></textarea>
+        </div>
+
+        @if (form.get('name')?.touched && form.get('name')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('name')?.hasError('required')) {
+                Name is required.
+              } @else if (form.get('name')?.hasError('maxlength')) {
+                Name must be 60 characters or fewer.
+              } @else if (form.get('name')?.hasError('whitespaceOnly')) {
+                Name cannot be blank.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('amount')?.touched && form.get('amount')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('amount')?.hasError('required')) {
+                Amount is required.
+              } @else if (form.get('amount')?.hasError('min')) {
+                Amount must be greater than $0.
+              } @else if (form.get('amount')?.hasError('max')) {
+                Amount must be $999,999 or less.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('billingDay')?.touched && form.get('billingDay')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              @if (form.get('billingDay')?.hasError('required')) {
+                Billing day is required.
+              } @else {
+                Billing day must be between 1 and 31.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('notes')?.touched && form.get('notes')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div
+              class="form-error"
+              style="grid-column: 1 / -1; padding: var(--space-sm) var(--space-md)"
+            >
+              Notes must be 200 characters or fewer.
+            </div>
+          </div>
+        }
+
+        <div class="row" style="padding: var(--space-md)">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
+            @if (isSubmitting()) {
+              SAVING...
+            } @else {
+              EXECUTE
+            }
+          </button>
+          <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
+            RESET
+          </button>
+        </div>
+
+        @if (submitSuccess()) {
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
+            <span class="text-ok text-sm">▸ {{ submitSuccess() }}</span>
+          </div>
+        }
+        @if (submitError()) {
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
+            <span class="text-bad text-sm">▸ {{ submitError() }}</span>
+          </div>
+        }
+      </form>
+    </div>
+
+    <div class="section-label" style="margin-top: var(--space-xl)">
+      <span><span class="num">02</span> &nbsp; ALL TIME SUMMARY</span>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>TOTAL MONTHLY</div>
+        <div class="stat-value">{{ totalMonthly() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
+        <div class="stat-delta flat">{{ subscriptions().length }} ACTIVE</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>NEXT CHARGE</div>
+        @if (nextRenewal(); as next) {
+          <div class="stat-value">{{ next.chargeDate | date: 'MM/dd/yy' }}</div>
+          <div class="stat-delta flat">{{ next.subscription.name }}</div>
+        } @else {
+          <div class="stat-value">—</div>
+          <div class="stat-delta flat">NO SUBSCRIPTIONS</div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Existing Subscriptions Table -->
+  <div>
+    <div class="section-label">
+      <span><span class="num">03</span> &nbsp; ACTIVE SUBSCRIPTIONS</span>
+    </div>
+
+    <div class="card">
+      @if (deleteError()) {
+        <div
+          style="
+            padding: var(--space-sm) var(--space-md);
+            border-bottom: 1px solid var(--bad);
+            background: rgba(255, 64, 64, 0.05);
+          "
+        >
+          <span class="text-bad text-sm">▸ {{ deleteError() }}</span>
+        </div>
+      }
+
+      @if (isEmpty()) {
+        <div class="card-body">
+          <p class="text-fg-3 text-sm">
+            No subscriptions yet. Add your first subscription using the form on the left.
+          </p>
+        </div>
+      } @else {
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width: 24px">#</th>
+              <th>NAME</th>
+              <th class="num">AMOUNT</th>
+              <th>NEXT CHARGE</th>
+              <th>NOTES</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of subscriptions(); track s.id; let i = $index) {
+              @if (editingId() !== s.id) {
+                <tr>
+                  <td>{{ (i + 1).toString().padStart(2, '0') }}</td>
+                  <td>
+                    <div class="cat">{{ s.name }}</div>
+                  </td>
+                  <td class="num">{{ s.amount | currency: 'USD' : 'symbol' : '1.2-2' }}</td>
+                  <td>{{ nextCharge(s.billingDay) | date: 'MM/dd/yy' }}</td>
+                  <td class="notes-cell">{{ s.notes || '—' }}</td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="btn-icon"
+                        (click)="startEdit(s)"
+                        [disabled]="editingId() !== null || deletingId() !== null"
+                      >
+                        EDIT
+                      </button>
+                      <button
+                        class="btn-icon danger"
+                        (click)="deleteSubscription(s)"
+                        [disabled]="editingId() !== null || deletingId() !== null"
+                      >
+                        @if (deletingId() === s.id) {
+                          ...
+                        } @else {
+                          DEL
+                        }
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+
+              @if (editingId() === s.id) {
+                <tr class="editing" [formGroup]="editForm">
+                  <td>{{ (i + 1).toString().padStart(2, '0') }}</td>
+                  <td>
+                    <input
+                      class="input-inline"
+                      formControlName="name"
+                      type="text"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td class="num">
+                    <input
+                      class="input-inline num"
+                      formControlName="amount"
+                      type="number"
+                      inputmode="decimal"
+                      step="0.01"
+                      min="0.01"
+                      max="999999"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="input-inline"
+                      formControlName="billingDay"
+                      type="number"
+                      inputmode="numeric"
+                      min="1"
+                      max="31"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="input-inline"
+                      formControlName="notes"
+                      type="text"
+                      [attr.disabled]="isUpdating() ? true : null"
+                    />
+                  </td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="btn-icon save"
+                        (click)="saveEdit()"
+                        [disabled]="editForm.invalid || isUpdating()"
+                      >
+                        @if (isUpdating()) {
+                          ...
+                        } @else {
+                          SAVE
+                        }
+                      </button>
+                      <button class="btn-icon" (click)="cancelEdit()" [disabled]="isUpdating()">
+                        CANCEL
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                @if (updateError()) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="6"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ {{ updateError() }}
+                    </td>
+                  </tr>
+                }
+                @if (editForm.get('name')?.touched && editForm.get('name')?.invalid) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="6"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ Name is required.
+                    </td>
+                  </tr>
+                }
+                @if (editForm.get('amount')?.touched && editForm.get('amount')?.invalid) {
+                  <tr class="editing-error">
+                    <td
+                      colspan="6"
+                      class="text-bad text-sm"
+                      style="padding: var(--space-sm) var(--space-md)"
+                    >
+                      ▸ Amount must be between $0.01 and $999,999.
+                    </td>
+                  </tr>
+                }
+              }
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</div>

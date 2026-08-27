@@ -1,140 +1,309 @@
-<div class="container">
-  <div class="search-section">
-    <input type="text" class="input" placeholder="Search transactions..." />
-  </div>
-
-  <div class="card">
-    <div class="card-head">
-      <span class="id">▸ TRANSACTIONS</span>
-      <span class="meta">{{ transactionService.transactions().length }} ITEMS</span>
-    </div>
-
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>NAME</th>
-          <th>CATEGORY</th>
-          <th class="num">AMOUNT</th>
-          <th>DATE</th>
-          <th>ACTIONS</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (transaction of transactionService.transactions(); track transaction.id ?? $index) {
-          <app-transaction-item
-            [transaction]="transaction"
-            (editRequested)="openEdit($event)"
-            (deleteRequested)="deleteTransaction($event)"
-          ></app-transaction-item>
-        }
-      </tbody>
-    </table>
-  </div>
-
-  <div class="add-btn">
-    <button class="btn btn-primary" type="button" (click)="openAdd()">▸ ADD EXPENSE</button>
+<!-- Page header -->
+<div class="page-head">
+  <h1>TRANSACTIONS<span class="punct">.</span></h1>
+  <div class="meta">
+    <strong>{{ headerMeta() }}</strong>
+    TOTAL INCOME {{ totalIncome() | currency: 'USD' : 'symbol' : '1.0-0' }}<br />
+    SPENT {{ totalSpent() | currency: 'USD' : 'symbol' : '1.2-2' }}
   </div>
 </div>
 
-@if (isAddOpen) {
-  <div class="modal-backdrop" (click)="closeAdd()">
-    <div class="modal-shell" (click)="$event.stopPropagation()">
-      <div class="card modal-card">
-        <div class="card-head">
-          <span class="id"
-            >▸ {{ editingTransaction ? 'EDIT.TRANSACTION' : 'ADD.TRANSACTION' }}</span
-          >
-          <button class="btn btn-ghost" type="button" (click)="closeAdd()">CLOSE</button>
+<div class="page-grid">
+  <!-- LEFT: Summary + Add Form -->
+  <div>
+    <div class="section-label">
+      <span><span class="num">01</span> &nbsp; SUMMARY</span>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: 1fr 1fr">
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>TOTAL INCOME</div>
+        <div class="stat-value">{{ totalIncome() | currency: 'USD' : 'symbol' : '1.0-0' }}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label"><span class="ticker">▸</span>NET</div>
+        <div class="stat-value" [class.text-ok]="net() >= 500" [class.text-bad]="net() <= -500">
+          {{ net() | currency: 'USD' : 'symbol' : '1.0-0' }}
         </div>
-
-        <form class="modal-form">
-          <div class="form-row">
-            <div class="label">NAME *</div>
-            <input
-              #nameInput
-              class="input"
-              type="text"
-              [value]="editingTransaction?.Name ?? ''"
-              placeholder="e.g. Trader Joe's"
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="label">CATEGORY *</div>
-            <select
-              #categoryInput
-              class="select"
-              name="transaction-category"
-              id="transaction-category"
-              [value]="editingTransaction?.Category ?? 'personal'"
-            >
-              <option value="" disabled>Select category</option>
-              <option value="Salary">Salary</option>
-              <option value="personal">Personal</option>
-              <option value="Grocery">Grocery</option>
-              <option value="Shopping">Shopping</option>
-              <option value="Rent">Rent</option>
-              <option value="Food">Food</option>
-              <option value="Health">Health</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div class="form-row">
-            <div class="label">AMOUNT *</div>
-            <input
-              #amountInput
-              class="input"
-              type="number"
-              [value]="editingTransaction?.Amount ?? ''"
-              placeholder="0.00"
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="label">DATE *</div>
-            <input
-              #dateInput
-              class="input"
-              type="date"
-              [value]="formatDateInput(editingTransaction)"
-            />
-          </div>
-
-          <div class="form-row">
-            <div class="label">TYPE</div>
-            <select
-              #type
-              class="select"
-              name="transaction-type"
-              id="transaction-type"
-              [value]="editingTransaction?.Type ?? 'Expense'"
-            >
-              <option value="Expense">Expense</option>
-              <option value="Income">Income</option>
-            </select>
-          </div>
-
-          <div class="row" style="padding: var(--space-md)">
-            <button
-              class="btn btn-primary"
-              type="button"
-              (click)="
-                saveTransaction(
-                  nameInput.value,
-                  categoryInput.value,
-                  amountInput.value,
-                  dateInput.value,
-                  type.value
-                )
-              "
-            >
-              ▸ {{ editingTransaction ? 'SAVE CHANGES' : 'SAVE' }}
-            </button>
-            <button class="btn" type="button" (click)="closeAdd()">CANCEL</button>
-          </div>
-        </form>
       </div>
     </div>
+
+    <div class="section-label" style="margin-top: var(--space-xl)">
+      <span
+        ><span class="num">02</span> &nbsp;
+        {{ isEditing() ? 'EDIT TRANSACTION' : 'NEW TRANSACTION' }}</span
+      >
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-row">
+          <div class="label">NAME</div>
+          <input
+            class="input"
+            formControlName="name"
+            type="text"
+            placeholder="e.g. Trader Joe's"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">CATEGORY</div>
+          <select
+            class="select"
+            formControlName="category"
+            name="transaction-category"
+            id="transaction-category"
+            [attr.disabled]="isSubmitting() ? true : null"
+          >
+            <option value="" disabled>Select category</option>
+            <option value="Salary">Salary</option>
+            <option value="Personal">Personal</option>
+            <option value="Grocery">Grocery</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Rent">Rent</option>
+            <option value="Food">Food</option>
+            <option value="Health">Health</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="label">AMOUNT</div>
+          <input
+            class="input"
+            formControlName="amount"
+            type="number"
+            inputmode="decimal"
+            placeholder="0.00"
+            step="0.01"
+            min="0.01"
+            max="999999"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">DATE</div>
+          <input
+            class="input"
+            formControlName="date"
+            type="date"
+            [attr.disabled]="isSubmitting() ? true : null"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="label">TYPE</div>
+          <select
+            class="select"
+            formControlName="type"
+            name="transaction-type"
+            id="transaction-type"
+            [attr.disabled]="isSubmitting() ? true : null"
+          >
+            <option value="Expense">Expense</option>
+            <option value="Income">Income</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="label">NOTES</div>
+          <textarea
+            class="textarea"
+            formControlName="notes"
+            rows="3"
+            placeholder="Optional Notes"
+            [attr.disabled]="isSubmitting() ? true : null"
+          ></textarea>
+        </div>
+
+        @if (form.get('name')?.touched && form.get('name')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              @if (form.get('name')?.hasError('required')) {
+                ▸ Name is required.
+              } @else if (form.get('name')?.hasError('maxlength')) {
+                ▸ Name must be 60 characters or fewer.
+              } @else if (form.get('name')?.hasError('whitespaceOnly')) {
+                ▸ Name cannot be blank.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('category')?.touched && form.get('category')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              ▸ Category is required.
+            </div>
+          </div>
+        }
+        @if (form.get('amount')?.touched && form.get('amount')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              @if (form.get('amount')?.hasError('required')) {
+                ▸ Amount is required.
+              } @else if (form.get('amount')?.hasError('min')) {
+                ▸ Amount must be greater than $0.
+              } @else if (form.get('amount')?.hasError('max')) {
+                ▸ Amount must be $999,999 or less.
+              }
+            </div>
+          </div>
+        }
+        @if (form.get('date')?.touched && form.get('date')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              ▸ Date is required.
+            </div>
+          </div>
+        }
+        @if (form.get('notes')?.touched && form.get('notes')?.invalid) {
+          <div class="form-row" style="border-bottom: none">
+            <div class="label" style="background: transparent; border-right: none"></div>
+            <div class="form-error" style="padding: 0 var(--space-md) var(--space-sm)">
+              ▸ Notes must be 150 characters or fewer.
+            </div>
+          </div>
+        }
+
+        <div class="row" style="padding: var(--space-md)">
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isSubmitting()">
+            @if (isSubmitting()) {
+              ▸ SAVING...
+            } @else if (isEditing()) {
+              SAVE CHANGES
+            } @else {
+              EXECUTE
+            }
+          </button>
+          @if (isEditing()) {
+            <button type="button" class="btn" (click)="cancelEdit()" [disabled]="isSubmitting()">
+              CANCEL
+            </button>
+          } @else {
+            <button type="button" class="btn" (click)="onReset()" [disabled]="isSubmitting()">
+              RESET
+            </button>
+          }
+        </div>
+
+        @if (submitSuccess()) {
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
+            <span class="text-ok text-sm">▸ {{ submitSuccess() }}</span>
+          </div>
+        }
+        @if (submitError()) {
+          <div
+            class="form-row"
+            style="border-bottom: none; padding: 0 var(--space-md) var(--space-sm)"
+          >
+            <span class="text-bad text-sm">▸ {{ submitError() }}</span>
+          </div>
+        }
+      </form>
+    </div>
   </div>
-}
+
+  <!-- RIGHT: Existing Transactions Table -->
+  <div>
+    <div class="section-label">
+      <span><span class="num">03</span> &nbsp; ALL TRANSACTIONS</span>
+    </div>
+
+    <div class="card">
+      @if (deleteError()) {
+        <div
+          style="
+            padding: var(--space-sm) var(--space-md);
+            border-bottom: 1px solid var(--bad);
+            background: rgba(255, 64, 64, 0.05);
+          "
+        >
+          <span class="text-bad text-sm">▸ {{ deleteError() }}</span>
+        </div>
+      }
+
+      @if (isEmpty()) {
+        <div class="card-body">
+          <p class="text-fg-3 text-sm">
+            No transactions yet. Add your first transaction using the form on the left.
+          </p>
+        </div>
+      } @else {
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>NAME</th>
+              <th>CATEGORY</th>
+              <th class="num">AMOUNT</th>
+              <th>DATE</th>
+              <th>TYPE</th>
+              <th>NOTES</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (t of transactionService.transactions(); track t.id ?? $index; let i = $index) {
+              <tr [class.editing]="editingTransaction()?.id === t.id">
+                <td>
+                  <div class="cat">{{ t.Name }}</div>
+                </td>
+                <td>{{ t.Category }}</td>
+                <td
+                  class="num"
+                  [class.text-ok]="t.Type === 'Income'"
+                  [class.text-bad]="t.Type === 'Expense'"
+                >
+                  {{ t.Type === 'Expense' ? '−' : '+'
+                  }}{{ t.Amount | currency: 'USD' : 'symbol' : '1.2-2' }}
+                </td>
+                <td>{{ t.Date | date: 'MM/dd/yy' }}</td>
+                <td>
+                  <span
+                    class="tag"
+                    [class.ok]="t.Type === 'Income'"
+                    [class.over]="t.Type === 'Expense'"
+                  >
+                    {{ t.Type }}
+                  </span>
+                </td>
+                <td class="notes-cell">{{ t.Notes || '—' }}</td>
+                <td>
+                  <div class="row-actions">
+                    <button
+                      class="btn-icon"
+                      (click)="startEdit(t)"
+                      [disabled]="isEditing() || deletingId() !== null"
+                    >
+                      EDIT
+                    </button>
+                    <button
+                      class="btn-icon danger"
+                      (click)="deleteTransaction(t)"
+                      [disabled]="isEditing() || deletingId() !== null"
+                    >
+                      @if (deletingId() === t.id) {
+                        ...
+                      } @else {
+                        DEL
+                      }
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  </div>
+</div>

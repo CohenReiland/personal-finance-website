@@ -1,9 +1,3 @@
-:host {
-  display: block;
-  background: var(--bg);
-  color: var(--fg);
-}
-
 /* 2-column layout. Collapses to single column under 1100px. */
 .page-grid {
   display: grid;
@@ -25,8 +19,8 @@
 
 .btn-icon {
   font-family: var(--font-mono);
-  font-size: var(--text-11);
-  padding: 6px 10px;
+  font-size: var(--text-10);
+  padding: 4px 8px;
   background: transparent;
   border: 1px solid var(--line-hi);
   color: var(--fg-2);
@@ -44,12 +38,20 @@
   border-color: var(--bad);
   color: var(--bad);
 }
+.btn-icon.save {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.btn-icon.save:hover:not(:disabled) {
+  background: var(--ok);
+  color: var(--bg);
+}
 .btn-icon:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* The row currently open in the edit form gets an accent outline. */
+/* The active editing row gets an accent outline. */
 .tbl tr.editing {
   background: var(--panel-2);
   outline: 1px solid var(--accent);
@@ -58,62 +60,41 @@
 .tbl tr.editing td {
   background: var(--panel-2);
 }
+.tbl tr.editing-error td {
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--accent);
+}
+
+/* Inline inputs replacing cells. */
+.input-inline {
+  width: 100%;
+  padding: 4px 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--accent);
+  font-family: var(--font-mono);
+  font-size: calc(var(--text-14) + 2px);
+  color: var(--fg);
+  outline: none;
+}
+.input-inline.num {
+  text-align: right;
+}
+.input-inline:focus {
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
 
 .notes-cell {
-  white-space: normal;
-  overflow-wrap: break-word;
-  color: var(--fg-2);
-}
-
-/* Fixed column widths so NOTES wraps correctly. */
-.tbl {
-  table-layout: fixed;
-}
-.tbl th:nth-child(1),
-.tbl td:nth-child(1) {
-  width: 14%;
-}
-.tbl th:nth-child(2),
-.tbl td:nth-child(2) {
-  width: 11%;
-}
-.tbl th:nth-child(3),
-.tbl td:nth-child(3) {
-  width: 13%;
-}
-.tbl th:nth-child(4),
-.tbl td:nth-child(4) {
-  width: 10%;
-}
-.tbl th:nth-child(5),
-.tbl td:nth-child(5) {
-  width: 10%;
-}
-.tbl th:nth-child(7),
-.tbl td:nth-child(7) {
-  width: 12%;
-}
-/* 6th column (NOTES) has a dynamic width. */
-
-.tbl th:not(:nth-child(6)),
-.tbl td:not(.notes-cell) {
+  max-width: 220px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--fg-2);
 }
 
-.tbl td.num,
-.tbl th.num {
-  text-align: left;
+/* Brighter, larger text */
+.form-row {
+  grid-template-columns: 250px 1fr;
 }
-
-.tbl th {
-  font-size: var(--text-11);
-  font-weight: 600;
-  color: var(--fg);
-}
-
-/* Brighter, larger text — matches the settings page treatment. */
 .section-label {
   font-size: calc(var(--text-14) + 4px);
   font-weight: 600;
@@ -127,7 +108,6 @@
   color: var(--fg-2);
 }
 .input,
-.select,
 .textarea {
   background: var(--bg-2);
   font-size: calc(var(--text-14) + 2px);
@@ -147,10 +127,12 @@
   font-size: calc(var(--text-14) + 1px);
   font-weight: 700;
 }
-.card-head .meta {
-  font-size: var(--text-12);
+.tbl th {
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--fg);
+  white-space: nowrap;
 }
-
 .tbl td {
   font-size: var(--text-14);
   color: var(--fg);
@@ -158,14 +140,11 @@
 .tbl td.num {
   color: var(--fg);
 }
-
 .stat-label {
   font-size: calc(var(--text-12) + 2px);
   color: var(--fg-0);
 }
-
-/* Native date picker icon — brighten so it's visible against the dark input. */
-input[type='date'].input::-webkit-calendar-picker-indicator {
-  filter: invert(1) brightness(1.3);
-  cursor: pointer;
+.stat-delta {
+  font-size: calc(var(--text-12) + 2px);
+  color: var(--fg-2);
 }
