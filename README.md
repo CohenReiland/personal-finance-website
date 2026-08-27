@@ -1,6 +1,6 @@
 # Personal Finance Website
 
-*Collaborative team project for Software Development with Frameworks at North Dakota State University.*
+_Collaborative team project for Software Development with Frameworks at North Dakota State University._
 
 A personal finance tracker built with Angular and Firebase. It handles transactions, budgets, subscriptions, and loans, all from one dashboard.
 
@@ -16,8 +16,9 @@ A personal finance tracker built with Angular and Firebase. It handles transacti
 
 ## Demo
 
-- **Original group project (end of course)**: [cohenreiland.github.io/frameworks-final-project](https://cohenreiland.github.io/frameworks-final-project/)
-- **Improved version (post-course updates)**: link coming soon
+- **Original Group Project:** [![Group Version](public/images/original.png)](https://cohenreiland.github.io/frameworks-final-project/)
+
+- **Improved Version:** [![Improved Version](public/images/improved.png)](https://cohenreiland.github.io/personal-finance-website)
 
 ## Tech Stack
 
@@ -94,7 +95,7 @@ This project started as a team assignment, and it was left in a working but roug
 
 The database turned out to be the biggest problem. Firestore's rules were still set to `allow read, write: if true`, so anyone who found the project ID could read or wipe the entire database. That's fixed now, with rules that scope every user's data to their own account.
 
-There were a couple of access-control gaps too. The dashboard and subscription pages were reachable without logging in, when every other page required it. 
+There were a couple of access-control gaps too. The dashboard and subscription pages were reachable without logging in, when every other page required it.
 
 Past the fixes, the UI got a consistency pass across transactions, budgets, loans, subscriptions, and the dashboard, plus a rework of the dashboard's charts. The codebase itself got cleaned up too: dead code and unused imports removed, debug statements pulled out, naming conventions normalized, and Prettier wired in for consistent formatting.
 
